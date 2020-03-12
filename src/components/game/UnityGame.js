@@ -2,10 +2,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
-import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import Unity, { UnityContent } from "react-unity-webgl";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -67,7 +66,16 @@ class UnityGame extends React.Component {
             name: null,
             username: null
         };
+
+        //unityContent is our unity code accessor
+        this.unityContent = new UnityContent(
+            "unity_project_build/Build.json",
+            "unity_project_build/UnityLoader.js"
+        );
     }
+
+
+
 
     async somethingFun() {
 
@@ -80,15 +88,56 @@ class UnityGame extends React.Component {
             <BaseContainer>
                 <FormContainer>
                     <Form>
-                        <Label>Unity React Control-Room</Label>
+                        <Label><b>Unity React Control-Room</b></Label>
                         <ButtonContainer>
+                            <Label> Force Connect Users: <br/> </Label>
                             <Button
                                 width="15%"
                                 onClick={() => {
                                     //send to unity
                                 }}
                             >
-                                Add_P1
+                                P1-Connect
+                            </Button>
+                            <Button
+                                width="15%"
+                                onClick={() => {
+                                    //send to unity
+                                }}
+                            >
+                                P2-Connect
+                            </Button>
+                            <Button
+                                width="15%"
+                                onClick={() => {
+                                    //send to unity
+                                }}
+                            >
+                                P3-Connect
+                            </Button>
+                            <Button
+                                width="15%"
+                                onClick={() => {
+                                    //send to unity
+                                }}
+                            >
+                                P4-Connect
+                            </Button>
+                            <Button
+                                width="15%"
+                                onClick={() => {
+                                    //send to unity
+                                }}
+                            >
+                                P5-Connect
+                            </Button>
+                            <Button
+                                width="15%"
+                                onClick={() => {
+                                    //send to unity
+                                }}
+                            >
+                                P6-Connect
                             </Button>
                         </ButtonContainer>
                     </Form>
