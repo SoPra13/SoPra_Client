@@ -60,8 +60,8 @@ const ButtonContainer = styled.div`
 
 class UnityGame extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             name: null,
             username: null
@@ -142,6 +142,8 @@ class UnityGame extends React.Component {
                         </ButtonContainer>
                     </Form>
                 </FormContainer>
+                <Unity unityContent={this.unityContent} />
+                <br/>
             </BaseContainer>
         );
     }
