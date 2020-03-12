@@ -17,18 +17,20 @@ const FormContainer = styled.div`
 `;
 
 const Form = styled.div`
-  display: flex;
+  display: block;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
-  height: 375px;
+  width: 80%;
+  height: 200px;
   font-size: 16px;
   font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  background: none;
+  border-style: solid;
+  border-width: 2px;
+  border-color: white;
 `;
 
 const InputField = styled.input`
@@ -52,7 +54,7 @@ const Label = styled.label`
 `;
 
 const ButtonContainer = styled.div`
-  display: flex;
+  display: block;
   justify-content: center;
   margin-top: 20px;
 `;
@@ -78,9 +80,10 @@ class UnityGame extends React.Component {
             <BaseContainer>
                 <FormContainer>
                     <Form>
+                        <Label>Unity React Control-Room</Label>
                         <ButtonContainer>
                             <Button
-                                width="50%"
+                                width="15%"
                                 onClick={() => {
                                     //send to unity
                                 }}
