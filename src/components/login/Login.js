@@ -105,6 +105,10 @@ class Login extends React.Component {
     }
   }
 
+  unityTesting(){
+    this.props.history.push(`/unityTesting`);
+  }
+
   /**
    *  Every time the user enters something in the input field, the state gets updated.
    * @param key (the key of the state for identifying the field that needs to be updated)
@@ -153,6 +157,14 @@ class Login extends React.Component {
                 }}
               >
                 Login
+              </Button>
+              <Button
+                  width="50%"
+                  onClick={() => {
+                    this.unityTesting();
+                  }}
+              >
+                Unity Testing
               </Button>
             </ButtonContainer>
           </Form>
