@@ -74,7 +74,20 @@ class UnityGame extends React.Component {
         );
     }
 
+    setPlayers(){
+        this.unityContent.send(
+            "PlayerTotal",
+            "SetPlayerTotal",
+            7
+        )
+    }
 
+    addPlayer(){
+        this.unityContent.send(
+            "PlayerTotal",
+            "AddPlayer"
+        )
+    }
 
 
     async somethingFun() {
@@ -94,18 +107,18 @@ class UnityGame extends React.Component {
                             <Button
                                 width="15%"
                                 onClick={() => {
-                                    //send to unity
+                                    this.setPlayers();
                                 }}
                             >
-                                P1-Connect
+                                SetPlayers
                             </Button>
                             <Button
                                 width="15%"
                                 onClick={() => {
-                                    //send to unity
+                                    this.addPlayer();
                                 }}
                             >
-                                P2-Connect
+                                AddaPlayer
                             </Button>
                             <Button
                                 width="15%"

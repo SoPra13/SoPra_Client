@@ -1,6 +1,8 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - PlayerCounter
+    - SetupGameBoard
     - rotatetotate
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
@@ -10,6 +12,14 @@ ScriptsOnlyBuild:
     - TMPro.TMP_SpriteAsset
     - TMPro.TMP_StyleSheet
     - TMPro.TextMeshProUGUI
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
+    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -21,7 +31,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
   sceneClasses:
-    Assets/Scenes/SampleScene.unity:
+    Assets/Scenes/LoadingScene.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -61,17 +71,19 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11786}
     - Class: 114
-      Script: {instanceID: 12358}
+      Script: {instanceID: 12202}
     - Class: 114
-      Script: {instanceID: 12372}
+      Script: {instanceID: 12362}
     - Class: 114
-      Script: {instanceID: 12552}
+      Script: {instanceID: 12376}
     - Class: 114
-      Script: {instanceID: 12614}
+      Script: {instanceID: 12558}
     - Class: 114
-      Script: {instanceID: 12760}
+      Script: {instanceID: 12622}
     - Class: 114
-      Script: {instanceID: 12968}
+      Script: {instanceID: 12768}
+    - Class: 114
+      Script: {instanceID: 12976}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -81,6 +93,53 @@ ScriptsOnlyBuild:
     - Class: 196
       Script: {instanceID: 0}
     - Class: 212
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
+    Assets/Scenes/PlayerGameScene.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 74
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 91
+      Script: {instanceID: 0}
+    - Class: 95
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 108
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 11174}
+    - Class: 114
+      Script: {instanceID: 11372}
+    - Class: 114
+      Script: {instanceID: 11878}
+    - Class: 114
+      Script: {instanceID: 12622}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -309,6 +368,12 @@ ScriptsOnlyBuild:
     className: ButtonImageOnClick
   - hash:
       serializedVersion: 2
+      Hash: 1953b0ad3005ccb2df46a33f40777f0c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SetupGameBoard
+  - hash:
+      serializedVersion: 2
       Hash: b3ab2106268377ffe25dd18ac23dca28
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -361,6 +426,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: RawImage
+  - hash:
+      serializedVersion: 2
+      Hash: eee4fed8320ddd9fd726afadbf01acc6
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PlayerCounter
   - hash:
       serializedVersion: 2
       Hash: 5ad4aa237d47ac2bab17bacb672edf7a
@@ -433,6 +504,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: AudioTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Player
   - hash:
       serializedVersion: 2
       Hash: ae83e830e7a90c0aff918c4c2e520825
@@ -583,7 +660,14 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Constants
   platform: 20
   scenePathNames:
-  - Assets/Scenes/SampleScene.unity
-  playerPath: C:/Users/chris/switchdrive/UZH/FS20/Sopra/Unity/Build
+  - Assets/Scenes/LoadingScene.unity
+  - Assets/Scenes/PlayerGameScene.unity
+  playerPath: F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Build
