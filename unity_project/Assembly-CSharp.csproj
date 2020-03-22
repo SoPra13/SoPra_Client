@@ -67,10 +67,15 @@
     <Compile Include="Assets\HUD&amp;GUI MEDIEVAL ART BUNDLE\Demo\Scripts\CastAnimationButton.cs" />
     <Compile Include="Assets\HUD&amp;GUI MEDIEVAL ART BUNDLE\Demo\Scripts\FillBySlider.cs" />
     <Compile Include="Assets\HUD&amp;GUI MEDIEVAL ART BUNDLE\Demo\Scripts\GathererLayout.cs" />
+    <Compile Include="Assets\Scripts\Avatars.cs" />
+    <Compile Include="Assets\Scripts\Card.cs" />
     <Compile Include="Assets\Scripts\Constants.cs" />
+    <Compile Include="Assets\Scripts\GameFlow.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerCounter.cs" />
     <Compile Include="Assets\Scripts\SetupGameBoard.cs" />
+    <Compile Include="Assets\Scripts\TestButton.cs" />
+    <Compile Include="Assets\Scripts\UserNames.cs" />
     <Compile Include="Assets\loadingBar\scripts\Loading.cs" />
     <Compile Include="Assets\loadingBar\scripts\SimpleLoading.cs" />
     <Compile Include="Assets\loadingBar\scripts\loadingbar.cs" />

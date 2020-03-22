@@ -116,7 +116,7 @@ class PlayableDirector;
 class Projector; 
 class ReflectionProbe; template <> void RegisterUnityClass<ReflectionProbe>(const char*);
 class Skybox; 
-class SortingGroup; 
+class SortingGroup; template <> void RegisterUnityClass<SortingGroup>(const char*);
 class StreamingController; 
 class Terrain; 
 class VideoPlayer; 
@@ -268,7 +268,7 @@ void RegisterAllClasses()
 {
 void RegisterBuiltinTypes();
 RegisterBuiltinTypes();
-	//Total: 65 non stripped classes
+	//Total: 66 non stripped classes
 	//0. AnimationClip
 	RegisterUnityClass<AnimationClip>("Animation");
 	//1. Animator
@@ -369,35 +369,37 @@ RegisterBuiltinTypes();
 	RegisterUnityClass<ScriptMapper>("Core");
 	//49. Shader
 	RegisterUnityClass<Shader>("Core");
-	//50. Sprite
+	//50. SortingGroup
+	RegisterUnityClass<SortingGroup>("Core");
+	//51. Sprite
 	RegisterUnityClass<Sprite>("Core");
-	//51. SpriteAtlas
+	//52. SpriteAtlas
 	RegisterUnityClass<SpriteAtlas>("Core");
-	//52. SpriteRenderer
+	//53. SpriteRenderer
 	RegisterUnityClass<SpriteRenderer>("Core");
-	//53. TagManager
+	//54. TagManager
 	RegisterUnityClass<TagManager>("Core");
-	//54. TextAsset
+	//55. TextAsset
 	RegisterUnityClass<TextAsset>("Core");
-	//55. Texture
+	//56. Texture
 	RegisterUnityClass<Texture>("Core");
-	//56. Texture2D
+	//57. Texture2D
 	RegisterUnityClass<Texture2D>("Core");
-	//57. Texture2DArray
+	//58. Texture2DArray
 	RegisterUnityClass<Texture2DArray>("Core");
-	//58. Texture3D
+	//59. Texture3D
 	RegisterUnityClass<Texture3D>("Core");
-	//59. TimeManager
+	//60. TimeManager
 	RegisterUnityClass<TimeManager>("Core");
-	//60. Transform
+	//61. Transform
 	RegisterUnityClass<Transform>("Core");
-	//61. TextRendering::Font
+	//62. TextRendering::Font
 	RegisterUnityClass<TextRendering::Font>("TextRendering");
-	//62. UI::Canvas
+	//63. UI::Canvas
 	RegisterUnityClass<UI::Canvas>("UI");
-	//63. UI::CanvasGroup
+	//64. UI::CanvasGroup
 	RegisterUnityClass<UI::CanvasGroup>("UI");
-	//64. UI::CanvasRenderer
+	//65. UI::CanvasRenderer
 	RegisterUnityClass<UI::CanvasRenderer>("UI");
 
 }

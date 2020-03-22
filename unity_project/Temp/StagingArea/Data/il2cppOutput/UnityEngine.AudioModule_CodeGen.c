@@ -103,7 +103,7 @@ static const int32_t s_InvokerIndices[25] =
 	792,
 	102,
 	31,
-	1538,
+	1540,
 	26,
 	26,
 	32,
@@ -119,12 +119,12 @@ static const int32_t s_InvokerIndices[25] =
 	32,
 	102,
 	136,
-	1539,
-	26,
-	1259,
-	1540,
-	1259,
 	1541,
+	26,
+	1261,
+	1542,
+	1261,
+	1543,
 };
 extern const Il2CppCodeGenModule g_UnityEngine_AudioModuleCodeGenModule;
 const Il2CppCodeGenModule g_UnityEngine_AudioModuleCodeGenModule = 

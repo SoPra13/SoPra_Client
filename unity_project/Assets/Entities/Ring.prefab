@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 5782223581499410934}
   - component: {fileID: 5782223581499410928}
   - component: {fileID: 5782223581499410935}
+  - component: {fileID: 1940941093}
+  - component: {fileID: 8967435738940813250}
   m_Layer: 5
   m_Name: Ring
   m_TagString: Untagged
@@ -73,3 +75,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &1940941093
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5782223581499410933}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fcfeab442fce6b84eb75e5fe96aab048, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!210 &8967435738940813250
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5782223581499410933}
+  m_Enabled: 1
+  m_SortingLayerID: 556376767
+  m_SortingLayer: -1
+  m_SortingOrder: 1

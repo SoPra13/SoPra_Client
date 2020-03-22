@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2893710476095619922}
   - component: {fileID: 5448542771088047054}
   - component: {fileID: 6796098641425452617}
+  - component: {fileID: 2820332118322532583}
   m_Layer: 5
   m_Name: MainBox
   m_TagString: Untagged
@@ -93,3 +94,14 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!210 &2820332118322532583
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6997231954948818164}
+  m_Enabled: 1
+  m_SortingLayerID: 556376767
+  m_SortingLayer: -1
+  m_SortingOrder: 2

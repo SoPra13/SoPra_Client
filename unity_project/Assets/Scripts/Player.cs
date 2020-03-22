@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     private long playerID;
     private int playerAvatar;
     private string playerInput;
+    private Vector3 playerPos;
 
     public Player(string name, int id, int avatar)
     {
@@ -50,6 +51,11 @@ public class Player : MonoBehaviour
         playerAvatar = avatar;
     }
 
+    public int getAvatar()
+    {
+        return playerAvatar;
+    }
+
     public void setInput(string input)
     {
         playerInput = input;
@@ -58,6 +64,16 @@ public class Player : MonoBehaviour
     public string getInput()
     {
         return playerInput;
+    }
+
+    public void setPos(Vector3 pos)
+    {
+        playerPos = pos;
+    }
+
+    public Vector3 getPos()
+    {
+        return playerPos;
     }
 
 
