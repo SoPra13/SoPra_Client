@@ -32,7 +32,7 @@ public class PlayerCounter : MonoBehaviour
     void Start()
     {
         //The following is for unity-react communication testing
-        Test(666);
+        ComTest(666);
 
 
         //for testing: These arrays need to come from react and react needs to get them from the server
@@ -71,12 +71,6 @@ public class PlayerCounter : MonoBehaviour
     public void SetPlayerTotal(int total)
     {
         playerTotal = total;
-    }
-
-    //This is for testing communication Unity --> React
-    public void Test(int score)
-    {
-        ComTest(score);
     }
 
     //Input: Array of String Playernames; Sets Names of Player Objects (Need to come from the Database)
