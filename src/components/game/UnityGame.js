@@ -58,7 +58,7 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-class UnityGame extends React.Component {
+export class UnityGame extends React.Component {
 
     constructor(props) {
         super(props);
@@ -72,6 +72,13 @@ class UnityGame extends React.Component {
             "unity_project_build/Build.json",
             "unity_project_build/UnityLoader.js"
         );
+
+        this.unityContent.on("ComTest", score =>{
+            this.setState({
+                test: true,
+                score: score
+            });
+        });
     }
 
     setPlayers(){
@@ -88,7 +95,6 @@ class UnityGame extends React.Component {
             "AddPlayer"
         )
     }
-
 
     async somethingFun() {
 
@@ -123,10 +129,10 @@ class UnityGame extends React.Component {
                             <Button
                                 width="15%"
                                 onClick={() => {
-                                    //send to unity
+                                    console.log(this.state.score)
                                 }}
                             >
-                                P3-Connect
+                                Check If Unity Talks
                             </Button>
                             <Button
                                 width="15%"
