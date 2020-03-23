@@ -80,6 +80,7 @@ export class UnityGame extends React.Component {
             console.log("Es funzt!" + score);
         });
 
+        //This listener is called on every frame by unity and needs to receive Backend Information
         this.unityContent.on("GameStarted", started =>{
             //Todo Create "Total Player" integer from Backend, update the this.state.totalPlayers and then update unity via setPlayers()
             //Todo Create "players Joined" integer from the Backend, update the this.state.playersJoined and then update Unity via addPlayers()
