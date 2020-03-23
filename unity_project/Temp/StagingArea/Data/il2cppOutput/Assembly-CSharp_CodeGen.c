@@ -72,16 +72,16 @@ extern void Player_setPos_mB1249EBE548E96D831C43E2BE077ED0815680E62 ();
 extern void Player_getPos_mFBC9730E65FFA1DCC83CD1E6518C3B065C88C66B ();
 // 0x0000001A System.Void PlayerCounter::ComTest(System.Int32)
 extern void PlayerCounter_ComTest_m40B2A6841BCA79ACBE22F469457A3832B3639104 ();
-// 0x0000001B System.Void PlayerCounter::Start()
+// 0x0000001B System.Void PlayerCounter::GameStarted()
+extern void PlayerCounter_GameStarted_m6FB599486EC3E0EA5E1C938A384C26ACEF767EEC ();
+// 0x0000001C System.Void PlayerCounter::Start()
 extern void PlayerCounter_Start_m593E1FB7CB0ABAB8EB14C4696E3058D10D12AD1C ();
-// 0x0000001C System.Void PlayerCounter::Update()
+// 0x0000001D System.Void PlayerCounter::Update()
 extern void PlayerCounter_Update_m92741F5DB829E2A6B80F476A8836629B1EFDE0A7 ();
-// 0x0000001D System.Void PlayerCounter::SetPlayerCount(System.Int32)
+// 0x0000001E System.Void PlayerCounter::SetPlayerCount(System.Int32)
 extern void PlayerCounter_SetPlayerCount_mF1BDD1B533FE341967535800C8C14E1968E69A1F ();
-// 0x0000001E System.Void PlayerCounter::SetPlayerTotal(System.Int32)
+// 0x0000001F System.Void PlayerCounter::SetPlayerTotal(System.Int32)
 extern void PlayerCounter_SetPlayerTotal_mE86769B0B610C7C9F31DAA6841E66BF7329B1CCF ();
-// 0x0000001F System.Void PlayerCounter::Test(System.Int32)
-extern void PlayerCounter_Test_m722BEB9DB0F192D035CCB2289A635456138B6FA4 ();
 // 0x00000020 System.Void PlayerCounter::UpdatePlayers(System.String[],System.Int64[],System.Int32[],System.String[],UnityEngine.Vector3[],UnityEngine.Vector3[])
 extern void PlayerCounter_UpdatePlayers_m06F072D84668A2DDC1EC7EBF27C1FC9061443BDF ();
 // 0x00000021 System.Void PlayerCounter::SetPlayerPosition(System.Int32)
@@ -244,11 +244,11 @@ static Il2CppMethodPointer s_methodPointers[98] =
 	Player_setPos_mB1249EBE548E96D831C43E2BE077ED0815680E62,
 	Player_getPos_mFBC9730E65FFA1DCC83CD1E6518C3B065C88C66B,
 	PlayerCounter_ComTest_m40B2A6841BCA79ACBE22F469457A3832B3639104,
+	PlayerCounter_GameStarted_m6FB599486EC3E0EA5E1C938A384C26ACEF767EEC,
 	PlayerCounter_Start_m593E1FB7CB0ABAB8EB14C4696E3058D10D12AD1C,
 	PlayerCounter_Update_m92741F5DB829E2A6B80F476A8836629B1EFDE0A7,
 	PlayerCounter_SetPlayerCount_mF1BDD1B533FE341967535800C8C14E1968E69A1F,
 	PlayerCounter_SetPlayerTotal_mE86769B0B610C7C9F31DAA6841E66BF7329B1CCF,
-	PlayerCounter_Test_m722BEB9DB0F192D035CCB2289A635456138B6FA4,
 	PlayerCounter_UpdatePlayers_m06F072D84668A2DDC1EC7EBF27C1FC9061443BDF,
 	PlayerCounter_SetPlayerPosition_m3540BD1B8073B02B25E812BE12048C697C31742B,
 	PlayerCounter_GetCorrectPlayerObject_m16224385A9CBF5DE713860FB8648481A91FA640B,
@@ -345,9 +345,9 @@ static const int32_t s_InvokerIndices[98] =
 	1099,
 	1098,
 	133,
+	3,
 	23,
 	23,
-	32,
 	32,
 	32,
 	892,

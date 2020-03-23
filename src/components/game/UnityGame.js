@@ -64,7 +64,10 @@ export class UnityGame extends React.Component {
         super(props);
         this.state = {
             name: null,
-            username: null
+            username: null,
+            started: false,
+            totalPlayers: 3, //has to be fetched from the backend, 3 is the default value
+            playersJoined: 0 //used to communicate with unity
         };
 
         //unityContent is our unity code accessor
@@ -74,10 +77,14 @@ export class UnityGame extends React.Component {
         );
 
         this.unityContent.on("ComTest", score =>{
-            this.setState({
-                test: true,
-                score: score
-            });
+            console.log("Es funzt!" + score);
+        });
+
+        this.unityContent.on("GameStarted", started =>{
+            //Todo Create "Total Player" integer from Backend, update the this.state.totalPlayers and then update unity via setPlayers()
+            //Todo Create "players Joined" integer from the Backend, update the this.state.playersJoined and then update Unity via addPlayers()
+
+            this.setPlayers();
         });
     }
 
@@ -85,14 +92,15 @@ export class UnityGame extends React.Component {
         this.unityContent.send(
             "PlayerTotal",
             "SetPlayerTotal",
-            7
+            this.state.totalPlayers
         )
     }
 
     addPlayer(){
         this.unityContent.send(
             "PlayerTotal",
-            "AddPlayer"
+            "SetPlayerCount",
+            4
         )
     }
 
@@ -113,10 +121,11 @@ export class UnityGame extends React.Component {
                             <Button
                                 width="15%"
                                 onClick={() => {
-                                    this.setPlayers();
+                                    this.setState({totalPlayers: this.state.totalPlayers +1});
+                                    console.log(this.state.totalPlayers)
                                 }}
                             >
-                                SetPlayers
+                                AddToTotal
                             </Button>
                             <Button
                                 width="15%"
@@ -124,7 +133,7 @@ export class UnityGame extends React.Component {
                                     this.addPlayer();
                                 }}
                             >
-                                AddaPlayer
+                                SetPlayers
                             </Button>
                             <Button
                                 width="15%"

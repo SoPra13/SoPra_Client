@@ -11,6 +11,9 @@ public class PlayerCounter : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void ComTest(int score);
 
+    [DllImport("__Internal")]
+    private static extern void GameStarted();
+
     public TextMeshProUGUI totalPlayers;
     public TextMeshProUGUI connectedPlayers;
     static public int playerCount;
@@ -31,8 +34,8 @@ public class PlayerCounter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //The following is for unity-react communication testing
-        ComTest(666);
+        //The following is for unity-react communication testing ComTest Works, leave unchanged!
+        //ComTest(666);
 
 
         //for testing: These arrays need to come from react and react needs to get them from the server
@@ -48,12 +51,14 @@ public class PlayerCounter : MonoBehaviour
         Vector3[] posMainArray = { Constants.p1PosMain, Constants.p2PosMain, Constants.p3PosMain, Constants.p4PosMain, Constants.p5PosMain, Constants.p6PosMain, Constants.p7PosMain };
         Vector3[] posOffArray = { Constants.p1PosOff, Constants.p2PosOff, Constants.p3PosOff, Constants.p4PosOff, Constants.p5PosOff, Constants.p6PosOff, Constants.p7PosOff };
         playerCount = 0;
-        UpdatePlayers(names,id,avatar,input, posMainArray, posOffArray);
+        UpdatePlayers(names, id,avatar, input, posMainArray, posOffArray);
     }
 
     // Update is called once per frame
     void Update()
     {
+        //As soon as unity Starts, Unity will tell React it has started.
+        GameStarted();
         totalPlayers.text = "/" + playerTotal.ToString();
         connectedPlayers.text = playerCount.ToString();
         if (playerTotal == playerCount)
