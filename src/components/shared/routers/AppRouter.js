@@ -5,6 +5,8 @@ import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
 import UnityGame from "../../game/UnityGame";
+import { DashboardGuard } from "../routeProtectors/DashboardGuard";
+import DashboardRouter from "./DashboardRouter";
 
 /**
  * Main router of your application.
@@ -22,11 +24,11 @@ class AppRouter extends React.Component {
         <Switch>
           <div>
             <Route
-              path="/game"
+              path="/dashboard"
               render={() => (
-                <GameGuard>
-                  <GameRouter base={"/game"} />
-                </GameGuard>
+                <DashboardGuard>
+                  <DashboardRouter base={"/dashboard"} />
+                </DashboardGuard>
               )}
             />
             <Route
@@ -45,8 +47,8 @@ class AppRouter extends React.Component {
                           <UnityGame />
                   )}
               />
-              <Route path="/" exact render={() => <Redirect to={"/game"} />} />
-            <Route path="/" exact render={() => <Redirect to={"/game"} />} />
+              <Route path="/" exact render={() => <Redirect to={"/dashboard"} />} />
+            <Route path="/" exact render={() => <Redirect to={"/dashboard"} />} />
           </div>
         </Switch>
       </BrowserRouter>

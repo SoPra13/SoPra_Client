@@ -1,6 +1,7 @@
 //Unity Component in here
 import React from 'react';
 import styled from 'styled-components';
+import User from "../shared/models/User";
 import { BaseContainer } from '../../helpers/layout';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
