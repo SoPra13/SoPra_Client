@@ -58,13 +58,16 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-class UnityGame extends React.Component {
+export class UnityGame extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             name: null,
-            username: null
+            username: null,
+            started: false,
+            totalPlayers: 3, //has to be fetched from the backend, 3 is the default value
+            playersJoined: 0 //used to communicate with unity
         };
 
         //unityContent is our unity code accessor
@@ -72,10 +75,35 @@ class UnityGame extends React.Component {
             "unity_project_build/Build.json",
             "unity_project_build/UnityLoader.js"
         );
+
+        this.unityContent.on("ComTest", score =>{
+            console.log("Es funzt!" + score);
+        });
+
+        //This listener is called on every frame by unity and needs to receive Backend Information
+        this.unityContent.on("GameStarted", started =>{
+            //Todo Create "Total Player" integer from Backend, update the this.state.totalPlayers and then update unity via setPlayers()
+            //Todo Create "players Joined" integer from the Backend, update the this.state.playersJoined and then update Unity via addPlayers()
+
+            this.setPlayers();
+        });
     }
 
+    setPlayers(){
+        this.unityContent.send(
+            "PlayerTotal",
+            "SetPlayerTotal",
+            this.state.totalPlayers
+        )
+    }
 
-
+    addPlayer(){
+        this.unityContent.send(
+            "PlayerTotal",
+            "SetPlayerCount",
+            4
+        )
+    }
 
     async somethingFun() {
 
@@ -94,26 +122,27 @@ class UnityGame extends React.Component {
                             <Button
                                 width="15%"
                                 onClick={() => {
-                                    //send to unity
+                                    this.setState({totalPlayers: this.state.totalPlayers +1});
+                                    console.log(this.state.totalPlayers)
                                 }}
                             >
-                                P1-Connect
+                                AddToTotal
                             </Button>
                             <Button
                                 width="15%"
                                 onClick={() => {
-                                    //send to unity
+                                    this.addPlayer();
                                 }}
                             >
-                                P2-Connect
+                                SetPlayers
                             </Button>
                             <Button
                                 width="15%"
                                 onClick={() => {
-                                    //send to unity
+                                    console.log(this.state.score)
                                 }}
                             >
-                                P3-Connect
+                                Check If Unity Talks
                             </Button>
                             <Button
                                 width="15%"

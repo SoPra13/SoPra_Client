@@ -1,5 +1,5 @@
 sceneSetups:
-- path: C:/Users/chris/Documents/GitHub/react-unity-webgl-test/unity_project/Assets/scenes/main.unity
+- path: Assets/Scenes/LoadingScene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
