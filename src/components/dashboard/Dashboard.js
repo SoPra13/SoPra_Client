@@ -134,11 +134,33 @@ class Dashboard extends React.Component {
         })
     }
 
-    enterLobby(id){
-        this.props.history.push({
-            pathname: '/lobby/{lobbyID}',
-            id: id
-        })
+    enterLobby(id) {
+        if (this.password == null) {
+            this.props.history.push({
+                pathname: '/lobby/{lobbyID}',
+                id: id
+            })
+        }
+        else{
+            try {
+                const requestBody = JSON.stringify({
+                    lobbyname: this.state.lobbyname,
+                    password: this.state.password
+                });
+                const response = api.post('/users', requestBody);
+
+                // Get the returned user and update a new object.
+                const user = new User(response.data);
+
+                // Store the token into the local storage.
+                localStorage.setItem('token', user.token);
+
+                // Login successfully worked --> navigate to the route /game in the GameRouter
+                this.props.history.push(`/lobby/{lobbyID}`);
+            } catch (error) {
+                alert(`Something went wrong during the login: \n${handleError(error)}`);
+            }
+        }
     }
 
     async createLobby(){
@@ -174,25 +196,13 @@ class Dashboard extends React.Component {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Get the returned users and update the state.
-            this.setState({ lobbies: response.data });
+            this.setState({ users: response.data });
 
             const resp = await api.get('/lobbies');
-            // delays continuous execution of an async operation for 1 second.
-            // This is just a fake async call, so that the spinner can be displayed
-            // feel free to remove it :)
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Get the returned users and update the state.
             this.setState({ lobbies: resp.data });
-
-            /*
-            // This is just some data for you to see what is available.
-            // Feel free to remove it.
-            console.log('request to:', response.request.responseURL);
-            console.log('status code:', response.status);
-            console.log('status text:', response.statusText);
-            console.log('requested data:', response.data);
-             */
 
             // See here to get more data.
             console.log(response);
