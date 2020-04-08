@@ -26,7 +26,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
+  background-color: #ffca65;
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -52,6 +52,7 @@ const Label = styled.label`
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin-top: 20px;
 `;
@@ -147,12 +148,21 @@ class Register extends React.Component {
                         <ButtonContainer>
                             <Button
                                 disabled={!this.state.username || !this.state.password}
-                                width="50%"
+                                width="30%"
                                 onClick={() => {
                                     this.register();
                                 }}
                             >
                                 Sign up
+                            </Button>
+
+                            <Button
+                                width="30%"
+                                onClick={() => {
+                                    this.props.history.push(`/login`);
+                                }}
+                            >
+                                Back
                             </Button>
                         </ButtonContainer>
                     </Form>
@@ -162,8 +172,4 @@ class Register extends React.Component {
     }
 }
 
-/**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
- */
 export default withRouter(Register);

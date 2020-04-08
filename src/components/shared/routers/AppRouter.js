@@ -7,14 +7,14 @@ import Login from "../../login/Login";
 import UnityGame from "../../game/UnityGame";
 import { DashboardGuard } from "../routeProtectors/DashboardGuard";
 import DashboardRouter from "./DashboardRouter";
+import EditProfile from "../../profile/EditProfile";
+import {CustomLobbyGuard} from "../routeProtectors/CustomLobbyGuard";
+import CustomLobby from "../../lobby/CustomLobby";
+import Profile from "../../profile/Profile";
+import {RegisterGuard} from "../routeProtectors/RegisterGuard";
+import Register from "../../register/Register";
 
 /**
- * Main router of your application.
- * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
- * and another Router that matches the route "/game".
- * The main difference between these two routes is the following:
- * /login renders another component without any sub-route
- * /game renders a Router that contains other sub-routes that render in turn other react components
  * Documentation about routing in React: https://reacttraining.com/react-router/web/guides/quick-start
  */
 class AppRouter extends React.Component {
@@ -23,6 +23,7 @@ class AppRouter extends React.Component {
       <BrowserRouter>
         <Switch>
           <div>
+
             <Route
               path="/dashboard"
               render={() => (
@@ -31,6 +32,7 @@ class AppRouter extends React.Component {
                 </DashboardGuard>
               )}
             />
+
             <Route
               path="/login"
               exact
@@ -40,6 +42,43 @@ class AppRouter extends React.Component {
                 </LoginGuard>
               )}
             />
+
+              <Route
+                  path="/dashboard/profile?{username}/editprofile"
+                  exact
+                  render={() => (
+                      <EditProfile/>
+                  )}
+              />
+
+              <Route
+                  path="/register"
+                  exact
+                  render={() => (
+                      <RegisterGuard>
+                          <Register />
+                      </RegisterGuard>
+                  )}
+              />
+
+              <Route
+                  path="/dashboard/customLobby"
+                  exact
+                  render={() => (
+                      <CustomLobbyGuard>
+                          <CustomLobby/>
+                      </CustomLobbyGuard>
+                  )}
+              />
+
+              <Route
+                  path="/dashboard/profile"
+                  exact
+                  render={() => (
+                      <Profile/>
+                  )}
+              />
+
               <Route
                   path="/unityTesting"
                   exact
@@ -48,14 +87,12 @@ class AppRouter extends React.Component {
                   )}
               />
               <Route path="/" exact render={() => <Redirect to={"/dashboard"} />} />
-            <Route path="/" exact render={() => <Redirect to={"/dashboard"} />} />
           </div>
         </Switch>
       </BrowserRouter>
     );
   }
 }
-/*
-* Don't forget to export your component!
- */
+
+
 export default AppRouter;

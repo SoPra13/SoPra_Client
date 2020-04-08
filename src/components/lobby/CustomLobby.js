@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
+import Lobby from "../shared/models/Lobby";
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 
@@ -65,7 +65,7 @@ const ButtonContainer = styled.div`
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
-class customLobby extends React.Component {
+class CustomLobby extends React.Component {
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
      * The constructor for a React component is called before it is mounted (rendered).
@@ -85,29 +85,25 @@ class customLobby extends React.Component {
      * invitePlayer()
      * ready() => if all players, but the bots,  are ready, it starts automatically the game
      */
-    async enterLobby() {
+    async create() {
         try {
             const requestBody = JSON.stringify({
                 lobbyname: this.state.lobbyname,
                 password: this.state.password
             });
-            const response = await api.post('/users', requestBody);
+            const response = await api.post('/lobby', requestBody);
 
             // Get the returned user and update a new object.
-            const user = new User(response.data);
+            const lobby = new Lobby(response.data);
 
             // Store the token into the local storage.
-            localStorage.setItem('token', user.token);
+            localStorage.setItem('token', lobby.lobbyToken);
 
-            // Login successfully worked --> navigate to the route /game in the GameRouter
-            this.props.history.push(`/game`);
+
+            this.props.history.push(`/dashboard`);
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
-    }
-
-    unityTesting(){
-        this.props.history.push(`/unityTesting`);
     }
 
     /**
@@ -135,14 +131,14 @@ class customLobby extends React.Component {
             <BaseContainer>
                 <FormContainer>
                     <Form>
-                        <Label>Username</Label>
+                        <Label>Lobby name</Label>
                         <InputField
                             placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange('username', e.target.value);
                             }}
                         />
-                        <Label>Name</Label>
+                        <Label>Password</Label>
                         <InputField
                             placeholder="Enter here.."
                             onChange={e => {
@@ -151,21 +147,13 @@ class customLobby extends React.Component {
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name}
-                                width="50%"
+                                disabled={!this.state.username}
+                                width="30%"
                                 onClick={() => {
-                                    this.login();
+                                    this.create();
                                 }}
                             >
-                                Login
-                            </Button>
-                            <Button
-                                width="50%"
-                                onClick={() => {
-                                    this.unityTesting();
-                                }}
-                            >
-                                Unity Testing
+                                Create
                             </Button>
                         </ButtonContainer>
                     </Form>
@@ -179,4 +167,4 @@ class customLobby extends React.Component {
  * You can get access to the history object's properties via the withRouter.
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
-export default withRouter(Login);
+export default withRouter(CustomLobby);

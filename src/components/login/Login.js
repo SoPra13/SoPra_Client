@@ -26,7 +26,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
+  background-color: #ffca65;
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -52,6 +52,7 @@ const Label = styled.label`
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin-top: 20px;
 `;
@@ -75,8 +76,8 @@ class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: null,
-      username: null
+      username: null,
+      password: null
     };
   }
   /**
@@ -96,10 +97,9 @@ class Login extends React.Component {
       const user = new User(response.data);
 
       // Store the token into the local storage.
-      localStorage.setItem('token', user.token);
+      localStorage.setItem('token', user.userToken);
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      this.props.history.push(`/game`);
+      this.props.history.push(`/dashboard`);
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
@@ -136,36 +136,48 @@ class Login extends React.Component {
           <Form>
             <Label>Username</Label>
             <InputField
-              placeholder="Enter here.."
+              placeholder="Enter here your username"
               onChange={e => {
                 this.handleInputChange('username', e.target.value);
               }}
             />
-            <Label>Name</Label>
+            <Label>Password</Label>
             <InputField
-              placeholder="Enter here.."
+              placeholder="Enter here your password"
               onChange={e => {
-                this.handleInputChange('name', e.target.value);
+                this.handleInputChange('password', e.target.value);
               }}
             />
             <ButtonContainer>
+
               <Button
-                disabled={!this.state.username || !this.state.name}
-                width="50%"
+                disabled={!this.state.username || !this.state.password}
+                width="30%"
                 onClick={() => {
                   this.login();
                 }}
               >
                 Login
               </Button>
+
               <Button
-                  width="50%"
+                  width="30%"
+                  onClick={() => {
+                    this.props.history.push('/register');
+                  }}
+              >
+                Sign Up
+              </Button>
+
+              <Button
+                  width="20%"
                   onClick={() => {
                     this.unityTesting();
                   }}
               >
                 Unity Testing
               </Button>
+
             </ButtonContainer>
           </Form>
         </FormContainer>

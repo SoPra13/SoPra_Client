@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { Redirect, Route } from "react-router-dom";
 import Dashboard from "../../dashboard/Dashboard";
-import Game from "../../game/Game";
 
 const Container = styled.div`
   display: flex;
@@ -31,7 +30,5 @@ class DashboardRouter extends React.Component {
         );
     }
 }
-/*
-* Don't forget to export your component!
- */
+
 export default DashboardRouter;

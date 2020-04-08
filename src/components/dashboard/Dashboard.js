@@ -10,6 +10,7 @@ import 'react-tabs/style/react-tabs.css';
 import Lobby from "../shared/models/Lobby";
 import { Spinner} from "../../views/design/Spinner";
 import Player from "../../views/Player";
+import Room from "../../views/Room";
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -90,6 +91,79 @@ const Lobbies = styled.ul`
   padding-left: 0;
 `;
 
+const central = styled.div`
+  text-align: center;
+`;
+
+const centralFlexbox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+
+const LoginForm = styled.div`
+  width: 40%;
+  height: 300px;
+  font-size: 16px;
+  font-weight: 300;
+  padding-left: 37px;
+  padding-right: 37px;
+  border-radius: 5px;
+  background-color: #ffca65;
+  text-align: center;
+`;
+
+const titleh2 = styled.h2`
+text-align: center;
+`;
+
+const List1 = styled.ul`
+  list-style-type: none;
+  text-align: center;
+  margin-bottom: 40px;
+  `;
+
+const UsersContainer = styled.div`
+  margin-top: 50px;
+  height: 150px;
+  overflow: auto;
+`;
+
+const LobbiesContainer = styled.div`
+  margin-top: 50px;
+  margin-bottom: 50px;
+  height: 150px;
+  overflow: auto;
+`;
+
+const PlayerButton = styled.li`
+width: 300px;
+color: #fff;
+background-color: #0e3d61;
+border: 2px solid;
+border-color: #c5c5c5;
+border-radius: 20px;
+height: 50px;
+line-height: 38px;
+padding: 5px 20px;
+margin-bottom: 10px;
+text-align: center;
+box-sizing: border-box;
+`;
+
+const LobbyButton = styled.li`
+color: #5a5a5a;
+background-color: #ffa700;
+border: 2px solid;
+border-color: #5a5a5a;
+border-radius: 5px;
+height: 50px;
+line-height: 38px;
+padding: 5px 20px;
+margin-bottom: 10px;
+text-align: center;
+box-sizing: border-box;
+`;
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -111,8 +185,10 @@ class Dashboard extends React.Component {
         super();
         this.state = {
             users: null,
-            id: null,
-            lobbies: null
+            user: null,
+            userId: null,
+            lobbyname: null,
+            lobbiesId: null
         };
     }
 
@@ -120,17 +196,19 @@ class Dashboard extends React.Component {
         try {
             const response = await api.put("/logout/" + localStorage.getItem("token"));
 
+            console.log(response);
         } catch (error) {
             alert(`Something went wrong while logging out: \n${handleError(error)}`);
         }
         localStorage.removeItem('token');
         this.props.history.push('/login');
+
     }
 
     showProfile(id){
         this.props.history.push({
             pathname: '/users/{userID}',
-            id: id
+            userId: id
         })
     }
 
@@ -138,7 +216,7 @@ class Dashboard extends React.Component {
         if (this.password == null) {
             this.props.history.push({
                 pathname: '/lobby/{lobbyID}',
-                id: id
+                lobbiesId: id
             })
         }
         else{
@@ -147,7 +225,7 @@ class Dashboard extends React.Component {
                     lobbyname: this.state.lobbyname,
                     password: this.state.password
                 });
-                const response = api.post('/users', requestBody);
+                const response = api.post('/lobbies', requestBody);
 
                 // Get the returned user and update a new object.
                 const user = new User(response.data);
@@ -155,8 +233,10 @@ class Dashboard extends React.Component {
                 // Store the token into the local storage.
                 localStorage.setItem('token', user.token);
 
-                // Login successfully worked --> navigate to the route /game in the GameRouter
+
                 this.props.history.push(`/lobby/{lobbyID}`);
+
+                console.log(response);
             } catch (error) {
                 alert(`Something went wrong during the login: \n${handleError(error)}`);
             }
@@ -170,6 +250,8 @@ class Dashboard extends React.Component {
                 password: this.state.password
             });
             const response = await api.post('/lobbies', requestBody);
+
+            this.props.history.push(`/lobby/{lobbyID}`);
 
         } catch (error) {
             alert(`Something went wrong during the registration: \n${handleError(error)}`);
@@ -189,10 +271,15 @@ class Dashboard extends React.Component {
 
     async componentDidMount() {
         try {
+
+            /**
+             * Either I request a single user by token or I try to extract a duplicate state from all users
+             */
+
+            const respo = await api.get(`/users`, localStorage.getItem('token'))
+            this.setState({user: respo.data});
+
             const response = await api.get('/users');
-            // delays continuous execution of an async operation for 1 second.
-            // This is just a fake async call, so that the spinner can be displayed
-            // feel free to remove it :)
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Get the returned users and update the state.
@@ -211,17 +298,10 @@ class Dashboard extends React.Component {
         }
     }
 
-    /**
-     * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
-     * Initialization that requires DOM nodes should go here.
-     * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-     * You may call setState() immediately in componentDidMount().
-     * It will trigger an extra rendering, but it will happen before the browser updates the screen.
-     */
-    componentDidMount() {}
 
     render() {
         return (
+
 
 
             <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
@@ -232,7 +312,10 @@ class Dashboard extends React.Component {
                     <Tab>Invitations</Tab>
 
                     <Button
-                        width="100%"
+                        position = "absolute"
+                        top = "50px"
+                        right = "30px"
+                        width="40px"
                         onClick={() => {
                             this.logout();
                         }}
@@ -244,17 +327,16 @@ class Dashboard extends React.Component {
                 <TabPanel>
                     <Container>
                     <h2> My profile details </h2>
-                    {!this.state.users ? (
+                    {!this.state.user ? (
                         <Spinner />
                     ) : (
                         <div>
                             <Users>
-                                {this.state.users.map(user => {
+                                {this.state.user.map(user => {
                                     return (
                                         <PlayerContainer
                                             key={user.id}
                                             onClick={() => {
-                                                console.log(user.id)
                                                 this.showProfile(user.id);
                                             }}>
                                             <Player user={user}/>
@@ -266,6 +348,7 @@ class Dashboard extends React.Component {
                     )}
                 </Container>
                 </TabPanel>
+
                 <TabPanel>
                     <Container>
                         <h2>Registered Users </h2>
@@ -291,8 +374,12 @@ class Dashboard extends React.Component {
                         )}
                     </Container>
                 </TabPanel>
-                <TabPanel>                    <Container>
-                    <h2>All active lobbies </h2>
+
+
+
+                <TabPanel>
+                    <Container>
+                    <h2>All active lobbies</h2>
                     {!this.state.lobbies ? (
                         <Spinner />
                     ) : (
@@ -300,14 +387,14 @@ class Dashboard extends React.Component {
                             <Lobbies>
                                 {this.state.lobbies.map(lobby => {
                                     return (
-                                        <PlayerContainer
+                                        <LobbyContainer
                                             key={lobby.id}
                                             onClick={() => {
                                                 console.log(lobby.id)
                                                 this.enterLobby(lobby.id);
                                             }}>
                                             <Player lobby={lobby}/>
-                                        </PlayerContainer>
+                                        </LobbyContainer>
                                     );
                                 })}
                             </Lobbies>
@@ -316,7 +403,7 @@ class Dashboard extends React.Component {
 
                     <ButtonContainer>
                         <Button
-                            width="30%"
+                            width="50px"
                             onClick={() => {this.createLobby();}}
                         >
                             Back
@@ -330,8 +417,4 @@ class Dashboard extends React.Component {
     }
 }
 
-/**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
- */
 export default withRouter(Dashboard);
