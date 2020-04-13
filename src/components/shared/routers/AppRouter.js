@@ -13,6 +13,7 @@ import CustomLobby from "../../lobby/CustomLobby";
 import Profile from "../../profile/Profile";
 import {RegisterGuard} from "../routeProtectors/RegisterGuard";
 import Register from "../../register/Register";
+import WaitingLobby from "../../lobby/WaitingLobby";
 
 /**
  * Documentation about routing in React: https://reacttraining.com/react-router/web/guides/quick-start
@@ -44,10 +45,18 @@ class AppRouter extends React.Component {
             />
 
               <Route
-                  path="/dashboard/profile?{username}/editprofile"
+                  path="/dashboard/profile/editprofile"
                   exact
                   render={() => (
                       <EditProfile/>
+                  )}
+              />
+
+              <Route
+                  path="/dashboard/lobby/waitingLobby"
+                  exact
+                  render={() => (
+                      <WaitingLobby/>
                   )}
               />
 

@@ -207,7 +207,7 @@ class Dashboard extends React.Component {
 
     showProfile(id){
         this.props.history.push({
-            pathname: '/users/{userID}',
+            pathname: `/dashboard/profile/editprofile`,
             userId: id
         })
     }
@@ -276,23 +276,28 @@ class Dashboard extends React.Component {
              * Either I request a single user by token or I try to extract a duplicate state from all users
              */
 
-            const respo = await api.get(`/users`, localStorage.getItem('token'))
+            const respo = await api.get(`/user/` + `?token` + localStorage.getItem('token'))
             this.setState({user: respo.data});
+
+            console.log(respo);
 
             const response = await api.get('/users');
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Get the returned users and update the state.
             this.setState({ users: response.data });
+            console.log(response);
+
 
             const resp = await api.get('/lobbies');
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Get the returned users and update the state.
+
             this.setState({ lobbies: resp.data });
+            console.log(resp);
 
             // See here to get more data.
-            console.log(response);
+
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }

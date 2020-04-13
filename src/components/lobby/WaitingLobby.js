@@ -6,6 +6,7 @@ import Player from '../../views/Player';
 import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
+import Lobby from "../shared/models/Lobby";
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -25,50 +26,32 @@ const PlayerContainer = styled.li`
 `;
 
 class WaitingRoom extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            user1: null,
-            id1: null,
-            user2: null,
-            id2: null,
-            user3: null,
-            id3: null,
-            user4: null,
-            id4: null,
-            user5: null,
-            id5: null,
-            user6: null,
-            id6: null,
-            user7: null,
-            id7: null
+            playerList: null,
+            botList: null,
+            lobbyToken: null
         };
     }
 
-    showProfile(id){
-        this.props.history.push({
-            pathname: '/dashboard/profile?{username}',
-            id: id
-        })
+    leaveLobby(){
+        const response = api.delete(`/lobby` + `?lobbyToken={lobbyToken}` + localStorage.getItem('token')
+        + `?userToken={userToken}` +  localStorage.getItem('token'))
     }
 
-    async componentDidMount() {
+    getLobbyToken(){
+        return this.lobbyToken;
+    }
+
+    async getLobby(){
         try {
-            const response = await api.get('/users');
-            // delays continuous execution of an async operation for 1 second.
-            // This is just a fake async call, so that the spinner can be displayed
-            // feel free to remove it :)
+            const response = await api.get(`/lobby`+`?token={token}`+ localStorage.getItem('token'));
+
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Get the returned users and update the state.
             this.setState({ users: response.data });
-
-            // This is just some data for you to see what is available.
-            // Feel free to remove it.
-            console.log('request to:', response.request.responseURL);
-            console.log('status code:', response.status);
-            console.log('status text:', response.statusText);
-            console.log('requested data:', response.data);
 
             // See here to get more data.
             console.log(response);
@@ -77,22 +60,64 @@ class WaitingRoom extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.getLobby(),
+            1000
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID)
+    }
+
     render() {
         return (
+            <BaseContainer>
             <Container>
                 <h2>Players </h2>
                 <div>
+                    {!this.state.playerList ? (
+                        <Spinner />
+                    ) : (
+                        <div>
+                            <Users>
+                                {this.state.playerList.map(user => {
+                                    return (
+                                        <PlayerContainer
+                                            key={user.id}
+                                            onClick={() => {
+                                                console.log(user.id)
+                                                /*nothing happens but a console log*/
+                                            }}>
+                                            <Player user={user}/>
+                                        </PlayerContainer>
+                                    );
+                                })}
+                            </Users>
+                        </div>
+                    )}
                         <Button
-                            width="100%"
+                            width="30%"
                             onClick={() => {
                                 this.leaveLobby();
                             }}
                         >
                             Leave
                         </Button>
+
+                    <Button
+                        width="30%"
+                        onClick={() => {
+                            this.getLobbyToken();
+                        }}
+                    >
+                        Leave
+                    </Button>
                     </div>
                 )}
             </Container>
+            </BaseContainer>
         );
     }
 }

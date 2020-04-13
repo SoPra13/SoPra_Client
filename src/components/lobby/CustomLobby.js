@@ -15,6 +15,12 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
+const active = styled.div`
+.active, .btn:hover {
+  background-color: #666;
+  color: white;
+ `;
+
 const Form = styled.div`
   display: flex;
   flex-direction: column;
@@ -66,17 +72,13 @@ const ButtonContainer = styled.div`
  * @Class
  */
 class CustomLobby extends React.Component {
-    /**
-     * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
-     * The constructor for a React component is called before it is mounted (rendered).
-     * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
-     * These fields are then handled in the onChange() methods in the resp. InputFields
-     */
+
     constructor() {
         super();
         this.state = {
             lobbyname: null,
-            password: null
+            password: null,
+            lobbyType: null
         };
     }
     /**
@@ -89,7 +91,9 @@ class CustomLobby extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 lobbyname: this.state.lobbyname,
-                password: this.state.password
+                password: this.state.password,
+                adminToken: this.state.adminToken,
+                lobbyType: this.state.lobbyType
             });
             const response = await api.post('/lobby', requestBody);
 
@@ -124,7 +128,9 @@ class CustomLobby extends React.Component {
      * You may call setState() immediately in componentDidMount().
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
-    componentDidMount() {}
+    componentDidMount() {
+        this.state.lobbyState = PUBLIC;
+    }
 
     render() {
         return (
@@ -135,19 +141,46 @@ class CustomLobby extends React.Component {
                         <InputField
                             placeholder="Enter here.."
                             onChange={e => {
-                                this.handleInputChange('username', e.target.value);
+                                this.handleInputChange('lobbyname', e.target.value);
                             }}
                         />
                         <Label>Password</Label>
                         <InputField
                             placeholder="Enter here.."
                             onChange={e => {
-                                this.handleInputChange('name', e.target.value);
+                                this.handleInputChange('password', e.target.value);
                             }}
                         />
+
+                        <ButtonContainer>
+                            <active>
+                            <Button
+                                width="30%"
+                                onClick={() => {
+                                    this.setState({
+                                        lobbyType: "PUBLIC"
+                                });
+                                }}
+                            >
+                                Create
+                            </Button>
+                            </active>
+
+                            <Button
+                                width="30%"
+                                onClick={() => {
+                                    this.setState({
+                                        lobbyType: "PRIVATE"
+                                });
+                                }}
+                            >
+                                Create
+                            </Button>
+                        </ButtonContainer>
+
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username}
+                                disabled={!this.state.lobbyname}
                                 width="30%"
                                 onClick={() => {
                                     this.create();
