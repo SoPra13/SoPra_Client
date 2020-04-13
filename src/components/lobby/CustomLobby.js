@@ -129,7 +129,7 @@ class CustomLobby extends React.Component {
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
     componentDidMount() {
-        this.state.lobbyState = PUBLIC;
+        this.state.lobbyState = "PUBLIC";
     }
 
     render() {

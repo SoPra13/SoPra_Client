@@ -6,6 +6,7 @@ import Player from '../../views/Player';
 import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
+import GameState from "../shared/models/GameState";
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -28,7 +29,8 @@ class Game extends React.Component {
   constructor() {
     super();
     this.state = {
-      users: null
+      users: null,
+      lobby: null
     };
   }
 
