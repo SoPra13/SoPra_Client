@@ -28,6 +28,8 @@ public class GameBoard : MonoBehaviour
     public AudioSource spinBubble;
     public AudioSource lockSound;
     public AudioSource notification;
+    public AudioSource buttonSFX;
+    public AudioSource gameMusic;
 
     public Rounds round;
 
@@ -56,7 +58,9 @@ public class GameBoard : MonoBehaviour
 
     void Start()
     {
+        gameMusic.volume = 0.25f;
         SetUpInitialBoard();
+        StartCoroutine(FadeInScreen());
         StartCoroutine(GameStarts());
     }
 
@@ -68,6 +72,7 @@ public class GameBoard : MonoBehaviour
         avatars = GameObject.Find("Canvas").GetComponent<Avatars>();
         nameClass = GameObject.Find("Canvas").GetComponent<UserNames>();
         playerHandler = GameObject.FindWithTag("PlayerTotal").GetComponent<PlayerManagement>();
+        playerHandler.UpdatePlayers();
 
         for (int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
         {
@@ -239,6 +244,11 @@ public class GameBoard : MonoBehaviour
     }
 
 
+    public void PlayButtonSFX()
+    {
+        buttonSFX.Play();
+    }
+
     IEnumerator GameStarts()
     {
         yield return new WaitForSeconds(4f);
@@ -397,6 +407,14 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(3.7f);
         StartCoroutine(DisplayInfoText("As you are the active player, you need to wait for the others to choose a Topic for this round!",true));
         yield return new WaitForSeconds(0.1f);
+    }
+
+
+    IEnumerator FadeInScreen()
+    {    
+        yield return new WaitForSeconds(1f);
+        GameObject.Find("FaderLeft").SetActive(false);
+        GameObject.Find("FaderRight").SetActive(false);
     }
 
 

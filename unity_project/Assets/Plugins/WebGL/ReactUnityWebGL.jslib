@@ -7,5 +7,11 @@
     },
     FetchPlayerInfo: function() {
       ReactUnityWebGL.FetchPlayerInfo();
+    },
+    SendTopicInput: function(topic) {
+      ReactUnityWebGL.SendTopicInput(topic);
+    },
+    AskForTopicsList: function() {
+      ReactUnityWebGL.AskForTopicsList();
     }
 });

@@ -1,10 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;
 using TMPro;
+using System;
 
 public class Rounds : MonoBehaviour
 {
+    [DllImport("__Internal")]
+    private static extern void AskForTopicsList();
+
+
+
     public GameBoard gameBoard;
     public Positions positions;
     public MockStats mockStats;
@@ -13,10 +20,11 @@ public class Rounds : MonoBehaviour
     //public AudioSource clockTick;
     //public AudioSource timeOver;
 
-    private int round = 0; //keeps track of the round number, starts with 1, ends after 13
+    private int round = 0; //keeps track of the round number, starts with 0, ends after 12
     private int roundPhase;
     private int[] topics;
     private bool roundPhase3Wakes = true;
+    private bool topicCall = false;
 
 
     void Start()
@@ -56,7 +64,7 @@ public class Rounds : MonoBehaviour
 
         if(roundPhase == 4)//Topic Card appears
         {
-            StartCoroutine(Round1PickTopic());
+            StartCoroutine(RoundPhase4DrawCard());
             roundPhase = 5;
         }
 
@@ -73,9 +81,15 @@ public class Rounds : MonoBehaviour
 
         if (roundPhase == 7)// Non-Active Players have 30 seconds to pick a Topic
         {
-            mockStats.GetTopicInput(); //calls Topics Array from React
+            mockStats.GetTopicInput();
 
-            for (int i = 1; i <= 5; i++)
+            if (!topicCall)
+            {
+                StartCoroutine(CallsForTopicList());
+                topicCall = true;
+            }
+
+            for (int i = 1 ; i <= 5; i++)
             {
                 GameObject.Find("TopicVoteNumber" + i.ToString()).GetComponent<TextMeshProUGUI>().text = topics[i - 1].ToString();
             }
@@ -90,6 +104,7 @@ public class Rounds : MonoBehaviour
             //Check for draws
             if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1))
             {
+                mockStats.UnlockInputForTopics();
                 StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
                 timer.DeactivateTimer();
                 gameBoard.ForceRemoveInfoBox();
@@ -143,7 +158,7 @@ public class Rounds : MonoBehaviour
     }
 
 
-    IEnumerator Round1PickTopic()
+    IEnumerator RoundPhase4DrawCard()
     {
         yield return new WaitForSeconds(0.1f);
 
@@ -166,5 +181,28 @@ public class Rounds : MonoBehaviour
         tmproInfoText.text = "The Cards have been dealt! Round 1 will start with " + mockStats.GetName(mockStats.GetActivePlayer()) + " as <color=#001AF6>active player</color>!";
         infoTextAnimator.SetBool("wake", true);*/
         yield return new WaitForSeconds(2f);
+    }
+
+
+    IEnumerator CallsForTopicList()
+    {
+        try { CallsForTopicList(); }//This will tell React to get the Topic Array from the Backend and send it to unity
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity has asked for TopicList did not succeeded " + e);
+        }
+        yield return new WaitForSeconds(1f);
+        topicCall = false;
+    }
+
+
+    //React will call this Function to pass the current Topic Array to Unity
+    //Attention, no NULL values, use 0 as empty value
+    public void ReactSetTopicArray(string topicArray)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            topics[i] = (int)Char.GetNumericValue(topicArray[i]);
+        }
     }
 }

@@ -11,6 +11,9 @@ public class MockStats : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void FetchPlayerInfo();
 
+    [DllImport("__Internal")]
+    private static extern void SendTopicInput(int topic);
+
 
     private Rounds rounds;
     private int playerPosition;
@@ -18,6 +21,7 @@ public class MockStats : MonoBehaviour
     private int activePlayer;
     private int connectedPlayers;
     private int[] topicChoices; //the topicnumber which this user choose [1,5]
+    private bool inputLocked = false;
 
     private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
     private int[] avatar = { 1, 2, 3, 4, 5, 6, 7 };
@@ -97,9 +101,23 @@ public class MockStats : MonoBehaviour
     //Then, React will ask for the topic info array for all players from the backend and sends this array back to unity mockStats
     //where the topicChoices[] will be updated
     //The Input which I need here from React is int[5], where Field 0 = Amount of Votes for Topic 1; Field 1 = Amount of Votes for Topic 2; etc
-    public void SetPlayerTopicInput(int i) //THIS IS A SEND TO REACT METHOD
+    public void SetPlayerTopicInput(int i) //i is either 0,1,2,3 or 4
     {
-        topicChoices[i]++; //JUST FOR TESTING
+        if (inputLocked)
+        {
+
+        }
+        else
+        {
+            
+            try { SendTopicInput(i); }//This will send this players Choice to React so that React can send it to Backend. React will then update Unity with the topic array
+            catch (EntryPointNotFoundException e)
+            {
+                Debug.Log("Unity could not send any Topic Output to React" + e);
+            }
+            topicChoices[i]++; //JUST FOR TESTING
+            inputLocked = true;
+        }
     }
 
 
@@ -130,6 +148,17 @@ public class MockStats : MonoBehaviour
     }
 
 
+    public void UnlockInputForTopics()
+    {
+        inputLocked = false;
+    }
+
+    public bool GetLockInputTopicState()
+    {
+        return inputLocked;
+    }
+
+
     //This is called by react after player has connected
     public void ReactSetPlayerStats(string playerStats)
     {
@@ -141,7 +170,7 @@ public class MockStats : MonoBehaviour
         try { FetchPlayerInfo(); }//This is triggered after React Set the above values (every second) and will set PlayerNames and PlayerAvatars
         catch (EntryPointNotFoundException e)
         {
-            Debug.Log("Could not Fetch any Info");
+            Debug.Log("Could not Fetch any Info " + e);
         }
     }
 
@@ -167,6 +196,22 @@ public class MockStats : MonoBehaviour
         for (int i = 0; i < playerTotal; i++)
         {
             avatar[i] = (int)Char.GetNumericValue(playerAvatars[i]);
+        }
+    }
+
+    //This is called by react after ReactSetPlayerStats has been called
+    //Only needs to be called once
+    //topicString is separated with ; delimiter
+    //Example Rainbow;Lake;River;
+    //TopicString needs to contain 65 topics, thus has 64 delimiters ";"
+    public void ReactSetTopicArray(string topicString)
+    {
+        char[] separator = { ';' };
+        string[] topicList = topicString.Split(separator, StringSplitOptions.None);
+
+        for (int i = 0; i < 65; i++)
+        {
+            topicArray[i] = topicList[i];
         }
     }
 }
