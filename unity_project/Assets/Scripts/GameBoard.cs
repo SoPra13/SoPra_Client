@@ -19,6 +19,7 @@ public class GameBoard : MonoBehaviour
     public GameObject dust;
     public GameObject infoBar;
     public GameObject infoBarText;
+    public GameObject topicBarObject;
 
     public Positions positions;
 
@@ -30,6 +31,8 @@ public class GameBoard : MonoBehaviour
     public AudioSource notification;
     public AudioSource buttonSFX;
     public AudioSource gameMusic;
+    public AudioSource barCheckSFX;
+    public AudioSource barAppearsSFX;
 
     public Rounds round;
 
@@ -248,6 +251,26 @@ public class GameBoard : MonoBehaviour
     {
         buttonSFX.Play();
     }
+
+    public IEnumerator ShowThisRoundsTopic()
+    {
+        GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
+        blackScreen.name = "BlackScreen";
+        blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        yield return new WaitForSeconds(1.0f);
+        GameObject topicBar = Instantiate(topicBarObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        topicBar.name = "TopicBar";
+        topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        barAppearsSFX.Play();
+        GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = mockStats.GetCurrentTopic();
+        yield return new WaitForSeconds(1.0f);
+        barCheckSFX.Play();
+        yield return new WaitForSeconds(3.2f);
+        round.SetRoundPhase(13);
+        Destroy(GameObject.Find("TopicBar"));
+        Destroy(GameObject.Find("BlackScreen"));
+    }
+
 
     IEnumerator GameStarts()
     {

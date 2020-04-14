@@ -103,6 +103,15 @@ export class UnityGame extends React.Component {
             this.setTopics();
             console.log("FetchingPlayerInfos");
         });
+
+        //In here, React has to call the backend to get the topic from the topic array for this round
+        //the back end has to handle the edge cases of
+        //1. there are ties among the votes (ex. topic 1 has 2 votes and topic 2 has 2 votes)
+        //2. No votes have been given (all have 0 votes but time is up)
+        this.unityContent.on("TopicsHaveBeenChosen", () =>{
+            this.sendRoundsTopic();
+            console.log("The Topics for this Round have been chosen");
+        });
     }
 
     setPlayers(){
@@ -113,6 +122,7 @@ export class UnityGame extends React.Component {
         )
     }
 
+
     addPlayer(){
         this.unityContent.send(
             "PlayerTotal",
@@ -122,7 +132,7 @@ export class UnityGame extends React.Component {
     }
 
     setPlayerStats(){ //activePlayer;playerTotal;playerPosition;connectPlayers
-        let infoString = "1423";
+        let infoString = "1726";
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerStats",
@@ -170,6 +180,17 @@ export class UnityGame extends React.Component {
             "Rounds",
             "ReactSetTopicArray",
             topicListString //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
+
+    //React will send the chosen topic for this round back to unity
+    sendRoundsTopic(){
+        console.log("sending back the topic to unity");
+        let topic = "Database";
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetThisRoundsTopic",
+            topic //Todo This are just dummy values, these values need to come from Backend Gameobject
         )
     }
 

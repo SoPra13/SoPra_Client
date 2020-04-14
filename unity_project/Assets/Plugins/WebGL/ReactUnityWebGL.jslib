@@ -13,5 +13,8 @@
     },
     AskForTopicsList: function() {
       ReactUnityWebGL.AskForTopicsList();
-    }
+    },
+    TopicsHaveBeenChosen: function() {
+          ReactUnityWebGL.TopicsHaveBeenChosen();
+        },
 });

@@ -22,6 +22,7 @@ public class MockStats : MonoBehaviour
     private int connectedPlayers;
     private int[] topicChoices; //the topicnumber which this user choose [1,5]
     private bool inputLocked = false;
+    private string currentTopic;
 
     private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
     private int[] avatar = { 1, 2, 3, 4, 5, 6, 7 };
@@ -159,6 +160,12 @@ public class MockStats : MonoBehaviour
     }
 
 
+    public string GetCurrentTopic()
+    {
+        return currentTopic;
+    }
+
+
     //This is called by react after player has connected
     public void ReactSetPlayerStats(string playerStats)
     {
@@ -213,5 +220,12 @@ public class MockStats : MonoBehaviour
         {
             topicArray[i] = topicList[i];
         }
+    }
+
+    //React will send the Topic of this round via this function
+    public void ReactSetThisRoundsTopic(string thisRoundsTopic)
+    {
+        currentTopic = thisRoundsTopic;
+        rounds.SetRoundPhase(11);
     }
 }
