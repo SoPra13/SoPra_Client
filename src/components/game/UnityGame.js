@@ -132,7 +132,7 @@ export class UnityGame extends React.Component {
     }
 
     setPlayerStats(){ //activePlayer;playerTotal;playerPosition;connectPlayers
-        let infoString = "1727";
+        let infoString = "1726";
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerStats",
