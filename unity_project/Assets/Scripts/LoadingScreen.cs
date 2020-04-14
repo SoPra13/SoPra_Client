@@ -184,7 +184,7 @@ public class LoadingScreen : MonoBehaviour
         try { PlayerHasConnected(); }//As soon as unity Starts, Unity will tell React that this player heas connected
         catch (EntryPointNotFoundException e)
         {
-            Debug.Log("PlayerHasConnected did not work");
+            Debug.Log("PlayerHasConnected did not work" + e);
         }
         yield return new WaitForSeconds(1f);
         reactCall = false;

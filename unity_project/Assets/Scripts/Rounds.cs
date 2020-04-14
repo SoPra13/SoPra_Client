@@ -7,8 +7,11 @@ using System;
 
 public class Rounds : MonoBehaviour
 {
-    [DllImport("__Internal")]
+    [DllImport("__Internal")]//brauch ich aktuell nicht
     private static extern void AskForTopicsList();
+
+    [DllImport("__Internal")]
+    private static extern void TopicsHaveBeenChosen();
 
 
 
@@ -25,6 +28,7 @@ public class Rounds : MonoBehaviour
     private int[] topics;
     private bool roundPhase3Wakes = true;
     private bool topicCall = false;
+    private bool lastCall = false;
 
 
     void Start()
@@ -102,19 +106,64 @@ public class Rounds : MonoBehaviour
             }
             //Everyone has set their vote
             //Check for draws
-            if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1))
+            if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
             {
-                mockStats.UnlockInputForTopics();
+                mockStats.UnlockInputForTopics(); //in order that players can enter their choice in the next round again
                 StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
                 timer.DeactivateTimer();
                 gameBoard.ForceRemoveInfoBox();
+                topicCall = false;
                 roundPhase = 8;
             }
         }
 
-        if (roundPhase == 8)//Evaluate Topic Choice Results
+        if (roundPhase == 8)//I get the latest version of the topic array and animate whether there are duplicates or no votes
+        {  
+            if (!lastCall)
+            {
+                StartCoroutine(LastCallForTopics());
+                lastCall = true;
+            }
+
+        }
+
+        if (roundPhase == 9)
         {
-            //Until here, the active Player was waiting, make sure to not forget about him
+            //Unity will now trigger the topicsHaveBeenChosen() function in React
+            //This function will tell react to get the final topic in the backend
+            //The backend will take the current topic Array and check if there are duplicates or if all is empty
+            //If there are duplicates: Backend will randomly choose one of the duplicates
+            //if there are no votes, backend will randomly return of the topic to react
+            //React will then set this Rounds Topic in the MockStats Object by calling ReactSetThisRoundsTopic(int string)
+            try { TopicsHaveBeenChosen(); }//This will tell React to get the Topic Array from the Backend and send it to unity
+            catch (EntryPointNotFoundException e)
+            {
+                Debug.Log("Unity wants to let React know that all topics have been chosen. This failed " + e);
+            }
+            roundPhase = 10;
+        }
+
+        if(roundPhase == 10)//waits until react sends back the chosen Topic to Unity, then the function ReactSetThisRoundsTopic() from mockStats will set Round = 11
+        {
+            //Just for testing
+            //mockStats.ReactSetThisRoundsTopic("Hoi Zamen");
+            //End Testing
+        }
+
+        if (roundPhase == 11)
+        {
+            StartCoroutine(gameBoard.ShowThisRoundsTopic());
+            roundPhase = 12;
+        }
+
+        if (roundPhase == 12)//Wait until Topic Animation is over in GameBoard
+        {
+
+        }
+
+        if (roundPhase == 13)//Wait until Topic Animation is over in GameBoard
+        {
+
         }
 
     }
@@ -128,7 +177,7 @@ public class Rounds : MonoBehaviour
 
     public void DisplaySameVoteMessage()
     {
-        StartCoroutine(Round1VoteConflict());
+        StartCoroutine( Round1VoteConflict());
     }
 
 
@@ -192,6 +241,21 @@ public class Rounds : MonoBehaviour
             Debug.Log("Unity has asked for TopicList did not succeeded " + e);
         }
         yield return new WaitForSeconds(1f);
+        topicCall = false;
+    }
+
+
+
+    IEnumerator LastCallForTopics()
+    {
+        try { CallsForTopicList(); }//This will tell React to get the Topic Array from the Backend and send it to unity
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity has asked for TopicList did not succeeded " + e);
+        }
+        yield return new WaitForSeconds(1f);
+        roundPhase = 9;
+        lastCall = false;
         topicCall = false;
     }
 

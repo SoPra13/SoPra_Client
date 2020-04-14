@@ -12,6 +12,7 @@ public class Timer : MonoBehaviour
 
     private bool interrupt = false;
     private GameObject timeNumber;
+    private bool timerStatus;
 
 
     void Start()
@@ -22,12 +23,18 @@ public class Timer : MonoBehaviour
 
     public void StartTimer(int timeInSeconds)
     {
+        timerStatus = true;
         StartCoroutine(TimerRuns(timeInSeconds));
     }
 
     public void DeactivateTimer()
     {
         interrupt = true;
+    }
+
+    public bool getTimerStatus()
+    {
+        return timerStatus;
     }
 
 
@@ -50,14 +57,14 @@ public class Timer : MonoBehaviour
                 Destroy(timeNumber);
                 time = -1;
             }
-            if (time != 0 && time != -1) { yield return new WaitForSeconds(0.25f); }
-            if (time <= 3 && time != -1) { clockTick.Play(); }
-            if (time != 0 && time != -1) { yield return new WaitForSeconds(0.25f); }
-            if (time <= 10 && time != -1 || time <= 3 && time != -1) { clockTick.Play(); }
-            if (time != 0 && time != -1) { yield return new WaitForSeconds(0.25f); }
-            if (time <= 3 && time != -1) { clockTick.Play(); }
-            if (time != 0 && time != -1) { yield return new WaitForSeconds(0.25f); }
-            if (time != 0 && time != -1)
+            if (time != 0 && time != -1 && !interrupt) { yield return new WaitForSeconds(0.25f); }
+            if (time <= 3 && time != -1 && !interrupt) { clockTick.Play(); }
+            if (time != 0 && time != -1 && !interrupt) { yield return new WaitForSeconds(0.25f); }
+            if (time <= 10 && time != -1 && !interrupt || time <= 3 && time != -1 && !interrupt) { clockTick.Play(); }
+            if (time != 0 && time != -1 && !interrupt) { yield return new WaitForSeconds(0.25f); }
+            if (time <= 3 && time != -1 && !interrupt) { clockTick.Play(); }
+            if (time != 0 && time != -1 && !interrupt) { yield return new WaitForSeconds(0.25f); }
+            if (time != 0 && time != -1 && !interrupt)
             {
                 clockTick.Play();
             }
@@ -68,5 +75,6 @@ public class Timer : MonoBehaviour
             Destroy(timeNumber);
         }
         interrupt = false;
+        timerStatus = false;
     }
 }
