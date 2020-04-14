@@ -12,7 +12,7 @@ public class Avatars : MonoBehaviour
     public GameObject avatar6;
     public GameObject avatar7;
 
-    public GameObject getAvatar(int i)
+    public GameObject GetAvatar(int i)
     {
         if (i == 1)
         {
@@ -48,7 +48,7 @@ public class Avatars : MonoBehaviour
         }
     }
 
-    public Vector3 getAvatarPos(int i)
+    public Vector3 GetAvatarPos(int i)
     {
         if (i == 1)
         {

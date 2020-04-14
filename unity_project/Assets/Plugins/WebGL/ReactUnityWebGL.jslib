@@ -2,7 +2,10 @@
   ComTest: function(score) {
     ReactUnityWebGL.ComTest(score);
   },
-    GameStarted: function() {
-      ReactUnityWebGL.GameStarted();
+    PlayerHasConnected: function() {
+      ReactUnityWebGL.PlayerHasConnected();
+    },
+    FetchPlayerInfo: function() {
+      ReactUnityWebGL.FetchPlayerInfo();
     }
 });

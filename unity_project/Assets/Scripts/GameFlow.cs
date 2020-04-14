@@ -5,8 +5,11 @@ using TMPro;
 
 public class GameFlow : MonoBehaviour
 {
+    [SerializeField] private MockStats mockStats;
     private int roundNr; //initialized with 1 for Round 1
     public TextMeshProUGUI infoText;
+    public GameObject lockedBubble;
+    public GameObject infoBar;
 
     public GameFlow(int rounNrInput)
     {
@@ -16,7 +19,7 @@ public class GameFlow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        mockStats = GameObject.FindWithTag("MockStats").GetComponent<MockStats>();
     }
 
     // Update is called once per frame
@@ -28,7 +31,7 @@ public class GameFlow : MonoBehaviour
     public void NextRound(Card card)
     {
         //In this case the viewing player is the active player
-        if(PlayerCounter.activePlayer == PlayerCounter.playerPosition)
+        /*if(PlayerCounter.activePlayer == mockStats.GetPlayerPosition())
         {
             //Active Player Draws a card
             //Non-Active Players can see the Topics on this Card
@@ -38,11 +41,11 @@ public class GameFlow : MonoBehaviour
         else //In this case, the viewing player isn't the active player
         {
 
-        }
+        }*/
 
 
         //Condition do terminate the game
-        if(card.getCardId() == 13)
+        if(card.GetCardId() == 13)
         {
             //EndGame
         }

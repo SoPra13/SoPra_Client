@@ -11,7 +11,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{1FD0A1C6-C51A-358F-646D-4CA3273A76F8}</ProjectGuid>
+    <ProjectGuid>{6B450D7F-1B70-91D5-DC53-B7E62CCF40EA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -69,12 +69,18 @@
     <Compile Include="Assets\HUD&amp;GUI MEDIEVAL ART BUNDLE\Demo\Scripts\GathererLayout.cs" />
     <Compile Include="Assets\Scripts\Avatars.cs" />
     <Compile Include="Assets\Scripts\Card.cs" />
-    <Compile Include="Assets\Scripts\Constants.cs" />
+    <Compile Include="Assets\Scripts\GameBoard.cs" />
     <Compile Include="Assets\Scripts\GameFlow.cs" />
+    <Compile Include="Assets\Scripts\IntroScript.cs" />
+    <Compile Include="Assets\Scripts\LoadingScreen.cs" />
+    <Compile Include="Assets\Scripts\MockStats.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\Scripts\PlayerCounter.cs" />
-    <Compile Include="Assets\Scripts\SetupGameBoard.cs" />
+    <Compile Include="Assets\Scripts\PlayerManagement.cs" />
+    <Compile Include="Assets\Scripts\PlayerTopicInput.cs" />
+    <Compile Include="Assets\Scripts\Positions.cs" />
+    <Compile Include="Assets\Scripts\Rounds.cs" />
     <Compile Include="Assets\Scripts\TestButton.cs" />
+    <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\UserNames.cs" />
     <Compile Include="Assets\loadingBar\scripts\Loading.cs" />
     <Compile Include="Assets\loadingBar\scripts\SimpleLoading.cs" />
@@ -102,31 +108,31 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/Unity/Game/JustOneSoPra/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>F:/0. UZH/SwitchDrive/ChrisCloud/UZH/FS20/Sopra/GitHub/Unity_Build/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.5f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
