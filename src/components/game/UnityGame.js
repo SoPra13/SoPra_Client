@@ -80,12 +80,28 @@ export class UnityGame extends React.Component {
             console.log("Es funzt!" + score);
         });
 
-        //This listener is called on every frame by unity and needs to receive Backend Information
-        this.unityContent.on("GameStarted", started =>{
-            //Todo Create "Total Player" integer from Backend, update the this.state.totalPlayers and then update unity via setPlayers()
-            //Todo Create "players Joined" integer from the Backend, update the this.state.playersJoined and then update Unity via addPlayers()
+        this.unityContent.on("PlayerHasConnected", () =>{
+            console.log("PlayerHasConnected");
+            this.setPlayerStats();
+        });
 
-            this.setPlayers();
+        this.unityContent.on("AskForTopicsList", () =>{
+            console.log("Unity asked for the TopicList");
+            this.sendTopicList();
+        });
+
+        this.unityContent.on("SendTopicInput", (topic) =>{
+            console.log("Unity has send topic input at position: " + topic);
+            //todo send this topic int to the backend
+            //this int represents the choice a player made and ranges from 0 to 4
+            //For example 3 meaning a player has voted for topic 4; 0 meaning a player has voted for topic 1
+        });
+
+        this.unityContent.on("FetchPlayerInfo", () =>{
+            this.setPlayerNames();
+            this.setPlayerAvatars();
+            this.setTopics();
+            console.log("FetchingPlayerInfos");
         });
     }
 
@@ -102,6 +118,58 @@ export class UnityGame extends React.Component {
             "PlayerTotal",
             "SetPlayerCount",
             4
+        )
+    }
+
+    setPlayerStats(){ //activePlayer;playerTotal;playerPosition;connectPlayers
+        let infoString = "1423";
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetPlayerStats",
+            infoString //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
+
+    setPlayerNames(){ //Send a string with a ";" delimiter to unity
+        let nameString = "Baba;Ganoush;Trimotop;Slayer99;Ivan;Boehlen;SonGoku";
+        console.log("Names Set Completed");
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetPlayerNames",
+            nameString //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
+
+    setPlayerAvatars(){ //send a string of avatar ids to unity
+        let avatarString = "1764325";
+        console.log("Avatars Set Completed");
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetPlayerAvatars",
+            avatarString //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
+
+    setTopics(){ //Send a string with a ";" delimiter to unity
+        let topicString = "Group13;WeRock;Database;Sopra;Corona;Wrench;Zebra;Ivy;Airplane;Bridge;Frost;" +
+            "Lollipop;Parachute;Day;Sunset;Witch;Lasso;Burger;Lotto Ticket;Worm;Fire;Grass;Parrot;Fear;" +
+            "Nail;Giraffe;Painting;Train;Star;Cricket;Wave;Bench;Comedy;Monster;Baby;Wrench;Piano;Laptop;" +
+            "Singer;Wasp;Roach;Dog;Sand;Swamp;Face;Lute;Flute;PC;Villa;Bee;Gun;Cat;Night;Fire;Iron;Sugar;Tears;" +
+            "Mobile Phone;Tree;Snake;Stone;Hero;Laser Gun;Ladybug;Spike";
+        console.log("Topics Set Completed");
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetTopicArray",
+            topicString //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
+
+    sendTopicList(){ //after having received the Topic List from the backend, send it as string to unity
+        let topicListString = "10200";
+        this.unityContent.send(
+            "Rounds",
+            "ReactSetTopicArray",
+            topicListString //Todo This are just dummy values, these values need to come from Backend Gameobject
         )
     }
 
@@ -171,7 +239,17 @@ export class UnityGame extends React.Component {
                         </ButtonContainer>
                     </Form>
                 </FormContainer>
-                <Unity unityContent={this.unityContent} />
+                <div
+                    style={{
+                        position: "center",
+                        top: 0,
+                        left: 0,
+                        width: "1080px",
+                        height: "600px"
+                    }}
+                    >
+                <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
+                </div>
                 <br/>
             </BaseContainer>
         );

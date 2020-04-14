@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - PlayerTotal
+  - MockStats
+  - GameBoard
   layers:
   - Default
   - TransparentFX
@@ -43,4 +46,10 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Order1
+    uniqueID: 3503582261
+    locked: 0
+  - name: Order2
+    uniqueID: 2985671843
     locked: 0

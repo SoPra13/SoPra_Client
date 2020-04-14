@@ -4,10 +4,22 @@ using UnityEngine;
 
 public class TestButton : MonoBehaviour
 {
+    public MockStats mockStats;
 
-    public void ButtonPressed()
+    private void Start()
     {
-        PlayerCounter.playerCount++;
+        mockStats = GameObject.Find("MockStats").GetComponent<MockStats>();
+    }
+
+    public void ConnectPlayer()
+    {
+        mockStats.SetConnectedPlayers();
+        //PlayerCounter.playerCount++;
+    }
+
+    public void TriggerTopicInput01()
+    {
+        mockStats.TESTINGsetTopicInputArray();
     }
 }
 

@@ -26,52 +26,52 @@ public class Player : MonoBehaviour
     }
 
 
-    public void setPlayerName(string name)
+    public void SetPlayerName(string name)
     {
         playerName = name;
     }
 
-    public string getPlayerName()
+    public string GetPlayerName()
     {
         return playerName;
     }
 
-    public void setId(long id)
+    public void SetId(long id)
     {
         playerID = id;
     }
 
-    public long getId()
+    public long GetId()
     {
         return playerID;
     }
 
-    public void setAvater(int avatar)
+    public void SetAvater(int avatar)
     {
         playerAvatar = avatar;
     }
 
-    public int getAvatar()
+    public int GetAvatar()
     {
         return playerAvatar;
     }
 
-    public void setInput(string input)
+    public void SetInput(string input)
     {
         playerInput = input;
     }
 
-    public string getInput()
+    public string GetInput()
     {
         return playerInput;
     }
 
-    public void setPos(Vector3 pos)
+    public void SetPos(Vector3 pos)
     {
         playerPos = pos;
     }
 
-    public Vector3 getPos()
+    public Vector3 GetPos()
     {
         return playerPos;
     }

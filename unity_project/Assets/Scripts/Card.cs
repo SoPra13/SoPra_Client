@@ -13,17 +13,17 @@ public class Card : MonoBehaviour
     }
 
 
-    public void setTopics(string[] topicArray)
+    public void SetTopics(string[] topicArray)
     {
         topics = topicArray;
     }
 
-    public string[] getTopics()
+    public string[] GetTopics()
     {
         return topics;
     }
 
-    public int getCardId()
+    public int GetCardId()
     {
         return cardId;
     }
