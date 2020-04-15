@@ -82,12 +82,15 @@ export class UnityGame extends React.Component {
 
         this.unityContent.on("PlayerHasConnected", () =>{
             console.log("PlayerHasConnected");
+            //todo Tell Backend that this player has connected
             this.setPlayerStats();
         });
 
         this.unityContent.on("AskForTopicsList", () =>{
             console.log("Unity asked for the TopicList");
             this.sendTopicList();
+            //topicArray [0,0,0,1,2], each index represents the number of votes a topic has
+            //in this example, topic 4 has 1 vote and topic 5 has 2 votes
         });
 
         this.unityContent.on("SendTopicInput", (topic) =>{
@@ -179,7 +182,6 @@ export class UnityGame extends React.Component {
         this.unityContent.send(
             "Rounds",
             "ReactSetTopicArray",
-            topicListString //Todo This are just dummy values, these values need to come from Backend Gameobject
         )
     }
 
@@ -260,17 +262,8 @@ export class UnityGame extends React.Component {
                         </ButtonContainer>
                     </Form>
                 </FormContainer>
-                <div
-                    style={{
-                        position: "center",
-                        top: 0,
-                        left: 0,
-                        width: "1080px",
-                        height: "600px"
-                    }}
-                    >
+
                 <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
-                </div>
                 <br/>
             </BaseContainer>
         );
