@@ -74,7 +74,15 @@ public class Rounds : MonoBehaviour
 
         if (roundPhase == 5)//Waits for Topiccard to be displayed
         {
+            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            {
+                //I have to get the topic array from React and adjust the thinking bubbles in the game accordingli
+                //if a player has made his choice, a thick should appear in his box
+            }
+            else
+            {
 
+            }
         }
 
         if (roundPhase == 6)//Timer Starts
@@ -148,6 +156,14 @@ public class Rounds : MonoBehaviour
             //Just for testing
             //mockStats.ReactSetThisRoundsTopic("Hoi Zamen");
             //End Testing
+            if(mockStats.GetCurrentTopic() == "")
+            {
+                
+            }
+            else
+            {
+                roundPhase = 11;
+            }
         }
 
         if (roundPhase == 11)
