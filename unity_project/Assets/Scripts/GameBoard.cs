@@ -20,6 +20,7 @@ public class GameBoard : MonoBehaviour
     public GameObject infoBar;
     public GameObject infoBarText;
     public GameObject topicBarObject;
+    public GameObject thinkingBubbleObject;
 
     public Positions positions;
 
@@ -99,6 +100,7 @@ public class GameBoard : MonoBehaviour
                 GameObject box = Instantiate(otherPlayers, playerHandler.GetCorrectPlayerObject(i).GetPos(), Quaternion.identity) as GameObject;
                 box.name = "Player" + i + "Box";
                 GameObject.Find("NameTag").name = "NameTagPlayer" + i;
+                GameObject.Find("ThinkingBubble").name = "ThinkingBubble" + i;
                 GameObject.Find("PlayerName").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i - 1);
                 GameObject.Find("PlayerName").name = "Player" + i + "Name";
                 box.transform.SetParent(GameObject.Find("Canvas").transform, false);
@@ -251,6 +253,13 @@ public class GameBoard : MonoBehaviour
     {
         buttonSFX.Play();
     }
+
+
+    public void PlaceThinkingBubble(int position, int mode)
+    {
+
+    }
+
 
     public IEnumerator ShowThisRoundsTopic()
     {
@@ -425,11 +434,20 @@ public class GameBoard : MonoBehaviour
                 StartCoroutine(AnimateFlipBox(i));
             }
         }
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
+        for (int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
+        {
+            if (i != mockStats.GetActivePlayer())
+            {
+                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("wake",true);
+                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", true);
+            }
+        }
         //blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
         yield return new WaitForSeconds(3.7f);
         StartCoroutine(DisplayInfoText("As you are the active player, you need to wait for the others to choose a Topic for this round!",true));
         yield return new WaitForSeconds(0.1f);
+        round.SetRoundPhase(5);
     }
 
 

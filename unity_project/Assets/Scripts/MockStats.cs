@@ -7,6 +7,10 @@ using System;
 
 public class MockStats : MonoBehaviour
 {
+    //Possible Bugs later on:
+    //currentTopic needs to be = "" in the beginning of Phase 10 so that unity can check if it has been set or not. I have to set it to "" at the end of a round
+
+
     //Call to react to catch PlayerInfo [names,avatars] --> will trigger ReactSetPlayerNames and ReactSetPlayerAvatars in this Script by React
     [DllImport("__Internal")]
     private static extern void FetchPlayerInfo();
@@ -22,7 +26,7 @@ public class MockStats : MonoBehaviour
     private int connectedPlayers;
     private int[] topicChoices; //the topicnumber which this user choose [1,5]
     private bool inputLocked = false;
-    private string currentTopic;
+    private string currentTopic = "";
 
     private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
     private int[] avatar = { 1, 2, 3, 4, 5, 6, 7 };
@@ -40,7 +44,7 @@ public class MockStats : MonoBehaviour
     void Start()
     {
         activePlayer = 7;
-        playerPosition = 2; //REACTINPUT, this value needs to come from React
+        playerPosition = 7; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
         topicChoices = new int[5]; //In here, each Field represents a Topic (Field 0 = Topic 1; Field 1 = Topic 2). Each Field contains an integer value
