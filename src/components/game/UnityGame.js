@@ -271,7 +271,7 @@ export class UnityGame extends React.Component {
                         height: "600px"
                     }}
                     >
-                <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
+                <Unity unityContent={this.unityContent} />
                 </div>
                 <br/>
             </BaseContainer>
