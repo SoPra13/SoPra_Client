@@ -262,18 +262,7 @@ export class UnityGame extends React.Component {
                         </ButtonContainer>
                     </Form>
                 </FormContainer>
-
-                <div
-                    style={{
-                        position: "center",
-                        top: 0,
-                        left: 0,
-                        width: "1080px",
-                        height: "600px"
-                    }}
-                >
-                    <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
-                </div>
+                <Unity unityContent={this.unityContent}/>
                 <br/>
             </BaseContainer>
         );
