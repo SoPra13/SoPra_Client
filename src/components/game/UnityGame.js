@@ -72,7 +72,7 @@ export class UnityGame extends React.Component {
 
         //unityContent is our unity code accessor
         this.unityContent = new UnityContent(
-            "unity_project_build/build.json",
+            "unity_project_build/Build.json",
             "unity_project_build/UnityLoader.js"
         );
 
