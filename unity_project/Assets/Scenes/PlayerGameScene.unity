@@ -185,6 +185,7 @@ MonoBehaviour:
   infoBarText: {fileID: 431347952435948682, guid: 3bb17192dd741a14484914c09b830b21,
     type: 3}
   topicBarObject: {fileID: 0}
+  thinkingBubbleObject: {fileID: 0}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
   drawCard: {fileID: 1207197612}
@@ -2435,6 +2436,8 @@ MonoBehaviour:
   infoBarText: {fileID: 431347952435948682, guid: 3bb17192dd741a14484914c09b830b21,
     type: 3}
   topicBarObject: {fileID: 4197185264338448634, guid: 7dd9ac2329a055849a8cb50be65a1736,
+    type: 3}
+  thinkingBubbleObject: {fileID: 5617971433773748320, guid: a260a6884b4a6e54d829de08877d0861,
     type: 3}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
