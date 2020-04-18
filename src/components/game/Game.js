@@ -6,6 +6,8 @@ import Player from '../../views/Player';
 import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
+import GameState from "../shared/models/GameState";
+
 const Container = styled(BaseContainer)`
   color: white;
   text-align: center;
@@ -27,7 +29,8 @@ class Game extends React.Component {
   constructor() {
     super();
     this.state = {
-      users: null
+      users: null,
+      lobby: null
     };
   }
 
@@ -46,13 +49,6 @@ class Game extends React.Component {
 
       // Get the returned users and update the state.
       this.setState({ users: response.data });
-
-      // This is just some data for you to see what is available.
-      // Feel free to remove it.
-      console.log('request to:', response.request.responseURL);
-      console.log('status code:', response.status);
-      console.log('status text:', response.statusText);
-      console.log('requested data:', response.data);
 
       // See here to get more data.
       console.log(response);

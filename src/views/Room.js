@@ -18,7 +18,7 @@ const UserName = styled.div`
 
 const Name = styled.div`
   font-weight: bold;
-  color: #06c4ff;
+  color: #5a5a5a;
 `;
 
 const Id = styled.div`
@@ -27,14 +27,13 @@ const Id = styled.div`
   font-weight: bold;
 `;
 
-
-const Player = ({ user }) => {
-  return (
-    <Container>
-        <UserName>{user.username}</UserName>
-      <Id>Id: {user.id}</Id>
-    </Container>
-  );
+const Room = ({ lobby }) => {
+    return (
+        <Container>
+            <UserName>{lobby.lobbyname}</UserName>
+            <Id>Id: {lobby.id}</Id>
+        </Container>
+    );
 };
 
-export default Player;
+export default Room;
