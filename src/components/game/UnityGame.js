@@ -61,6 +61,7 @@ const ButtonContainer = styled.div`
 `;
 
 export class UnityGame extends React.Component {
+    async;
 
     constructor(props) {
         super(props);
@@ -86,11 +87,16 @@ export class UnityGame extends React.Component {
             console.log("Es funzt!" + score);
         });
 
+        //!!
+
         this.unityContent.on("PlayerHasConnected", () =>{
             console.log("PlayerHasConnected");
-            //todo Tell Backend that this player has connected
-            this.setPlayerStats();
+            this.tryPut();
+
         });
+
+
+
 
         this.unityContent.on("AskForTopicsList", () =>{
             console.log("Unity asked for the TopicList");
@@ -123,6 +129,45 @@ export class UnityGame extends React.Component {
         });
     }
 
+    async tryPut()
+    {
+        const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') +
+            '&gameToken=' + localStorage.getItem('gameToken'))
+
+        console.log(response)
+
+        var game = response.data;
+
+        console.log(game);
+
+        var playerIndex = this.getIndex(game, localStorage.getItem('userToken'));
+
+        var activePlayer = game.guesser+1;
+
+        var totalPlayer = game.playerList.length + game.botList.length;
+
+        var ready = game.botList.length;
+
+        for (var i = 0; i<game.playerList.length; i++) {
+            if (game.playerList[i].unityReady == true) {
+                ready += 1;
+            }
+        }
+
+        console.log(activePlayer);
+        console.log(totalPlayer);
+        console.log(playerIndex);
+        console.log(ready);
+
+        var str = '';
+        str= (activePlayer.toString()+ totalPlayer.toString()+ playerIndex.toString()+ ready.toString());
+
+        console.log(activePlayer.toString()+totalPlayer.toString());
+        console.log(str)
+
+        this.setPlayerStats(str);
+    }
+
     setPlayers(){
         this.unityContent.send(
             "PlayerTotal",
@@ -151,21 +196,16 @@ export class UnityGame extends React.Component {
         return array;
     }
 
-    isReady(){
-        try
-        {
-        const requestBody = JSON.stringify({
-            gameToken: localStorage.getItem('gameToken'),
-            userToken: localStorage.getItem('userToken'),
-            status: "READY"
-        });
-        const response = api.put('/game/ready?userToken=' + this.state.userToken +
-            '&gameToken=' + this.state.gameToken);
+    getIndex(game, token){
+        console.log(token);
+        for(var i = 0; i<game.playerList.length; i++){
+            console.log(game.playerList[i].token)
+            if(token == game.playerList[i].token){
+                return i+1;
 
-    } catch (error) {
-        alert(`Something went wrong during the login: \n${handleError(error)}`);
+            }
+        }
     }
-}
 
 
 
@@ -178,8 +218,8 @@ export class UnityGame extends React.Component {
         )
     }
 
-    setPlayerStats(){ //activePlayer;playerTotal;playerPosition;connectPlayers
-        let infoString = "1726";
+    setPlayerStats(playerStats){ //activePlayer;playerTotal;playerPosition;connectPlayers
+        let infoString = playerStats;//i.e. "1726" String
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerStats",
@@ -188,7 +228,7 @@ export class UnityGame extends React.Component {
     }
 
     setPlayerNames(){ //Send a string with a ";" delimiter to unity
-        let nameString = "Baba;Ganoush;Trimotop;Slayer99;Ivan;Boehlen;SonGoku";
+        let nameString = "Baba;Ganoush;Trimotop;Slayer99;Ivan;Boehlen;SonGoku"; //player +  bot names
         console.log("Names Set Completed");
         this.unityContent.send(
             "MockStats",

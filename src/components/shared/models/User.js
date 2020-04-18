@@ -11,6 +11,7 @@ class User {
     this.lobbyToken = null;
     this.gameToken = null;
     this.status = null;
+    this.unityReady = null;
     this.score = null;
     this.ready = null; // READY, PREPARING
     this.currentPosition = null; // (int 1-7)
