@@ -14,9 +14,6 @@ class User {
     this.unityReady = null;
     this.score = null;
     this.ready = null; // READY, PREPARING
-    this.currentPosition = null; // (int 1-7)
-    this.memberIs = null; // ADMIN or PLAYER in the lobby
-    this.gamePos = null;  // current position in the game for the rotation
     this.word = null;
     Object.assign(this, data);
   }
