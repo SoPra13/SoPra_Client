@@ -72,7 +72,7 @@ export class UnityGame extends React.Component {
             username: null,
             started: false,
             totalPlayers: 3, //has to be fetched from the backend, 3 is the default value
-            playersJoined: 0 //used to communicate with unity
+            playersJoined: 0, //used to communicate with unity
             topic: 0
         };
 
