@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 
@@ -50,6 +49,12 @@ const Label = styled.label`
   text-transform: uppercase;
 `;
 
+const Central = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -91,13 +96,12 @@ class Login extends React.Component {
         username: this.state.username,
         password: this.state.password
       });
-      const response = await api.post('/users', requestBody);
+      const response = await api.put('/login', requestBody);
 
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
+      console.log(response);
 
       // Store the token into the local storage.
-      localStorage.setItem('token', user.userToken);
+      localStorage.setItem('userToken', response.data);
 
       this.props.history.push(`/dashboard`);
     } catch (error) {
@@ -150,6 +154,7 @@ class Login extends React.Component {
             />
             <ButtonContainer>
 
+              <Central>
               <Button
                 disabled={!this.state.username || !this.state.password}
                 width="30%"
@@ -159,7 +164,9 @@ class Login extends React.Component {
               >
                 Login
               </Button>
+              </Central>
 
+            <Central>
               <Button
                   width="30%"
                   onClick={() => {
@@ -168,6 +175,7 @@ class Login extends React.Component {
               >
                 Sign Up
               </Button>
+            </Central>
 
               <Button
                   width="20%"

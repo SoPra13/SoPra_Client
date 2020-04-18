@@ -6,6 +6,7 @@ import { BaseContainer } from '../../helpers/layout';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import Unity, { UnityContent } from "react-unity-webgl";
+import { api, handleError } from '../../helpers/api';
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -64,8 +65,12 @@ class UnityGame extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            lobbyToken: localStorage.getItem('lobbyToken'),
+            userToken: localStorage.getItem('userToken'),
+            gameToken: localStorage.getItem('gameToken'),
             name: null,
-            username: null
+            username: null,
+            topic: 0
         };
 
         //unityContent is our unity code accessor
@@ -75,14 +80,68 @@ class UnityGame extends React.Component {
         );
     }
 
-
-
-
-    async somethingFun() {
-
+    stringToArray(str){
+        let array = [];
+        for (let i = 0; i < str.length; i++){
+            array.push(parseInt(str.charAt(i)));
+        }
+        return array;
     }
 
-    componentDidMount() {}
+    isReady(){
+        try
+        {
+        const requestBody = JSON.stringify({
+            gameToken: localStorage.getItem('gameToken'),
+            userToken: localStorage.getItem('userToken'),
+            status: "READY"
+        });
+        const response = api.put('/game/ready?userToken=' + this.state.userToken +
+            '&gameToken=' + this.state.gameToken);
+
+    } catch (error) {
+        alert(`Something went wrong during the login: \n${handleError(error)}`);
+    }
+}
+
+
+
+    currentGame(){
+        try{
+        const response = api.get('/game/' + this.state.gameToken);
+
+        this.setState({
+            //fetch current game to unity by requesting for the states
+
+
+        })
+    } catch (error) {
+        alert(`Something went wrong during the login: \n${handleError(error)}`);
+    }
+}
+
+
+    voteTopic(){
+        try{
+        //topic int 0 by default
+        const response = api.put('/game/vote?=gameToken=' + this.state.gameToken + '&topic=' + this.state.topic);
+
+    } catch (error) {
+        alert(`Something went wrong during the login: \n${handleError(error)}`);
+    }
+    }
+
+
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.currentGame(),
+            1000
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
 
     render() {
         return (
@@ -150,8 +209,5 @@ class UnityGame extends React.Component {
     }
 }
 
-/**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
- */
+
 export default withRouter(UnityGame);

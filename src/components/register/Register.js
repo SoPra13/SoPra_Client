@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 
@@ -89,17 +88,16 @@ class Register extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
-                name: this.state.password
+                password: this.state.password
             });
-            const response = await api.post('/users', requestBody);
+            const response = await api.post('/register', requestBody);
 
-            // Get the returned user and update a new object.
+/*            // Get the returned user and update a new object.
             const user = new User(response.data);
 
             // Store the token into the local storage.
-            localStorage.setItem('token', user.token);
+            localStorage.setItem('userToken', user.userToken);*/
 
-            // Login successfully worked --> navigate to the route /game in the GameRouter
             this.props.history.push(`/login`);
         } catch (error) {
             alert(`Something went wrong during the sign up: \n${handleError(error)}`);

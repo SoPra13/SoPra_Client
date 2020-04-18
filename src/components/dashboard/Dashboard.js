@@ -11,6 +11,8 @@ import Lobby from "../shared/models/Lobby";
 import { Spinner} from "../../views/design/Spinner";
 import Player from "../../views/Player";
 import Room from "../../views/Room";
+import EditProfile from "../profile/EditProfile";
+import ProfileInfo from "../../views/ProfileInfo";
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -175,88 +177,58 @@ box-sizing: border-box;
  * @Class
  */
 class Dashboard extends React.Component {
-    /**
-     * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
-     * The constructor for a React component is called before it is mounted (rendered).
-     * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
-     * These fields are then handled in the onChange() methods in the resp. InputFields
-     */
+
     constructor() {
         super();
         this.state = {
             users: null,
             user: null,
             userId: null,
+            lobbies: null,
             lobbyname: null,
-            lobbiesId: null
+            tabIndex: 0
         };
     }
 
     async logout() {
+        const key = localStorage.getItem(('userToken'))
+
+        console.log(key);
+
         try {
-            const response = await api.put("/logout/" + localStorage.getItem("token"));
+            const response = await api.put('/logout?token=' + key);
 
             console.log(response);
         } catch (error) {
             alert(`Something went wrong while logging out: \n${handleError(error)}`);
         }
-        localStorage.removeItem('token');
+        localStorage.removeItem('userToken');
         this.props.history.push('/login');
 
     }
 
     showProfile(id){
         this.props.history.push({
-            pathname: `/dashboard/profile/editprofile`,
+            pathname: `/dashboard/profile`,
             userId: id
         })
     }
 
-    enterLobby(id) {
-        if (this.password == null) {
-            this.props.history.push({
-                pathname: '/lobby/{lobbyID}',
-                lobbiesId: id
-            })
-        }
-        else{
-            try {
-                const requestBody = JSON.stringify({
-                    lobbyname: this.state.lobbyname,
-                    password: this.state.password
-                });
-                const response = api.post('/lobbies', requestBody);
 
-                // Get the returned user and update a new object.
-                const user = new User(response.data);
-
-                // Store the token into the local storage.
-                localStorage.setItem('token', user.token);
-
-
-                this.props.history.push(`/lobby/{lobbyID}`);
-
-                console.log(response);
-            } catch (error) {
-                alert(`Something went wrong during the login: \n${handleError(error)}`);
-            }
-        }
+    editProfile(id){
+        this.props.history.push({
+            pathname: '/dashboard/profile/editProfile',
+            id: id,
+        })
     }
 
-    async createLobby(){
-        try {
-            const requestBody = JSON.stringify({
-                lobbyname: this.state.lobbyname,
-                password: this.state.password
-            });
-            const response = await api.post('/lobbies', requestBody);
-
-            this.props.history.push(`/lobby/{lobbyID}`);
-
-        } catch (error) {
-            alert(`Something went wrong during the registration: \n${handleError(error)}`);
-        }
+    enterLoginLobby(id){
+        this.props.history.push({
+            pathname: '/dashboard/loginLobby',
+            id: id
+        })
     }
+
 
     /**
      *  Every time the user enters something in the input field, the state gets updated.
@@ -269,35 +241,43 @@ class Dashboard extends React.Component {
         this.setState({ [key]: value });
     }
 
-    async componentDidMount() {
+    async componentWillMount(){
         try {
 
-            /**
-             * Either I request a single user by token or I try to extract a duplicate state from all users
-             */
+            const key = localStorage.getItem('userToken')
 
-            const respo = await api.get(`/user/` + `?token` + localStorage.getItem('token'))
+
+            const respo = await api.get('/user/?token=' + key);
             this.setState({user: respo.data});
-
             console.log(respo);
 
+            const response = api.get('/user');
+            this.setState({ users: response.data });
+            console.log(response.data);
+
+
+            const resp = api.get('/lobbies');
+            this.setState({ lobbies: resp.data });
+            console.log(resp.data);
+
+        } catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+        }
+
+    }
+
+    async componentDidMount() {
+        try {
             const response = await api.get('/users');
+            // delays continuous execution of an async operation for 1 second.
+            // This is just a fake async call, so that the spinner can be displayed
+            // feel free to remove it :)
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Get the returned users and update the state.
             this.setState({ users: response.data });
+
             console.log(response);
-
-
-            const resp = await api.get('/lobbies');
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-
-            this.setState({ lobbies: resp.data });
-            console.log(resp);
-
-            // See here to get more data.
-
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
@@ -305,22 +285,28 @@ class Dashboard extends React.Component {
 
 
     render() {
-        return (
+
+        const localToken = localStorage.getItem("userToken");
 
 
 
-            <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
+
+
+        const tabComp =(
+            <Tabs defaultIndex={1} onSelect={index => console.log(index)}>
                 <TabList>
                     <Tab>My Profile</Tab>
                     <Tab>Users</Tab>
                     <Tab>Lobby</Tab>
                     <Tab>Invitations</Tab>
+                </TabList>
+
+                <TabPanel>
 
                     <Button
                         position = "absolute"
-                        top = "50px"
-                        right = "30px"
-                        width="40px"
+                        top = "0"
+                        right = "0"
                         onClick={() => {
                             this.logout();
                         }}
@@ -328,35 +314,74 @@ class Dashboard extends React.Component {
                         Logout
                     </Button>
 
-                </TabList>
-                <TabPanel>
+{/*                    <Container>
+                        <h2> My profile details </h2>
+                            <div>
+                                <Users>
+                                            <PlayerContainer>
+                                                <h1>{this.state.user.username}</h1>
+                                                <h1>{this.state.user.id}</h1>
+                                                <Button
+                                                    onClick={() => {
+                                                        this.showProfile(this.state.user.id);
+                                                    }}>
+                                                    Show my profile
+                                                </Button>
+                                            </PlayerContainer>
+                                        );
+                                    })}
+                                </Users>
+                            </div>
+                        )}
+                    </Container>*/}
+
+
                     <Container>
-                    <h2> My profile details </h2>
-                    {!this.state.user ? (
-                        <Spinner />
-                    ) : (
-                        <div>
-                            <Users>
-                                {this.state.user.map(user => {
-                                    return (
-                                        <PlayerContainer
-                                            key={user.id}
+                        <h2>Profile</h2>
+                        {!this.state.user ? (
+                            <Spinner />
+                        ) : (
+                            <div>
+                                <Users>
+                                    <PlayerContainer key={this.state.user.id}>
+                                        <ProfileInfo user={this.state.user}/>
+                                    </PlayerContainer>
+                                </Users>
+
+                                {(this.state.user.token != localToken) ? (
+                                    <Label> </Label>
+                                ) : (
+                                    <ButtonContainer>
+                                        <Button
+                                            width="30%"
                                             onClick={() => {
-                                                this.showProfile(user.id);
-                                            }}>
-                                            <Player user={user}/>
-                                        </PlayerContainer>
-                                    );
-                                })}
-                            </Users>
-                        </div>
-                    )}
-                </Container>
+                                                this.editProfile(this.state.user.id)
+                                            }}
+                                        >
+                                            Edit
+                                        </Button>
+                                    </ButtonContainer>
+                                )}
+                            </div>
+                        )}
+                    </Container>
+
+
+
                 </TabPanel>
 
                 <TabPanel>
+
+                    <Button
+                        onClick={() => {
+                            this.logout();
+                        }}
+                    >
+                        Logout
+                    </Button>
+
                     <Container>
-                        <h2>Registered Users </h2>
+                        <h2>Registered User! </h2>
                         {!this.state.users ? (
                             <Spinner />
                         ) : (
@@ -378,46 +403,98 @@ class Dashboard extends React.Component {
                             </div>
                         )}
                     </Container>
+
+{/*                    <Container>
+                        <h2>Registered Users </h2>
+                        {!this.state.users ? (
+                            <Spinner />
+                        ) : (
+                            <div>
+                                <Users>
+                                    {this.state.users.map(user => {
+                                        return (
+                                            <PlayerContainer
+                                                key={user.id}
+                                                onClick={() => {
+                                                    console.log(user.id)
+                                                    this.showProfile(user.id);
+                                                }}>
+                                                <Player user={user}/>
+                                            </PlayerContainer>
+                                        );
+                                    })}
+                                </Users>
+                            </div>
+                        )}
+                    </Container>*/}
                 </TabPanel>
+
+                <Button
+                    position = "absolute"
+                    onClick={() => {
+                        this.props.history.push('/dashboard/customLobby');
+                    }}
+                >
+                    Create Lobby
+                </Button>
 
 
 
                 <TabPanel>
-                    <Container>
-                    <h2>All active lobbies</h2>
-                    {!this.state.lobbies ? (
-                        <Spinner />
-                    ) : (
-                        <div>
-                            <Lobbies>
-                                {this.state.lobbies.map(lobby => {
-                                    return (
-                                        <LobbyContainer
-                                            key={lobby.id}
-                                            onClick={() => {
-                                                console.log(lobby.id)
-                                                this.enterLobby(lobby.id);
-                                            }}>
-                                            <Player lobby={lobby}/>
-                                        </LobbyContainer>
-                                    );
-                                })}
-                            </Lobbies>
-                        </div>
-                    )}
 
-                    <ButtonContainer>
-                        <Button
-                            width="50px"
-                            onClick={() => {this.createLobby();}}
-                        >
-                            Back
-                        </Button>
-                    </ButtonContainer>
-                </Container>
+                    <Button
+                        onClick={() => {
+                            this.logout();
+                        }}
+                    >
+                        Logout
+                    </Button>
+
+                    <Container>
+                        <h2>All lobbies</h2>
+                        {!this.state.lobbies ? (
+                            <Spinner />
+                        ) : (
+                            <div>
+                                <Users>
+                                    {this.state.lobbies.map(lobby => {
+                                        return (
+                                            <PlayerContainer
+                                                key={lobby.id}
+                                                onClick={() => {
+                                                    console.log(lobby.id)
+                                                    this.enterLoginLobby(lobby.id);
+                                                }}>
+                                                <Room lobby={lobby}/>
+                                            </PlayerContainer>
+                                        );
+                                    })}
+                                </Users>
+                            </div>
+                        )}
+                    </Container>
+
                 </TabPanel>
-                <TabPanel>Panel 4</TabPanel>
+
+                <TabPanel>
+
+                    <Button
+                        position = "absolute"
+                        onClick={() => {
+                            this.logout();
+                        }}
+                    >
+                        Logout
+                    </Button>
+                </TabPanel>
             </Tabs>
+        );
+
+        return (
+            <div>
+                {tabComp}
+            </div>
+
         );
     }
 }

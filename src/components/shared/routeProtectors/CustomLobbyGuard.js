@@ -6,10 +6,9 @@ import { Redirect } from "react-router-dom";
  * Another way to export directly your functional component.
  */
 export const CustomLobbyGuard = props => {
-    if (!localStorage.getItem("token")) {
+    if (localStorage.getItem("userToken")) {
         return props.children;
     }
 
-
-    return <Redirect to={"/customLobby"} />;
+    return <Redirect to={"/dashboard"} />;
 };

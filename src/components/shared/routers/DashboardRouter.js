@@ -17,14 +17,14 @@ class DashboardRouter extends React.Component {
             <Container>
                 <Route
                     exact
-                    path={`${this.props.base}/dashboard`}
+                    path={`${this.props.base}`}
                     render={() => <Dashboard />}
                 />
 
                 <Route
                     exact
                     path={`${this.props.base}`}
-                    render={() => <Redirect to={`${this.props.base}/dashboard`} />}
+                    render={() => <Redirect to={`${this.props.base}`} />}
                 />
             </Container>
         );

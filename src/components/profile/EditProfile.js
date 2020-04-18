@@ -5,7 +5,7 @@ import { api, handleError } from '../../helpers/api';
 import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
-import 'react-datepicker/dist/react-datepicker.css'
+import User from "../shared/models/User";
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -147,7 +147,7 @@ class EditProfile extends React.Component {
                     <Button
                         width="30%"
                         onClick={() => {
-                            this.props.history.push(`/dashboard/profile`);
+                            this.props.history.push(`/dashboard`);
                         }}>
                         Back
                     </Button>

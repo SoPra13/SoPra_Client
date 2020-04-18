@@ -11,7 +11,7 @@ import { Redirect } from "react-router-dom";
  * @param props
  */
 export const DashboardGuard = props => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("userToken")) {
         return props.children;
     }
     return <Redirect to={"/login"} />;

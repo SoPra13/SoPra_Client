@@ -8,6 +8,9 @@ import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
 import Lobby from "../shared/models/Lobby";
 
+/*for all players place a ready button, by condition if all players are ready starts a game object automatically*/
+
+
 const Container = styled(BaseContainer)`
   color: white;
   text-align: center;
@@ -31,22 +34,42 @@ class WaitingRoom extends React.Component {
         this.state = {
             playerList: null,
             botList: null,
-            lobbyToken: null
+            lobbyToken: localStorage.getItem('lobbyToken'),
+            difficulty: "FRIEND",
+            numberOfPlayers: 7,
+            numberOfBots: 0
         };
     }
 
+    addBot(){
+    const response = api.put('/lobby?lobbyToken=' + this.state.lobbyToken + '&difficulty=' + this.state.difficulty)
+    }
+
+    removeBot(botToken){
+        const response = api.delete('/lobby?lobbyToken=' + this.state.lobbyToken + '&botToken=' + botToken)
+
+    }
+
     leaveLobby(){
-        const response = api.delete(`/lobby` + `?lobbyToken={lobbyToken}` + localStorage.getItem('token')
-        + `?userToken={userToken}` +  localStorage.getItem('token'))
+        try {
+            const response = api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
+                + '?userToken=' + localStorage.getItem('userToken'));
+
+            localStorage.removeItem('lobbyToken');
+
+        }catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+        }
+
     }
 
     getLobbyToken(){
-        return this.lobbyToken;
+        return this.state.lobbyToken;
     }
 
     async getLobby(){
         try {
-            const response = await api.get(`/lobby`+`?token={token}`+ localStorage.getItem('token'));
+            const response = await api.get(`/lobby`+`?token={token}`+ localStorage.getItem('lobbyToken'));
 
             await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -58,6 +81,46 @@ class WaitingRoom extends React.Component {
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
+    }
+
+    ready(){
+        try {
+            const requestBody = JSON.stringify({
+                lobbyToken: localStorage.getItem('lobbyToken'),
+                /*                password: this.state.password,*/
+                userToken: localStorage.getItem('userToken'),
+                status: "READY"
+            });
+            const response = api.put('/lobby/ready?userToken=' + localStorage.getItem('userToken')
+                + '?gameToken=' + localStorage.getItem('userToken'), requestBody);
+
+
+        }catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+        }
+    }
+
+    enterGamer(){
+        try {
+            const response = api.post('/lobby/' + localStorage.getItem('lobbyToken')
+                + '/game');
+
+            localStorage.setItem('gameToken', response.data);
+
+            this.props.history.push('/unityGame');
+
+        }catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+        }
+    }
+
+    componentWillMount() {
+        const response = api.get('/lobby?token=' + localStorage.getItem('lobbyToken'))
+        const lobby = new Lobby(response.data);
+        this.setState({
+            playerList: lobby.playerList,
+            botList: lobby.botList
+        })
     }
 
     componentDidMount() {
@@ -107,6 +170,7 @@ class WaitingRoom extends React.Component {
                         </Button>
 
                     <Button
+                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
                         width="30%"
                         onClick={() => {
                             this.getLobbyToken();

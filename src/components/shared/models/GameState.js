@@ -4,7 +4,6 @@ class GameState {
         this.lobbyId = null;
         this.gameToken = null;
         this.wordList = null;
-        this.adminUserToken = null;
         this.status = null;
         this.adminToken = null;
         this.playerList = null; //array of users

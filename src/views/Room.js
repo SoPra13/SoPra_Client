@@ -21,11 +21,17 @@ const Name = styled.div`
   color: #5a5a5a;
 `;
 
+const Id = styled.div`
+  margin-left: auto;
+  margin-right: 10px;
+  font-weight: bold;
+`;
 
 const Room = ({ lobby }) => {
     return (
         <Container>
-            <Name>{lobby.name}</Name> <UserName>{lobby.username}</UserName>
+            <UserName>{lobby.lobbyname}</UserName>
+            <Id>Id: {lobby.id}</Id>
         </Container>
     );
 };

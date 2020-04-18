@@ -15,10 +15,10 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-const active = styled.div`
+const Active = styled.div`
 .active, .btn:hover {
   background-color: #666;
-  color: white;
+  color: #c92222;
  `;
 
 const Form = styled.div`
@@ -62,36 +62,37 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
+function ready(){
+    const requestBody = JSON.stringify({
+        lobbyname: this.state.lobbyname,
+        userToken: this.state.userToken,
+        lobbyType: this.state.lobbyType
+    });
+    const response = api.post(`/lobby/ready` + `?userToken={userToken}` + localStorage.getItem(`userToken`)
+    + `&gameToken={gameToken}` + localStorage.getItem(`gameToken`), requestBody)
+}
+
 /**
- * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
- * You should have a class (instead of a functional component) when:
- * - You need an internal state that cannot be achieved via props from other parent components
- * - You fetch data from the server (e.g., in componentDidMount())
- * - You want to access the DOM via Refs
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
 class CustomLobby extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             lobbyname: null,
-            password: null,
-            lobbyType: null
+/*            password: null,*/
+            adminToken: localStorage.getItem('userToken'),
+            lobbyType: "PUBLIC"
         };
     }
-    /**
-     * getUserID()
-     * addBot()
-     * invitePlayer()
-     * ready() => if all players, but the bots,  are ready, it starts automatically the game
-     */
+
     async create() {
         try {
             const requestBody = JSON.stringify({
                 lobbyname: this.state.lobbyname,
-                password: this.state.password,
+/*                password: this.state.password,*/
                 adminToken: this.state.adminToken,
                 lobbyType: this.state.lobbyType
             });
@@ -104,7 +105,7 @@ class CustomLobby extends React.Component {
             localStorage.setItem('token', lobby.lobbyToken);
 
 
-            this.props.history.push(`/dashboard`);
+            this.props.history.push(`/dashboard/waitingLobby`);
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
@@ -121,6 +122,7 @@ class CustomLobby extends React.Component {
         this.setState({ [key]: value });
     }
 
+
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
      * Initialization that requires DOM nodes should go here.
@@ -129,7 +131,6 @@ class CustomLobby extends React.Component {
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
     componentDidMount() {
-        this.state.lobbyState = "PUBLIC";
     }
 
     render() {
@@ -144,43 +145,41 @@ class CustomLobby extends React.Component {
                                 this.handleInputChange('lobbyname', e.target.value);
                             }}
                         />
-                        <Label>Password</Label>
+{/*                        <Label>Password</Label>
                         <InputField
                             placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange('password', e.target.value);
                             }}
-                        />
+                        />*/}
 
                         <ButtonContainer>
-                            <active>
+                            <Active>
                             <Button
-                                width="30%"
                                 onClick={() => {
                                     this.setState({
                                         lobbyType: "PUBLIC"
                                 });
                                 }}
                             >
-                                Create
+                                Public
                             </Button>
-                            </active>
-
-                            <Button
-                                width="30%"
+                            </Active>
+{/*                            <Button
                                 onClick={() => {
                                     this.setState({
                                         lobbyType: "PRIVATE"
                                 });
                                 }}
                             >
-                                Create
-                            </Button>
+                                Private
+                            </Button>*/}
                         </ButtonContainer>
 
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.lobbyname}
+                                disabled={/*this.state.lobbyType == null || (this.state.lobbyType === "PRIVATE" && this.state.password == null)
+                                || */this.state.lobbyname == null}
                                 width="30%"
                                 onClick={() => {
                                     this.create();
@@ -196,8 +195,5 @@ class CustomLobby extends React.Component {
     }
 }
 
-/**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
- */
+
 export default withRouter(CustomLobby);

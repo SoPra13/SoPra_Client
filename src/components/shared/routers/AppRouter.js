@@ -1,7 +1,5 @@
 import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { GameGuard } from "../routeProtectors/GameGuard";
-import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
 import UnityGame from "../../game/UnityGame";
@@ -14,6 +12,9 @@ import Profile from "../../profile/Profile";
 import {RegisterGuard} from "../routeProtectors/RegisterGuard";
 import Register from "../../register/Register";
 import WaitingLobby from "../../lobby/WaitingLobby";
+import {GameGuard} from "../routeProtectors/GameGuard";
+import LoginLobby from "../../lobby/LoginLobby";
+
 
 /**
  * Documentation about routing in React: https://reacttraining.com/react-router/web/guides/quick-start
@@ -27,6 +28,7 @@ class AppRouter extends React.Component {
 
             <Route
               path="/dashboard"
+              exact
               render={() => (
                 <DashboardGuard>
                   <DashboardRouter base={"/dashboard"} />
@@ -35,11 +37,11 @@ class AppRouter extends React.Component {
             />
 
             <Route
-              path="/login"
+              path='/login'
               exact
               render={() => (
                 <LoginGuard>
-                  <Login />
+                  <Login/>
                 </LoginGuard>
               )}
             />
@@ -53,19 +55,11 @@ class AppRouter extends React.Component {
               />
 
               <Route
-                  path="/dashboard/lobby/waitingLobby"
-                  exact
-                  render={() => (
-                      <WaitingLobby/>
-                  )}
-              />
-
-              <Route
                   path="/register"
                   exact
                   render={() => (
                       <RegisterGuard>
-                          <Register />
+                          <Register/>
                       </RegisterGuard>
                   )}
               />
@@ -81,6 +75,22 @@ class AppRouter extends React.Component {
               />
 
               <Route
+                  path="/dashboard/loginLobby"
+                  exact
+                  render={() => (
+                      <LoginLobby/>
+                  )}
+              />
+
+              <Route
+                  path="/dashboard/waitingLobby"
+                  exact
+                  render={() => (
+                      <WaitingLobby/>
+                  )}
+              />
+
+              <Route
                   path="/dashboard/profile"
                   exact
                   render={() => (
@@ -88,11 +98,14 @@ class AppRouter extends React.Component {
                   )}
               />
 
+
               <Route
-                  path="/unityTesting"
+                  path="/unityGame"
                   exact
                   render={() => (
+                      <GameGuard>
                           <UnityGame />
+                          </GameGuard>
                   )}
               />
               <Route path="/" exact render={() => <Redirect to={"/dashboard"} />} />

@@ -11,8 +11,8 @@ import { Redirect } from "react-router-dom";
  * @param props
  */
 export const GameGuard = props => {
-  if (localStorage.getItem("token")) {
+  if (localStorage.getItem("lobbyToken") && localStorage.getItem('userToken')) {
     return props.children;
   }
-  return <Redirect to={"/lobby"} />;
+  return <Redirect to={"/dashboard"} />;
 };
