@@ -1,8 +1,16 @@
 class GameState {
     constructor(data = {}) {
         this.id = null;
-        this.lobbyId = null;
-        this.gameToken = null;
+        this.version = null;
+        this.token = null;
+        this.round = null;
+        this.guesser = null;
+        this.guessList = null;
+        this.mysteryWords = null;
+        this.voteList = null;
+        this.playerList = null;
+        this.botList = null;
+
         this.wordList = null;
         this.status = null;
         this.adminToken = null;

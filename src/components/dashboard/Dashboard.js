@@ -429,15 +429,6 @@ class Dashboard extends React.Component {
                     </Container>*/}
                 </TabPanel>
 
-                <Button
-                    position = "absolute"
-                    onClick={() => {
-                        this.props.history.push('/dashboard/customLobby');
-                    }}
-                >
-                    Create Lobby
-                </Button>
-
 
 
                 <TabPanel>
@@ -473,6 +464,17 @@ class Dashboard extends React.Component {
                             </div>
                         )}
                     </Container>
+
+
+                    <Button
+                        position = "absolute"
+                        onClick={() => {
+                            this.props.history.push('/dashboard/customLobby');
+                        }}
+                    >
+                        Create Lobby
+                    </Button>
+
 
                 </TabPanel>
 

@@ -69,15 +69,17 @@ class WaitingRoom extends React.Component {
 
     async getLobby(){
         try {
-            const response = await api.get(`/lobby`+`?token={token}`+ localStorage.getItem('lobbyToken'));
+            const response = await api.get('/lobby?lobbyToken='+ localStorage.getItem('lobbyToken'));
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
+/*            await new Promise(resolve => setTimeout(resolve, 1000));*/
 
             // Get the returned users and update the state.
-            this.setState({ users: response.data });
+            this.setState({
+                playerList: response.data.playerList
+            });
 
             // See here to get more data.
-            console.log(response);
+            console.log(response.data.playerList);
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
@@ -100,27 +102,35 @@ class WaitingRoom extends React.Component {
         }
     }
 
-    enterGamer(){
+    enterGame(){
         try {
-            const response = api.post('/lobby/' + localStorage.getItem('lobbyToken')
+            const response = api.put('/lobby/' + localStorage.getItem('lobbyToken')
                 + '/game');
 
-            localStorage.setItem('gameToken', response.data);
+            console.log(response);
+            console.log(response.data);
+            localStorage.setItem('gameToken', localStorage.getItem('lobbyToken'));
+            console.log(localStorage.getItem('gameToken'))
 
             this.props.history.push('/unityGame');
 
         }catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+            alert(`Ivan is a dictator \n${handleError(error)}`);
         }
     }
 
     componentWillMount() {
-        const response = api.get('/lobby?token=' + localStorage.getItem('lobbyToken'))
+        const response = api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'))
+
+
         const lobby = new Lobby(response.data);
+
+
         this.setState({
             playerList: lobby.playerList,
             botList: lobby.botList
         })
+
     }
 
     componentDidMount() {
@@ -176,10 +186,18 @@ class WaitingRoom extends React.Component {
                             this.getLobbyToken();
                         }}
                     >
-                        Leave
+                        Get the lobby token
                     </Button>
                     </div>
-                )}
+
+                <Button
+                    onClick={() => {
+                        this.enterGame();
+                    }}
+                >
+                    Leave
+                </Button>
+
             </Container>
             </BaseContainer>
         );

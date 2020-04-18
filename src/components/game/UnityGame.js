@@ -130,6 +130,19 @@ export class UnityGame extends React.Component {
             this.state.totalPlayers
         )
     }
+
+    substringOfWordList(str){
+        var res = str.split(";");
+        return res;
+    }
+
+/*    arrayToString(array){
+        var begin = array[1];
+        for (let i = 1; i < array.length; i++){
+            begin =
+        }
+    }*/
+
     stringToArray(str){
         let array = [];
         for (let i = 0; i < str.length; i++){
@@ -153,6 +166,10 @@ export class UnityGame extends React.Component {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
 }
+
+
+
+
     addPlayer(){
         this.unityContent.send(
             "PlayerTotal",
@@ -227,7 +244,7 @@ export class UnityGame extends React.Component {
 
     currentGame(){
         try{
-        const response = api.get('/game/' + this.state.gameToken);
+        const response = api.get('/game?token=' + localStorage.getItem('gameToken'));
 
         this.setState({
             //fetch current game to unity by requesting for the states

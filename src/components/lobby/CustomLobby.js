@@ -82,7 +82,6 @@ class CustomLobby extends React.Component {
         super(props);
         this.state = {
             lobbyname: null,
-/*            password: null,*/
             adminToken: localStorage.getItem('userToken'),
             lobbyType: "PUBLIC"
         };
@@ -92,7 +91,6 @@ class CustomLobby extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 lobbyname: this.state.lobbyname,
-/*                password: this.state.password,*/
                 adminToken: this.state.adminToken,
                 lobbyType: this.state.lobbyType
             });
@@ -100,6 +98,9 @@ class CustomLobby extends React.Component {
 
             // Get the returned user and update a new object.
             const lobby = new Lobby(response.data);
+
+            console.log(lobby);
+            console.log(lobby.lobbyToken);
 
             // Store the token into the local storage.
             localStorage.setItem('lobbyToken', lobby.lobbyToken);
