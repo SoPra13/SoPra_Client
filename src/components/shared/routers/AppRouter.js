@@ -14,6 +14,7 @@ import Register from "../../register/Register";
 import WaitingLobby from "../../lobby/WaitingLobby";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import LoginLobby from "../../lobby/LoginLobby";
+import UnityDummy from "../../game/UnityDummy";
 
 
 /**
@@ -98,6 +99,14 @@ class AppRouter extends React.Component {
                   )}
               />
 
+              <Route
+                  path="/unitydummy"
+                  exact
+                  render={() => (
+                      <UnityDummy/>
+                  )}
+              />
+
 
               <Route
                   path="/unityGame"
@@ -108,7 +117,7 @@ class AppRouter extends React.Component {
                           </GameGuard>
                   )}
               />
-              <Route path="/" exact render={() => <Redirect to={"/dashboard"} />} />
+              <Route path="/" exact render={() => <Redirect to={"/login"} />} />
           </div>
         </Switch>
       </BrowserRouter>

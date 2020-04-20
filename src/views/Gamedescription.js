@@ -38,7 +38,9 @@ const Id = styled.div`
 function Gamedescription() {
     return (
         <Container>
-
+            <p>
+                Blablablabla
+            </p>
         </Container>
     );
 };
