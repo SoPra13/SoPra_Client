@@ -178,7 +178,6 @@ class Login extends React.Component {
             </Central>
 
               <Button
-                  width="20%"
                   onClick={() => {
                     this.unityTesting();
                   }}
