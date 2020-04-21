@@ -25,5 +25,5 @@
         },
     CallsForTopicList: function() {
           ReactUnityWebGL.CallsForTopicList();
-         }
+        }
 });
