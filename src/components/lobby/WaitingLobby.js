@@ -63,6 +63,8 @@ class WaitingRoom extends React.Component {
 
     }
 
+    //alkjdslöfha
+
     getLobbyToken(){
         return this.state.lobbyToken;
     }
@@ -195,7 +197,7 @@ class WaitingRoom extends React.Component {
                         this.enterGame();
                     }}
                 >
-                    Leave
+                    Join into Game
                 </Button>
 
             </Container>
