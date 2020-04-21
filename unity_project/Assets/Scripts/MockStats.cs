@@ -18,6 +18,9 @@ public class MockStats : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void SendTopicInput(int topic);
 
+    [DllImport("__Internal")]
+    private static extern void FetchPlayerMadeTopicChoice(); //active player only, checks which player has already chosen his topic
+
 
     private Rounds rounds;
     private int playerPosition;
@@ -28,6 +31,7 @@ public class MockStats : MonoBehaviour
     private bool inputLocked = false;
     private string currentTopic = "";
 
+    private int[] topicChoiceMade = { 0, 0, 0, 0, 0, 0, 0 }; //this array comes from Backend, 0 = not chosen a topic yet; 1 = chosen a topic yet; index 0 = player pos 1 etc.
     private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
     private int[] avatar = { 1, 2, 3, 4, 5, 6, 7 };
     string[] input = { null, null, null, null, null, null, null };
@@ -43,62 +47,85 @@ public class MockStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 7;
+        activePlayer = 6;
         playerPosition = 7; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
         topicChoices = new int[5]; //In here, each Field represents a Topic (Field 0 = Topic 1; Field 1 = Topic 2). Each Field contains an integer value
-                                    //indicating how many votes this Topic has [0,2,0,1,0] means that Topic 2 has 2 votes, Topic 4 has 1 vote, thre rest has 0 votes
+                                   //indicating how many votes this Topic has [0,2,0,1,0] means that Topic 2 has 2 votes, Topic 4 has 1 vote, thre rest has 0 votes
     }
+
 
     public string GetName(int i)
     {
         return names[i];
     }
 
+
     public int GetAvatar(int i)
     {
         return avatar[i];
     }
+
 
     public int GetTotalNumberOfPlayers()
     {
         return playerTotal;
     }
 
+
     public int GetPlayerPosition()
     {
         return playerPosition;
     }
+
 
     public void SetPlayerPosition(int i)
     {
         playerPosition = i;
     }
 
+
     public void SetPlayerTotal(int i)
     {
         playerTotal = i;
     }
+
 
     public string[] GetTopicArray()
     {
         return topicArray;
     }
 
+
     public void SetConnectedPlayers() //this is +1 just for testing, afterwards it needs to pull this number from react
     {
         connectedPlayers += 1;
     }
+
 
     public int GetConnectedPlayers()
     {
         return connectedPlayers;
     }
 
+
     public int GetActivePlayer()
     {
         return activePlayer;
+    }
+
+
+    //just for Testing Buttons
+    public void PlayerHasChosenTopic(int playerPos)
+    {
+        topicChoiceMade[playerPos] = 1;
+    }
+
+
+    public int[] GetTopicChoiceMade()
+    {
+        return topicChoiceMade;
     }
 
 
@@ -226,10 +253,50 @@ public class MockStats : MonoBehaviour
         }
     }
 
+
     //React will send the Topic of this round via this function
     public void ReactSetThisRoundsTopic(string thisRoundsTopic)
     {
         currentTopic = thisRoundsTopic;
         rounds.SetRoundPhase(11);
     }
+
+
+    //React will send a String containing information about which player has already chosen his topic
+    //1 = has chosen; 0 = has not chosen yet
+    //ex. 100101: Player Pos. 1 & 4 & 6 have chosen, Player Pos. 2 & 3 & 5 have not yet chosen
+    public void ReactSetPlayerHasChosenTopic(string playerChosenString)
+    {
+        for (int i = 0; i < playerTotal; i++)
+        {
+            if(i+1 == activePlayer)
+            {
+
+            }
+            else
+            {
+                topicChoiceMade[i] = (int)Char.GetNumericValue(playerChosenString[i]);
+            }
+        }
+    }
+
+
+    //This is called by react after player has connected
+    public void GetPlayerHaveChosenTopicFromReact()
+    {
+        try { FetchPlayerMadeTopicChoice(); }//This is triggered after React Set the above values (every second) and will set PlayerNames and PlayerAvatars
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Could not get any Infos about Players who made Topic Choices " + e);
+        }
+    }
+
+
+    //This is called by react to update the Round value (round can be 0 - 12 (0 for round 1))
+    public void ReactSetRound(int round)
+    {
+        rounds.SetRound(round);
+    }
+
+
 }
