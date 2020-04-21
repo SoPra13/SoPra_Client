@@ -127,7 +127,20 @@ export class UnityGame extends React.Component {
             this.sendRoundsTopic();
             console.log("The Topics for this Round have been chosen");
         });
+
+        this.unityContent.on("FetchPlayerMadeTopicChoice", () =>{
+            //Todo fetch Info about which player has already chosen a Topic in the Backend
+            this.sendPlayerHasChosenTopic();
+            console.log("Active Player has asked for state of Topic choices");
+        });
+
+        this.unityContent.on("AskForRound", () =>{
+            //Todo Get the current round of the game from the Backend and pass it to setRound()
+            this.setRound();
+            console.log("Unity has asked for the current Round of the Game");
+        });
     }
+
 
     async tryPut()
     {
@@ -280,6 +293,35 @@ export class UnityGame extends React.Component {
         )
     }
 
+
+    //Tells Unity which player has already chosen a Topic
+    //Input: String with length = nr. of total players in the game (incl. Bots)
+    //0 = has not made a topic choice; 1 = has made a topic choice
+    //Ex. Game has 5 players, input string = "10011" meaning, player pos. 1 has made his topic choice
+    // player pos. 2 and player pos. 3 have not made a topic choice; player pos. 4 and player pos. 5 have made a
+    //topic choice
+    sendPlayerHasChosenTopic(){
+        console.log("sending back which Player has already chosen a topic --> to unity");
+        let topicChoice = "0000000";
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetPlayerHasChosenTopic",
+            topicChoice //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
+
+
+    //Input: Int which represent the current round
+    //may range from 0 to 12, where 0 = Round 1 and 12 = Round 13
+    setRound(){
+        console.log("React has send the current Round to unity");
+        let round = 0;
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetRound",
+            round //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
 
 
     currentGame(){
