@@ -308,18 +308,6 @@ export class UnityDummy extends React.Component {
   }
 
 
-  //Input: Int which represent the current round
-  //may range from 0 to 12, where 0 = Round 1 and 12 = Round 13
-  setRound(){
-    console.log("React has send the current Round to unity");
-    let round = 0;
-    this.unityContent.send(
-        "MockStats",
-        "ReactSetRound",
-        round //Todo This are just dummy values, these values need to come from Backend Gameobject
-    )
-  }
-
   componentDidMount() {
 /*    this.timerID = setInterval(
         () => this.currentGame(),
