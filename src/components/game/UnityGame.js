@@ -96,8 +96,6 @@ export class UnityGame extends React.Component {
         });
 
 
-
-
         this.unityContent.on("AskForTopicsList", () =>{
             console.log("Unity asked for the TopicList");
             this.sendTopicList();
@@ -126,6 +124,19 @@ export class UnityGame extends React.Component {
         this.unityContent.on("TopicsHaveBeenChosen", () =>{
             this.sendRoundsTopic();
             console.log("The Topics for this Round have been chosen");
+        });
+
+
+        this.unityContent.on("AskForRound", () =>{
+            //Todo fetch round number from backend and pass it to sendRoundNumber
+            this.sendRoundNumber();
+            console.log("Unity asks React for the current Round");
+        });
+
+
+        this.unityContent.on("FetchPlayerMadeTopicChoice", () =>{
+            this.sendPlayerHasChosenTopicInfo();
+            console.log("Unity asks for the info about which player has already chosen his topic");
         });
     }
 
@@ -279,7 +290,32 @@ export class UnityGame extends React.Component {
             topic //Todo This are just dummy values, these values need to come from Backend Gameobject
         )
     }
-    //test
+
+
+    //The round number is an int  in Range [0,12]; 0 = round 1; 12 = round 13
+    sendRoundNumber(){
+        console.log("sending back the current Round to unity");
+        let round = 0;
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetRound",
+            round //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
+
+
+    //Send a string to unity containing info about which player has already chosen his topic
+    //1 = has chosen; 0 = has not yet chosen
+    //ex. 100101: Player Pos. 1 & 4 & 6 have chosen, Player Pos. 2 & 3 & 5 have not yet chosen
+    sendPlayerHasChosenTopicInfo(){
+        console.log("sending back info about which player has already chosen a Topic to Unity");
+        let topicChoiceMade = "100101";
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetPlayerHasChosenTopic",
+            topicChoiceMade //Todo This are just dummy values, these values need to come from Backend Gameobject
+        )
+    }
 
 
     currentGame(){
