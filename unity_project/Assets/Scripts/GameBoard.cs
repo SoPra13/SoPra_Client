@@ -21,8 +21,6 @@ public class GameBoard : MonoBehaviour
     public GameObject infoBarText;
     public GameObject topicBarObject;
     public GameObject thinkingBubbleObject;
-    public GameObject infoTagObject;
-    public GameObject loadingTagObject;
 
     public Positions positions;
 
@@ -36,7 +34,6 @@ public class GameBoard : MonoBehaviour
     public AudioSource gameMusic;
     public AudioSource barCheckSFX;
     public AudioSource barAppearsSFX;
-    public AudioSource dingSFX;
 
     public Rounds round;
 
@@ -60,9 +57,6 @@ public class GameBoard : MonoBehaviour
     private bool serverRespondedToTopic = false;
     private bool timerPhase1Ended = false;
     private bool startGame = true;
-    private bool keepInfoTextIdle = false;
-    private bool Phase5HasLoaded = false;
-    //private bool phase6TransitionOngoing = false;
 
 
 
@@ -250,7 +244,8 @@ public class GameBoard : MonoBehaviour
 
     public void ForceRemoveInfoBox()
     {
-        keepInfoTextIdle = false;
+        infoBarAnimator.SetBool("displayInfoBar", false);
+        infoTextAnimator.SetBool("wake", false);
     }
 
 
@@ -260,36 +255,8 @@ public class GameBoard : MonoBehaviour
     }
 
 
-    public void CheckTopicChoiceBubble()
+    public void PlaceThinkingBubble(int position, int mode)
     {
-        for(int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
-        {
-            if(i == mockStats.GetActivePlayer())
-            {
-
-            }
-            else
-            {
-                if (mockStats.GetTopicChoiceMade()[i-1] == 1 && GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().GetBool("finished") == false)
-                {
-                    dingSFX.Play();
-                    GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("finished", true);
-                }
-            }
-        }
-        if (Phase5HasLoaded)
-        {
-            int sum = 0;
-            for (int i = 0; i < mockStats.GetTotalNumberOfPlayers(); i++)
-            {
-                sum += mockStats.GetTopicChoiceMade()[i];
-            }
-            if (sum == mockStats.GetTotalNumberOfPlayers() - 1)
-            {
-                round.SetRoundPhase(6);
-                Phase5HasLoaded = false;
-            }
-        }
 
     }
 
@@ -309,25 +276,6 @@ public class GameBoard : MonoBehaviour
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
         round.SetRoundPhase(13);
-        Destroy(GameObject.Find("TopicBar"));
-        Destroy(GameObject.Find("BlackScreen"));
-    }
-
-    public IEnumerator NotifyPlayerThatTopicHasBeenChosen()
-    {
-        GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
-        blackScreen.name = "BlackScreen";
-        blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        yield return new WaitForSeconds(1.0f);
-        GameObject topicBar = Instantiate(topicBarObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        topicBar.name = "TopicBar";
-        topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        barAppearsSFX.Play();
-        GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your Team has chosen...";
-        GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...a Topic for this Round!";
-        yield return new WaitForSeconds(1.0f);
-        barCheckSFX.Play();
-        yield return new WaitForSeconds(3.2f);
         Destroy(GameObject.Find("TopicBar"));
         Destroy(GameObject.Find("BlackScreen"));
     }
@@ -383,7 +331,7 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
         //TODO here I have to add the correct topics
         float y = 164.6f;
-        StartCoroutine(DisplayInfoText("You have <color=#001AF6>30</color> Seconds to pick a Topic for this Round!",true,0));
+        StartCoroutine(DisplayInfoText("You have <color=#001AF6>30</color> Seconds to pick a Topic for this Round!",true));
         for (int j = 0; j < 5; j++)
         {
             GameObject topicButton = Instantiate(topicButtonObject, new Vector3(-7.6f, y, 0), Quaternion.identity) as GameObject;
@@ -476,6 +424,9 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator ActivePlayerWaitsForTopics()
     {
+        //GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
+        //blackScreen.name = "BlackScreen";
+        //Hier könnte ich einbauen dass es alle anderen Spieler flippt
         for(int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
         {
             if(i != mockStats.GetActivePlayer())
@@ -492,25 +443,11 @@ public class GameBoard : MonoBehaviour
                 GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", true);
             }
         }
-        yield return new WaitForSeconds(2.5f);
-        StartCoroutine(DisplayInfoText("As you are the active player, you need to wait for the others to choose a Topic for this round!",true,2));
-        Phase5HasLoaded = true;
+        //blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        yield return new WaitForSeconds(3.7f);
+        StartCoroutine(DisplayInfoText("As you are the active player, you need to wait for the others to choose a Topic for this round!",true));
         yield return new WaitForSeconds(0.1f);
-    }
-
-
-    public IEnumerator ActivePlayerWaitsForClues()
-    {
-        for (int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
-        {
-            if (i != mockStats.GetActivePlayer())
-            {
-                Debug.Log("Trigger");
-                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("wake", true);
-                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", true);
-            }
-        }
-        yield return new WaitForSeconds(0.1f);
+        round.SetRoundPhase(5);
     }
 
 
@@ -521,8 +458,8 @@ public class GameBoard : MonoBehaviour
         GameObject.Find("FaderRight").SetActive(false);
     }
 
-    //Mode Documentation: 0 = nothing; 1 = info; 2 = loading
-    public IEnumerator DisplayInfoText(string text, bool keepIdle, int mode)
+
+    public IEnumerator DisplayInfoText(string text, bool keepIdle)
     {
         GameObject infoBoard = Instantiate(infoBar, new Vector3(-12f, 260f, 0), Quaternion.identity) as GameObject;
         infoBoard.name = "Infoboard";
@@ -536,83 +473,16 @@ public class GameBoard : MonoBehaviour
         infoTextAnimator = infoText.GetComponent<Animator>();
         tmproInfoText = infoText.GetComponent<TextMeshProUGUI>();
 
-        if(mode == 0)
-        {
-
-        }else if (mode == 1)
-        {
-            GameObject infoTag = Instantiate(infoTagObject, new Vector3(396, 0, 0), Quaternion.identity) as GameObject;
-            infoTag.name = "infoTag";
-            infoTag.transform.SetParent(GameObject.Find("Infoboard").transform, false);
-        }
-        else if (mode == 2)
-        {
-            GameObject loadingTag = Instantiate(loadingTagObject, new Vector3(395, 0, 0), Quaternion.identity) as GameObject;
-            loadingTag.name = "loadingTag";
-            loadingTag.transform.SetParent(GameObject.Find("Infoboard").transform, false);
-        }
-
         notification.Play();
         tmproInfoText.text = text;
         infoBarAnimator.SetBool("displayInfoBar", true);
         infoTextAnimator.SetBool("wake", true);
-        if (keepIdle)
+        yield return new WaitForSeconds(6f);
+        if (!keepIdle)
         {
-            keepInfoTextIdle = true;
-            while (keepInfoTextIdle)
-            {
-                yield return new WaitForSeconds(0.1f);
-            }
+            infoBarAnimator.SetBool("displayInfoBar", false);
+            infoTextAnimator.SetBool("wake", false);
         }
-        else
-        {
-            yield return new WaitForSeconds(6f);
-        }
-
-        infoBarAnimator.SetBool("displayInfoBar", false);
-        infoTextAnimator.SetBool("wake", false);
-        if (mode == 0)
-        {
-            yield return new WaitForSeconds(1f);
-        }
-        else if (mode == 1)
-        {
-            GameObject.Find("infoTag").GetComponent<Animator>().SetBool("disappear", true);
-            yield return new WaitForSeconds(1f);
-            Destroy(GameObject.Find("infoTag"));
-        }
-        else if (mode == 2)
-        {
-            GameObject.Find("loadingTag").GetComponent<Animator>().SetBool("disappear", true);
-            yield return new WaitForSeconds(1f);
-            Destroy(GameObject.Find("loadingTag"));
-        }
-        Destroy(GameObject.Find("Infoboard"));
-        Destroy(GameObject.Find("InfoText"));
-    }
-
-    //This is just an Animaton notation for the Active Player once the players have chosen their topic
-    public IEnumerator PlayersHaveChosenTheirTopic()
-    {
-        for (int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
-        {
-            if (i == mockStats.GetActivePlayer())
-            {
-
-            }
-            else
-            {
-                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("finished", false);
-                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", false);
-                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("wake", false);
-            }
-        }
-        ForceRemoveInfoBox();
-        StartCoroutine(NotifyPlayerThatTopicHasBeenChosen());
-        yield return new WaitForSeconds(5f);
-        StartCoroutine(DisplayInfoText("The players have chosen their Topic for this Round. They will now give you clues. Hold on...", true, 2));
-        StartCoroutine(ActivePlayerWaitsForClues());
-        yield return new WaitForSeconds(2.5f);
     }
 }
 

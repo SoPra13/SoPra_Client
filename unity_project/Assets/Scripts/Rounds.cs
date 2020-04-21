@@ -13,9 +13,6 @@ public class Rounds : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void TopicsHaveBeenChosen();
 
-    [DllImport("__Internal")]
-    private static extern void AskForRound();
-
 
 
     public GameBoard gameBoard;
@@ -32,7 +29,6 @@ public class Rounds : MonoBehaviour
     private bool roundPhase3Wakes = true;
     private bool topicCall = false;
     private bool lastCall = false;
-    private bool gettingTopicChoiceInfo = false;
 
 
     void Start()
@@ -43,16 +39,10 @@ public class Rounds : MonoBehaviour
 
     private void Update()
     {
-        if(roundPhase == 1)//Shuffling Animation of Cards AND Set the Round (fetched from Backend)
+        if(roundPhase == 1)//Shuffling Animation of Cards
         {
-            try { AskForRound(); }//This will tell React to get the Round int for this round
-            catch (EntryPointNotFoundException e)
-            {
-                Debug.Log("Unity wants to set the current round but failed " + e);
-            }
-
             StartCoroutine(gameBoard.DisplayInfoText(mockStats.GetName(mockStats.GetActivePlayer()-1) + " has been chosen to be the Active " +
-                                                "Player this Round! He will draw <color=#001AF6>13</color> random topic cards...", false, 1));
+                                                "Player this Round! He will draw <color=#001AF6>13</color> random topic cards...", false));
             gameBoard.DisplayArrow();
             StartCoroutine(Phase1Shuffle());
             roundPhase = 2;
@@ -68,7 +58,6 @@ public class Rounds : MonoBehaviour
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
                 StartCoroutine(gameBoard.ActivePlayerWaitsForTopics());
-                roundPhase = 5;
             }
             else
             {
@@ -83,17 +72,12 @@ public class Rounds : MonoBehaviour
             roundPhase = 5;
         }
 
-        if (roundPhase == 5)//Waits for Topiccard to be displayed OR Active Player waits for Topics being chosen
+        if (roundPhase == 5)//Waits for Topiccard to be displayed
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
-                if (!gettingTopicChoiceInfo)
-                {
-                    //I have to get the topic array from React and adjust the thinking bubbles in the game accordingli
-                    //if a player has made his choice, a thick should appear in his box
-                    StartCoroutine(GetPlayerChoiceInfosFromReact());
-                    gettingTopicChoiceInfo = true;
-                }
+                //I have to get the topic array from React and adjust the thinking bubbles in the game accordingli
+                //if a player has made his choice, a thick should appear in his box
             }
             else
             {
@@ -103,75 +87,52 @@ public class Rounds : MonoBehaviour
 
         if (roundPhase == 6)//Timer Starts
         {
-            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
-            {
-                StartCoroutine(gameBoard.PlayersHaveChosenTheirTopic());
-                gettingTopicChoiceInfo = false;
-                roundPhase = 7;
-            }
-            else
-            {
-                timer.StartTimer(30);
-                roundPhase = 7;
-            }
+            timer.StartTimer(30);
+            roundPhase = 7;
         }
 
         if (roundPhase == 7)// Non-Active Players have 30 seconds to pick a Topic
         {
-            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            mockStats.GetTopicInput();
+
+            if (!topicCall)
             {
-                
+                StartCoroutine(CallsForTopicList());
+                topicCall = true;
             }
-            else
+
+            for (int i = 1 ; i <= 5; i++)
             {
-                mockStats.GetTopicInput();
-
-                if (!topicCall)
-                {
-                    StartCoroutine(CallsForTopicList());
-                    topicCall = true;
-                }
-
-                for (int i = 1; i <= 5; i++)
-                {
-                    GameObject.Find("TopicVoteNumber" + i.ToString()).GetComponent<TextMeshProUGUI>().text = topics[i - 1].ToString();
-                }
-
-                //every player has made his choice conditon
-                int sum = 0;
-                for (int j = 0; j < 5; j++)
-                {
-                    sum += topics[j];
-                }
-                //Everyone has set their vote
-                //Check for draws
-                if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
-                {
-                    mockStats.UnlockInputForTopics(); //in order that players can enter their choice in the next round again
-                    StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
-                    timer.DeactivateTimer();
-                    gameBoard.ForceRemoveInfoBox();
-                    topicCall = false;
-                    roundPhase = 8;
-                }
+                GameObject.Find("TopicVoteNumber" + i.ToString()).GetComponent<TextMeshProUGUI>().text = topics[i - 1].ToString();
             }
-  
+
+            //every player has made his choice conditon
+            int sum = 0;
+            for (int j = 0; j < 5; j++)
+            {
+                sum += topics[j];
+            }
+            //Everyone has set their vote
+            //Check for draws
+            if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
+            {
+                mockStats.UnlockInputForTopics(); //in order that players can enter their choice in the next round again
+                StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
+                timer.DeactivateTimer();
+                gameBoard.ForceRemoveInfoBox();
+                topicCall = false;
+                roundPhase = 8;
+            }
         }
 
         if (roundPhase == 8)//I get the latest version of the topic array and animate whether there are duplicates or no votes
-        {
-            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+        {  
+            if (!lastCall)
             {
+                StartCoroutine(LastCallForTopics());
+                lastCall = true;
+            }
 
-            }
-            else
-            {
-                if (!lastCall)
-                {
-                    StartCoroutine(LastCallForTopics());
-                    lastCall = true;
-                }
-            }
         }
 
         if (roundPhase == 9)
@@ -193,7 +154,7 @@ public class Rounds : MonoBehaviour
         if(roundPhase == 10)//waits until react sends back the chosen Topic to Unity, then the function ReactSetThisRoundsTopic() from mockStats will set Round = 11
         {
             //Just for testing
-            mockStats.ReactSetThisRoundsTopic("Hoi Zamen");
+            //mockStats.ReactSetThisRoundsTopic("Hoi Zamen");
             //End Testing
             if(mockStats.GetCurrentTopic() == "")
             {
@@ -216,7 +177,7 @@ public class Rounds : MonoBehaviour
 
         }
 
-        if (roundPhase == 13)//Show Player Input Panel
+        if (roundPhase == 13)//Wait until Topic Animation is over in GameBoard
         {
 
         }
@@ -242,18 +203,6 @@ public class Rounds : MonoBehaviour
     }
 
 
-    public int GetRound()
-    {
-        return round;
-    }
-
-
-    public void SetRound(int roundInput)
-    {
-        round = roundInput;
-    }
-
-
     //This is called via the MockStats Script. The Mock gets this info from React
     public void SetTopics(int[] topicsFromBackend)
     {
@@ -267,8 +216,8 @@ public class Rounds : MonoBehaviour
         gameBoard.SetupCardStack();
         yield return new WaitForSeconds(4f);
         StartCoroutine(gameBoard.DisplayInfoText("The Cards have been dealt! Round 1 will start with " + mockStats.GetName(mockStats.GetActivePlayer()-1) + " as" +
-            " <color=#001AF6>active player</color>!", false, 1));
-        yield return new WaitForSeconds(3f);
+            " <color=#001AF6>active player</color>!", false));
+        yield return new WaitForSeconds(2f);
         gameBoard.RemoveArrow();
         roundPhase = 3;
     }
@@ -336,13 +285,4 @@ public class Rounds : MonoBehaviour
             topics[i] = (int)Char.GetNumericValue(topicArray[i]);
         }
     }
-
-    IEnumerator GetPlayerChoiceInfosFromReact()
-    {
-        mockStats.GetPlayerHaveChosenTopicFromReact();
-        gameBoard.CheckTopicChoiceBubble();
-        yield return new WaitForSeconds(1f);
-        gettingTopicChoiceInfo = false;
-    }
-
 }

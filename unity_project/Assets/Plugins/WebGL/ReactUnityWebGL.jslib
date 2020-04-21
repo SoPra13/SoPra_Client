@@ -16,11 +16,5 @@
     },
     TopicsHaveBeenChosen: function() {
           ReactUnityWebGL.TopicsHaveBeenChosen();
-        },
-    FetchPlayerMadeTopicChoice: function() {
-          ReactUnityWebGL.FetchPlayerMadeTopicChoice();
-        },
-    AskForRound: function() {
-          ReactUnityWebGL.AskForRound();
         }
 });
