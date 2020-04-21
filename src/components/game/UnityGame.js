@@ -143,6 +143,12 @@ export class UnityGame extends React.Component {
             this.sendPlayerHasChosenTopicInfo(this.state.game);
             console.log("Unity asks for the info about which player has already chosen his topic");
         });
+
+        this.unityContent.on("CallsForTopicList", () =>{
+            this.sendTopicList(this.state.game);
+            console.log("Unity asks for the List of voted topics");
+        });
+
     }
 
 

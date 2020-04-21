@@ -22,5 +22,8 @@
         },
     AskForRound: function() {
           ReactUnityWebGL.AskForRound();
-        }
+        },
+    CallsForTopicList: function() {
+          ReactUnityWebGL.CallsForTopicList();
+         }
 });
