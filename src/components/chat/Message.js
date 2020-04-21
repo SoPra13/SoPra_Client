@@ -1,16 +1,10 @@
 import React from 'react'
-import styled from 'styled-components'
+import '../../components/chat/chat.css'
 
-
-const Usernametext = styled.span`
-
-`
-const Messagetext = styled.span`
-
-`
 export function Message(props) {
 
     return (
-        <div><Usernametext>{props.username}:</Usernametext> <Messagetext>{props.message}</Messagetext></div>
+        <div>
+            <span className="usernametext">{props.username}:</span> <span className="messagetext">{props.message}</span></div>
     )
 }
