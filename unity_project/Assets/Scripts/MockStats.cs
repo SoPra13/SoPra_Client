@@ -47,9 +47,9 @@ public class MockStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 6;
-        playerPosition = 7; //REACTINPUT, this value needs to come from React
-        playerTotal = 7; // REACTINPUT, this value needs to come from React
+        activePlayer = 3;
+        playerPosition = 3; //REACTINPUT, this value needs to come from React
+        playerTotal = 3; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
         topicChoices = new int[5]; //In here, each Field represents a Topic (Field 0 = Topic 1; Field 1 = Topic 2). Each Field contains an integer value
                                    //indicating how many votes this Topic has [0,2,0,1,0] means that Topic 2 has 2 votes, Topic 4 has 1 vote, thre rest has 0 votes
