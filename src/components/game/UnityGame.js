@@ -63,12 +63,14 @@ const ButtonContainer = styled.div`
 export class UnityGame extends React.Component {
     async;
 
+
     constructor(props) {
         super(props);
         this.state = {
             lobbyToken: localStorage.getItem('lobbyToken'),
             userToken: localStorage.getItem('userToken'),
             gameToken: localStorage.getItem('gameToken'),
+            game:null,
             name: null,
             username: null,
             started: false,
@@ -91,29 +93,32 @@ export class UnityGame extends React.Component {
 
         this.unityContent.on("PlayerHasConnected", () =>{
             console.log("PlayerHasConnected");
-            this.tryPut();
+
+            this.setPlayerArray(this.state.game);
 
         });
 
 
         this.unityContent.on("AskForTopicsList", () =>{
             console.log("Unity asked for the TopicList");
-            this.sendTopicList();
+            this.sendTopicList(this.state.game);
             //topicArray [0,0,0,1,2], each index represents the number of votes a topic has
             //in this example, topic 4 has 1 vote and topic 5 has 2 votes
         });
 
         this.unityContent.on("SendTopicInput", (topic) =>{
             console.log("Unity has send topic input at position: " + topic);
-            //todo send this topic int to the backend
+
+            this.voteForTopic(topic)
+
             //this int represents the choice a player made and ranges from 0 to 4
             //For example 3 meaning a player has voted for topic 4; 0 meaning a player has voted for topic 1
         });
 
         this.unityContent.on("FetchPlayerInfo", () =>{
-            this.setPlayerNames();
-            this.setPlayerAvatars();
-            this.setTopics();
+            this.setPlayerNames(this.state.game);
+            this.setPlayerAvatars(this.state.game);
+            this.setTopics(this.state.game);
             console.log("FetchingPlayerInfos");
         });
 
@@ -122,14 +127,14 @@ export class UnityGame extends React.Component {
         //1. there are ties among the votes (ex. topic 1 has 2 votes and topic 2 has 2 votes)
         //2. No votes have been given (all have 0 votes but time is up)
         this.unityContent.on("TopicsHaveBeenChosen", () =>{
-            this.sendRoundsTopic();
+            this.sendRoundsTopic(this.state.game);
             console.log("The Topics for this Round have been chosen");
         });
 
 
         this.unityContent.on("AskForRound", () =>{
             //Todo fetch round number from backend and pass it to sendRoundNumber
-            this.sendRoundNumber();
+            this.sendRoundNumber(this.state.game);
             console.log("Unity asks React for the current Round");
         });
 
@@ -140,14 +145,9 @@ export class UnityGame extends React.Component {
         });
     }
 
-    async tryPut()
-    {
+    async setPlayerArray(game) {
         const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') +
             '&gameToken=' + localStorage.getItem('gameToken'))
-
-        console.log(response)
-
-        var game = response.data;
 
         console.log(game);
 
@@ -192,12 +192,12 @@ export class UnityGame extends React.Component {
         return res;
     }
 
-/*    arrayToString(array){
-        var begin = array[1];
+    arrayToString(array){
+        var begin = array[0];
         for (let i = 1; i < array.length; i++){
-            begin =
+            begin += ";"+array[i]
         }
-    }*/
+    }
 
     stringToArray(str){
         let array = [];
@@ -234,17 +234,27 @@ export class UnityGame extends React.Component {
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerStats",
-            infoString //Todo This are just dummy values, these values need to come from Backend Gameobject
+            infoString
         )
     }
 
-    setPlayerNames(){ //Send a string with a ";" delimiter to unity
-        let nameString = "Baba;Ganoush;Trimotop;Slayer99;Ivan;Boehlen;SonGoku"; //player +  bot names
+    setPlayerNames(game){ //Send a string with a ";" delimiter to unity
+
+        let nameString = game.playerList[0].username;
+        for (var i = 1; i<game.playerList.length; i++) {
+            nameString += ';'+game.playerList[i].username;
+        }
+
+       /* for (var i = 1; i<game.botList.length; i++) {
+            nameString += ';'+game.botList[i].botname;
+        }*/
+
+
         console.log("Names Set Completed");
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerNames",
-            nameString //Todo This are just dummy values, these values need to come from Backend Gameobject
+            nameString //Todo This are just dummy values, these values need to come from Backend Gameobject BOTS
         )
     }
 
@@ -258,48 +268,45 @@ export class UnityGame extends React.Component {
         )
     }
 
-    setTopics(){ //Send a string with a ";" delimiter to unity
-        let topicString = "Group13;WeRock;Database;Sopra;Corona;Wrench;Zebra;Ivy;Airplane;Bridge;Frost;" +
-            "Lollipop;Parachute;Day;Sunset;Witch;Lasso;Burger;Lotto Ticket;Worm;Fire;Grass;Parrot;Fear;" +
-            "Nail;Giraffe;Painting;Train;Star;Cricket;Wave;Bench;Comedy;Monster;Baby;Wrench;Piano;Laptop;" +
-            "Singer;Wasp;Roach;Dog;Sand;Swamp;Face;Lute;Flute;PC;Villa;Bee;Gun;Cat;Night;Fire;Iron;Sugar;Tears;" +
-            "Mobile Phone;Tree;Snake;Stone;Hero;Laser Gun;Ladybug;Spike";
+    setTopics(game){ //Send a string with a ";" delimiter to unity
+        let topicString = this.arrayToString(game.mysteryWords)
         console.log("Topics Set Completed");
         this.unityContent.send(
             "MockStats",
             "ReactSetTopicArray",
-            topicString //Todo This are just dummy values, these values need to come from Backend Gameobject
+            topicString
         )
     }
 
-    sendTopicList(){ //after having received the Topic List from the backend, send it as string to unity
-        let topicListString = "10200";
+    sendTopicList(game){ //after having received the Topic List from the backend, send it as string to unity
+        let topicListString = this.arrayToString(game.voteList)
         this.unityContent.send(
             "Rounds",
             "ReactSetTopicArray",
+            topicListString
         )
     }
 
     //React will send the chosen topic for this round back to unity
-    sendRoundsTopic(){
+    sendRoundsTopic(game){
         console.log("sending back the topic to unity");
-        let topic = "Database";
+        let topic = game.topic;
         this.unityContent.send(
             "MockStats",
             "ReactSetThisRoundsTopic",
-            topic //Todo This are just dummy values, these values need to come from Backend Gameobject
+            topic
         )
     }
 
 
     //The round number is an int  in Range [0,12]; 0 = round 1; 12 = round 13
-    sendRoundNumber(){
+    sendRoundNumber(game){
         console.log("sending back the current Round to unity");
-        let round = 0;
+        let round = game.currentRound;
         this.unityContent.send(
             "MockStats",
             "ReactSetRound",
-            round //Todo This are just dummy values, these values need to come from Backend Gameobject
+            round
         )
     }
 
@@ -307,36 +314,48 @@ export class UnityGame extends React.Component {
     //Send a string to unity containing info about which player has already chosen his topic
     //1 = has chosen; 0 = has not yet chosen
     //ex. 100101: Player Pos. 1 & 4 & 6 have chosen, Player Pos. 2 & 3 & 5 have not yet chosen
-    sendPlayerHasChosenTopicInfo(){
+    sendPlayerHasChosenTopicInfo(game){
         console.log("sending back info about which player has already chosen a Topic to Unity");
-        let topicChoiceMade = "100101";
+
+        var votedString = ''
+        for (var i = 0; i<game.playerList.length; i++) {
+            if(game.playerList[i].voted == true){
+            votedString += '1'
+        }else {
+                votedString += '0'
+            }
+        }
+
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerHasChosenTopic",
-            topicChoiceMade //Todo This are just dummy values, these values need to come from Backend Gameobject
+            votedString
         )
     }
 
 
-    currentGame(){
+    async currentGame(){
         try{
-        const response = api.get('/game?token=' + localStorage.getItem('gameToken'));
+        const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
+
+        var game = response.data;
+        console.log(game);
+            console.log(response);
 
         this.setState({
-            //fetch current game to unity by requesting for the states
-
-
+            game: game,
         })
+            console.log(this.state.game);
     } catch (error) {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
 }
 
 
-    voteTopic(){
+    async voteForTopic(topic){
         try{
         //topic int 0 by default
-        const response = api.put('/game/vote?=gameToken=' + this.state.gameToken + '&topic=' + this.state.topic);
+         const response = await api.put('/game/vote?=gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
 
     } catch (error) {
         alert(`Something went wrong during the login: \n${handleError(error)}`);

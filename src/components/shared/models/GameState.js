@@ -3,7 +3,7 @@ class GameState {
         this.id = null;
         this.version = null;
         this.token = null;
-        this.round = null;
+        this.currentRound = null;
         this.guesser = null;
         this.guessList = null;
         this.mysteryWords = null;
