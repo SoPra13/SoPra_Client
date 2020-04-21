@@ -70,7 +70,7 @@ export class UnityGame extends React.Component {
             lobbyToken: localStorage.getItem('lobbyToken'),
             userToken: localStorage.getItem('userToken'),
             gameToken: localStorage.getItem('gameToken'),
-            game:null,
+            game: null,
             name: null,
             username: null,
             started: false,
@@ -140,10 +140,12 @@ export class UnityGame extends React.Component {
 
 
         this.unityContent.on("FetchPlayerMadeTopicChoice", () =>{
-            this.sendPlayerHasChosenTopicInfo();
+            this.sendPlayerHasChosenTopicInfo(this.state.game);
             console.log("Unity asks for the info about which player has already chosen his topic");
         });
     }
+
+
 
     async setPlayerArray(game) {
         const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') +
@@ -355,13 +357,19 @@ export class UnityGame extends React.Component {
     async voteForTopic(topic){
         try{
         //topic int 0 by default
-         const response = await api.put('/game/vote?=gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
+         const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
 
     } catch (error) {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
     }
 
+    componentWillMount() {
+        this.setState({
+            game: this.currentGame(),
+        })
+
+    }
 
     componentDidMount() {
         this.timerID = setInterval(
