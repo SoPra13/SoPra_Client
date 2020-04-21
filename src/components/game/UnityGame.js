@@ -148,9 +148,7 @@ export class UnityGame extends React.Component {
             this.sendTopicList(this.state.game);
             console.log("Unity asks for the List of voted topics");
         });
-
     }
-
 
 
     async setPlayerArray(game) {

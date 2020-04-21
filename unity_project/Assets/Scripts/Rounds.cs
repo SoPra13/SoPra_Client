@@ -7,8 +7,8 @@ using System;
 
 public class Rounds : MonoBehaviour
 {
-    [DllImport("__Internal")]//brauch ich aktuell nicht
-    private static extern void AskForTopicsList();
+    [DllImport("__Internal")]
+    private static extern void CallsForTopicList();
 
     [DllImport("__Internal")]
     private static extern void TopicsHaveBeenChosen();
@@ -128,7 +128,7 @@ public class Rounds : MonoBehaviour
 
                 if (!topicCall)
                 {
-                    StartCoroutine(CallsForTopicList());
+                    StartCoroutine(CallForTopicList());
                     topicCall = true;
                 }
 
@@ -300,7 +300,7 @@ public class Rounds : MonoBehaviour
     }
 
 
-    IEnumerator CallsForTopicList()
+    IEnumerator CallForTopicList()
     {
         try { CallsForTopicList(); }//This will tell React to get the Topic Array from the Backend and send it to unity
         catch (EntryPointNotFoundException e)
