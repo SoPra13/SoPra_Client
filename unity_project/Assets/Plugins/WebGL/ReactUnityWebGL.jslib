@@ -9,7 +9,7 @@
       ReactUnityWebGL.FetchPlayerInfo();
     },
     SendTopicInput: function(topic) {
-      ReactUnityWebGL.SendTopicInput(Pointer_stringify(topic));
+      ReactUnityWebGL.SendTopicInput(topic);
     },
     AskForTopicsList: function() {
       ReactUnityWebGL.AskForTopicsList();
