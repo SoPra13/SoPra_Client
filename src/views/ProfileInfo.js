@@ -10,6 +10,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background:  #ed782f;
   border: 1px solid #ffffff26;
   
 `;

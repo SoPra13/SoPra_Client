@@ -13,6 +13,7 @@ import Player from "../../views/Player";
 import Room from "../../views/Room";
 import EditProfile from "../profile/EditProfile";
 import ProfileInfo from "../../views/ProfileInfo";
+import Gamedescription from "../../views/Gamedescription";
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -86,7 +87,15 @@ const LobbyContainer = styled.li`
 const Users = styled.ul`
   list-style: none;
   padding-left: 0;
+  overflow: auto;
+  height: 310px;
 `;
+
+const User1 = styled.ul`
+  list-style: none;
+  padding-left: 0;
+`;
+
 
 const Lobbies = styled.ul`
   list-style: none;
@@ -298,7 +307,7 @@ class Dashboard extends React.Component {
                     <Tab>My Profile</Tab>
                     <Tab>Users</Tab>
                     <Tab>Lobby</Tab>
-                    <Tab>Invitations</Tab>
+                    <Tab>Game description and rules</Tab>
                 </TabList>
 
                 <TabPanel>
@@ -314,27 +323,6 @@ class Dashboard extends React.Component {
                         Logout
                     </Button>
 
-{/*                    <Container>
-                        <h2> My profile details </h2>
-                            <div>
-                                <Users>
-                                            <PlayerContainer>
-                                                <h1>{this.state.user.username}</h1>
-                                                <h1>{this.state.user.id}</h1>
-                                                <Button
-                                                    onClick={() => {
-                                                        this.showProfile(this.state.user.id);
-                                                    }}>
-                                                    Show my profile
-                                                </Button>
-                                            </PlayerContainer>
-                                        );
-                                    })}
-                                </Users>
-                            </div>
-                        )}
-                    </Container>*/}
-
 
                     <Container>
                         <h2>Profile</h2>
@@ -342,11 +330,11 @@ class Dashboard extends React.Component {
                             <Spinner />
                         ) : (
                             <div>
-                                <Users>
+                                <User1>
                                     <PlayerContainer key={this.state.user.id}>
                                         <ProfileInfo user={this.state.user}/>
                                     </PlayerContainer>
-                                </Users>
+                                </User1>
 
                                 {(this.state.user.token != localToken) ? (
                                     <Label> </Label>
@@ -404,29 +392,6 @@ class Dashboard extends React.Component {
                         )}
                     </Container>
 
-{/*                    <Container>
-                        <h2>Registered Users </h2>
-                        {!this.state.users ? (
-                            <Spinner />
-                        ) : (
-                            <div>
-                                <Users>
-                                    {this.state.users.map(user => {
-                                        return (
-                                            <PlayerContainer
-                                                key={user.id}
-                                                onClick={() => {
-                                                    console.log(user.id)
-                                                    this.showProfile(user.id);
-                                                }}>
-                                                <Player user={user}/>
-                                            </PlayerContainer>
-                                        );
-                                    })}
-                                </Users>
-                            </div>
-                        )}
-                    </Container>*/}
                 </TabPanel>
 
 
@@ -488,6 +453,7 @@ class Dashboard extends React.Component {
                     >
                         Logout
                     </Button>
+                    <Gamedescription/>
                 </TabPanel>
             </Tabs>
         );

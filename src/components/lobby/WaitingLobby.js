@@ -57,13 +57,14 @@ class WaitingRoom extends React.Component {
 
             localStorage.removeItem('lobbyToken');
 
+            this.props.history.push('/dashboard');
+
         }catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
 
     }
 
-    //alkjdslöfha
 
     getLobbyToken(){
         return this.state.lobbyToken;

@@ -23,7 +23,7 @@ const PlayerContainer = styled.li`
 
 const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   margin-top: 20px;
 `;

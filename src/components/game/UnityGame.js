@@ -323,7 +323,7 @@ export class UnityGame extends React.Component {
     sendPlayerHasChosenTopicInfo(game){
         console.log("sending back info about which player has already chosen a Topic to Unity");
 
-        var votedString = ''
+        var votedString = '';
         for (var i = 0; i<game.playerList.length; i++) {
             if(game.playerList[i].voted == true){
             votedString += '1'
@@ -355,7 +355,7 @@ export class UnityGame extends React.Component {
     } catch (error) {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
-}
+}a
 
 
     async voteForTopic(topic){
