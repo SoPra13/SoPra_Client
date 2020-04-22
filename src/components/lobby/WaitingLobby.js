@@ -28,6 +28,27 @@ const PlayerContainer = styled.li`
   justify-content: center;
 `;
 
+const Button1 = styled.button`
+  &:hover {
+    transform: translateY(-2px);
+  }
+  margin: 10px;
+  padding: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  color: #fff;
+  width: ${props => props.width || null};
+  height: 35px;
+  border: 2px solid;
+  border-color: #c5c5c5;
+  border-radius: 20px;
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+  opacity: ${props => (props.disabled ? 0.4 : 1)};
+  background: #0e3d61;
+  transition: all 0.3s ease;
+`;
+
 class WaitingRoom extends React.Component {
     constructor(props) {
         super(props);
@@ -67,7 +88,7 @@ class WaitingRoom extends React.Component {
 
 
     getLobbyToken(){
-        return this.state.lobbyToken;
+        alert(this.state.lobbyToken);
     }
 
     async getLobby(){
@@ -173,33 +194,39 @@ class WaitingRoom extends React.Component {
                             </Users>
                         </div>
                     )}
-                        <Button
-                            width="30%"
+                    <PlayerContainer>
+                        <Button1
+                            width="20%"
                             onClick={() => {
                                 this.leaveLobby();
                             }}
                         >
                             Leave
-                        </Button>
+                        </Button1>
 
-                    <Button
-                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                        width="30%"
+                    <Button1
+                        disabled = {localStorage.getItem('userToken') == this.state.adminToken}
+                        width="20%"
                         onClick={() => {
                             this.getLobbyToken();
                         }}
                     >
                         Get the lobby token
-                    </Button>
+                    </Button1>
+
+                    <Button1
+                        width="20%"
+                        onClick={() => {
+                            this.enterGame();
+                        }}
+                    >
+                        Join into Game
+                    </Button1>
+
+                    </PlayerContainer>
                     </div>
 
-                <Button
-                    onClick={() => {
-                        this.enterGame();
-                    }}
-                >
-                    Join into Game
-                </Button>
+
 
             </Container>
             </BaseContainer>
