@@ -302,7 +302,7 @@ class Dashboard extends React.Component {
 
 
         const tabComp =(
-            <Tabs defaultIndex={1} onSelect={index => console.log(index)}>
+            <Tabs defaultIndex={0} onSelect={index => console.log(index)}>
                 <TabList>
                     <Tab>My Profile</Tab>
                     <Tab>Users</Tab>

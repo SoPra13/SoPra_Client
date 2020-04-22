@@ -37,7 +37,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
+  background-color: #ffca65;
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -79,9 +79,9 @@ class EditProfile extends React.Component {
                 username: this.state.username,
             });
 
-            const response = await api.put('/users/' + this.state.id, requestBody);
+            const response = await api.put('/user' + localStorage.getItem('userToken'), requestBody);
             this.props.history.push({
-                pathname: '/dashboard/profile',
+                pathname: '/dashboard',
                 id: this.state.id
             })
 
@@ -100,7 +100,7 @@ class EditProfile extends React.Component {
     async componentDidMount() {
         try {
             console.log(this.state.id)
-            const response = await api.get('/users/' + this.state.id);
+            const response = await api.get('/user/?token=' + localStorage.getItem('userToken'));
 
             this.setState({ user: response.data });
             console.log(this.state.user)
@@ -123,35 +123,39 @@ class EditProfile extends React.Component {
                             <Form>
                                 <Label>Username</Label>
                                 <InputField
-                                    placeholder="Enter here.."
+                                    placeholder="Enter here a new username"
                                     onChange={e => {
                                         this.handleInputChange('username', e.target.value);
                                     }}
                                 />
+
+                                <ButtonContainer>
+                                    <Button
+                                        disabled={!this.state.username}
+                                        width="30%"
+                                        onClick={() => {
+                                            this.update()
+                                        }}
+                                    >
+                                        Save
+                                    </Button>
+                                </ButtonContainer>
+
+                                <ButtonContainer>
+                                    <Button
+                                        width="30%"
+                                        onClick={() => {
+                                            this.props.history.push(`/dashboard`);
+                                        }}>
+                                        Back
+                                    </Button>
+                                </ButtonContainer>
                             </Form>
                         </FormContainer>
-                        <ButtonContainer>
-                            <Button
-                                disabled={!this.state.username}
-                                width="30%"
-                                onClick={() => {
-                                    this.update()
-                                }}
-                            >
-                                Save
-                            </Button>
-                        </ButtonContainer>
+
                     </BaseContainer>
                 )}
-                <ButtonContainer>
-                    <Button
-                        width="30%"
-                        onClick={() => {
-                            this.props.history.push(`/dashboard`);
-                        }}>
-                        Back
-                    </Button>
-                </ButtonContainer>
+
             </Container>
         )
 

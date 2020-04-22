@@ -19,26 +19,10 @@ const UserName = styled.div`
   font-weight: lighter;
   margin-left: 5px;
 `;
-const label = styled.div`
-  font-weight: bold;
-  color: #06c4ff;
-`;
-const onlineStatus = styled.div`
-  font-weight: bold;
-  color: #06c4ff;
-`;
-const creationDate = styled.div`
-  font-weight: bold;
-  color: #06c4ff;
-`;
-const birthDate = styled.div`
-  font-weight: bold;
-  color: #06c4ff;
-`;
 
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
+const OnlineStatus = styled.div`
+  font-weight: bold;
+  color: #0e3d61;
 `;
 
 /**
@@ -53,7 +37,7 @@ const ProfileInfo = ({ user }) => {
     return (
         <Container>
             <UserName>{user.username}</UserName>
-            <onlineStatus>{user.status}</onlineStatus>
+            <OnlineStatus>{user.status}</OnlineStatus>
         </Container>
     );
 };
