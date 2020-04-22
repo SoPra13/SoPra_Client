@@ -355,7 +355,7 @@ export class UnityGame extends React.Component {
     } catch (error) {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
-}a
+}
 
 
     async voteForTopic(topic){
