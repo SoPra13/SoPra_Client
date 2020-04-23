@@ -147,7 +147,7 @@ export class UnityGame extends React.Component {
 
 
         this.unityContent.on("CallsForLeaveGame", () =>{
-            //Todo handle a leaving player
+            this.leaveGame(this.state.game);
             console.log("A player wants to leave the game");
         });
 
@@ -333,8 +333,8 @@ export class UnityGame extends React.Component {
     //in this example, topic 4 has 1 vote and topic 5 has 2 votes
     //after having received the Topic List from the backend, send it as string to unity
     sendTopicList(game){
-        //let topicListString = this.arrayToString(game.voteList) //Todo just4testing
-        let topicListString = "02001"
+        let topicListString = this.arrayToString(game.voteList)
+        console.log(topicListString);
         this.unityContent.send(
             "MockStats",
             "ReactSetTopicVoteList",
@@ -374,6 +374,7 @@ export class UnityGame extends React.Component {
         console.log("sending back info about which player has already chosen a Topic to Unity");
 
         var votedString = '';
+
         for (var i = 0; i<game.playerList.length; i++) {
             if(game.playerList[i].voted == true){
             votedString += '1'
@@ -381,7 +382,7 @@ export class UnityGame extends React.Component {
                 votedString += '0'
             }
         }
-
+        console.log(votedString)
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerHasChosenTopic",
@@ -470,11 +471,16 @@ Structure and design:
     }
 */
 
+    async leaveGame(game){
+        const response = await api.delete('/game/gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
+        //todo: thanh error handling + rounting close unity ivan
+    }
+
     async setGuess(guess){
         try{
 
-            const response = await api.put('/game/guess?gameToken=' + localStorage.getItem('gameToken' +
-                '&guess=' + guess));
+            const response = await api.put('/game/guess?gameToken=' + localStorage.getItem('gameToken') +
+                '&guess=' + guess);
 
         }catch(error){
             alert(`guessCorrect error: \\n${handleError(error)}`);
@@ -496,7 +502,6 @@ Structure and design:
 
     async voteForTopic(topic){
         try{
-        //topic int 0 by default
          const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
 
     } catch (error) {
