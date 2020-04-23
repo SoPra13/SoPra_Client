@@ -292,9 +292,8 @@ public class MockStats : MonoBehaviour
     {
         for(int i = 0; i < 5; i++)
         {
+            Debug.Log((int)Char.GetNumericValue(topicVoteList[i]));
             topicChoices[i] = (int)Char.GetNumericValue(topicVoteList[i]);
         }
     }
-
-
 }

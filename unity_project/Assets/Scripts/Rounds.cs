@@ -16,6 +16,9 @@ public class Rounds : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void AskForRound();
 
+    [DllImport("__Internal")]
+    private static extern void SendTopicStringToReact(string message);
+
 
 
     public GameBoard gameBoard;
@@ -32,6 +35,7 @@ public class Rounds : MonoBehaviour
     private bool topicCall = false;
     private bool lastCall = false;
     private bool gettingTopicChoiceInfo = false;
+    private int finalIndex;
 
 
     void Start()
@@ -126,6 +130,7 @@ public class Rounds : MonoBehaviour
 
                 if (!topicCall)
                 {
+                    mockStats.ReactSetTopicVoteList("11131");
                     StartCoroutine(CallForTopicList());
                     topicCall = true;
                 }
@@ -161,7 +166,6 @@ public class Rounds : MonoBehaviour
             {
                 if (!lastCall)
                 {
-
                     StartCoroutine(LastCallForTopics());
                     lastCall = true;
                 }
@@ -329,6 +333,38 @@ public class Rounds : MonoBehaviour
         {
             Debug.Log("Unity has asked for TopicList did not succeeded " + e);
         }
+
+        //Sort out duplicates
+        int[] finalTopic = mockStats.GetTopicChoices();
+        int max = 0;
+        List<int> finalList = new List<int>();
+        string chosenTopic;
+
+        //Get max value of topic votes
+        for (int i = 0; i < 5; i++)
+        {
+            if (finalTopic[i] >= max)
+            {
+                max = finalTopic[i];
+            }
+        }
+
+        for (int k = 0; k < 5; k++)
+        {
+            if(finalTopic[k] == max)
+            {
+                finalList.Add(k);
+            }
+        }
+        finalIndex = UnityEngine.Random.Range(0, finalList.Count - 1);
+        chosenTopic = gameBoard.GetCardStack()[round].GetTopics()[finalList[finalIndex]];
+
+        try { SendTopicStringToReact(chosenTopic); }
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity wants to send the topic string but failed " + e);
+        }
+
         yield return new WaitForSeconds(0.5f);
         roundPhase = 9;
         lastCall = false;

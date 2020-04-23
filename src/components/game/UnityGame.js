@@ -119,7 +119,7 @@ export class UnityGame extends React.Component {
         //1. there are ties among the votes (ex. topic 1 has 2 votes and topic 2 has 2 votes)
         //2. No votes have been given (all have 0 votes but time is up)
         //Then, this function will send the final chosen topic back to unity via sendRoundsTopic()
-        //Todo not yet implemented correctly --> Backend has to handle edge cases
+        //Todo
         this.unityContent.on("TopicsHaveBeenChosen", () =>{
             this.sendRoundsTopic(this.state.game);
             console.log("The Topics for this Round have been chosen");

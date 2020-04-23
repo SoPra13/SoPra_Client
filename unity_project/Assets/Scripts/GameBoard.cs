@@ -274,6 +274,12 @@ public class GameBoard : MonoBehaviour
     }
 
 
+    public Card[] GetCardStack()
+    {
+        return cardStack;
+    }
+
+
     public void CheckTopicChoiceBubble()
     {
         for(int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)

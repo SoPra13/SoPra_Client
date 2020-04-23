@@ -28,5 +28,8 @@
         },
     SendGuessToReact: function(message) {
           ReactUnityWebGL.SendGuessToReact(Pointer_stringify(message));
+        },
+    SendTopicStringToReact: function(message) {
+          ReactUnityWebGL.SendTopicStringToReact(Pointer_stringify(message));
         }
 });
