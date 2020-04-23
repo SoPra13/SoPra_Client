@@ -11,9 +11,6 @@
     SendTopicInput: function(topic) {
       ReactUnityWebGL.SendTopicInput(topic);
     },
-    AskForTopicsList: function() {
-      ReactUnityWebGL.AskForTopicsList();
-    },
     TopicsHaveBeenChosen: function() {
           ReactUnityWebGL.TopicsHaveBeenChosen();
         },
@@ -25,5 +22,11 @@
         },
     CallsForTopicList: function() {
           ReactUnityWebGL.CallsForTopicList();
+        },
+    CallsForLeaveGame: function() {
+          ReactUnityWebGL.CallsForLeaveGame();
+        },
+    SendGuessToReact: function(message) {
+          ReactUnityWebGL.SendGuessToReact(Pointer_stringify(message));
         }
 });

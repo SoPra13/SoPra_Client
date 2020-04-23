@@ -98,14 +98,6 @@ export class UnityGame extends React.Component {
 
         });
 
-
-        this.unityContent.on("AskForTopicsList", () =>{
-            console.log("Unity asked for the TopicList");
-            this.sendTopicList(this.state.game);
-            //topicArray [0,0,0,1,2], each index represents the number of votes a topic has
-            //in this example, topic 4 has 1 vote and topic 5 has 2 votes
-        });
-
         this.unityContent.on("SendTopicInput", (topic) =>{
             console.log("Unity has send topic input at position: " + topic);
 
@@ -126,6 +118,8 @@ export class UnityGame extends React.Component {
         //the back end has to handle the edge cases of
         //1. there are ties among the votes (ex. topic 1 has 2 votes and topic 2 has 2 votes)
         //2. No votes have been given (all have 0 votes but time is up)
+        //Then, this function will send the final chosen topic back to unity via sendRoundsTopic()
+        //Todo not yet implemented correctly --> Backend has to handle edge cases
         this.unityContent.on("TopicsHaveBeenChosen", () =>{
             this.sendRoundsTopic(this.state.game);
             console.log("The Topics for this Round have been chosen");
@@ -144,9 +138,23 @@ export class UnityGame extends React.Component {
             console.log("Unity asks for the info about which player has already chosen his topic");
         });
 
+
         this.unityContent.on("CallsForTopicList", () =>{
             this.sendTopicList(this.state.game);
             console.log("Unity asks for the List of voted topics");
+        });
+
+
+
+        this.unityContent.on("CallsForLeaveGame", () =>{
+            //Todo handle a leaving player
+            console.log("A player wants to leave the game");
+        });
+
+
+        this.unityContent.on("SendGuessToReact", (message) =>{
+            //Todo handle the misteryword with Backend API
+            console.log("A player sent a mistery word: " + message);
         });
 
 /*
@@ -184,6 +192,7 @@ export class UnityGame extends React.Component {
         });
 
         */
+
     }
 
 
@@ -320,11 +329,15 @@ export class UnityGame extends React.Component {
         )
     }
 
-    sendTopicList(game){ //after having received the Topic List from the backend, send it as string to unity
-        let topicListString = this.arrayToString(game.voteList)
+    //topicArray [0,0,0,1,2], each index represents the number of votes a topic has
+    //in this example, topic 4 has 1 vote and topic 5 has 2 votes
+    //after having received the Topic List from the backend, send it as string to unity
+    sendTopicList(game){
+        //let topicListString = this.arrayToString(game.voteList) //Todo just4testing
+        let topicListString = "02001"
         this.unityContent.send(
-            "Rounds",
-            "ReactSetTopicArray",
+            "MockStats",
+            "ReactSetTopicVoteList",
             topicListString
         )
     }
@@ -332,7 +345,8 @@ export class UnityGame extends React.Component {
     //React will send the chosen topic for this round back to unity
     sendRoundsTopic(game){
         console.log("sending back the topic to unity");
-        let topic = game.topic;
+        //let topic = game.topic; //todo just4testing
+        let topic = "Animal Crossing"
         this.unityContent.send(
             "MockStats",
             "ReactSetThisRoundsTopic",
@@ -486,7 +500,7 @@ Structure and design:
          const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
 
     } catch (error) {
-        alert(`Something went wrong during the login: \n${handleError(error)}`);
+        alert(`Something went wrong when trying to set the vote: \n${handleError(error)}`);
     }
     }
 

@@ -23,6 +23,7 @@ public class GameBoard : MonoBehaviour
     public GameObject thinkingBubbleObject;
     public GameObject infoTagObject;
     public GameObject loadingTagObject;
+    public GameObject misteryWordInputContainer;
 
     public Positions positions;
 
@@ -54,6 +55,7 @@ public class GameBoard : MonoBehaviour
     private TextMeshProUGUI tmproInfoText;
     private int[] topics;
     private int dustSeries = 0;
+    private GameObject misteryWordContainer;
 
     private bool advanceToState3 = false;
     private bool waitForServerTopicResponse = false;
@@ -68,7 +70,8 @@ public class GameBoard : MonoBehaviour
 
     void Start()
     {
-        gameMusic.volume = 0.25f;
+
+        gameMusic.volume = 0.5f;
         SetUpInitialBoard();
         StartCoroutine(FadeInScreen());
         StartCoroutine(GameStarts());
@@ -77,6 +80,11 @@ public class GameBoard : MonoBehaviour
 
     private void SetUpInitialBoard()
     {
+        misteryWordContainer = Instantiate(misteryWordInputContainer, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+        misteryWordContainer.name = "MisteryWordInput";
+        misteryWordContainer.transform.SetParent(GameObject.Find("Interaction").transform,false);
+        misteryWordContainer.SetActive(false);
+
         cardStack = new Card[13];
         mockStats = GameObject.Find("MockStats").GetComponent<MockStats>();
         avatars = GameObject.Find("Canvas").GetComponent<Avatars>();
@@ -226,7 +234,6 @@ public class GameBoard : MonoBehaviour
         GameObject arrow = Instantiate(arrowObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         arrow.name = "Arrow";
         arrow.transform.SetParent(GameObject.Find("Player" + mockStats.GetActivePlayer() + "Box").transform, false);
-        //arrow.transform.localPosition = positions.GetArrowPosition(mockStats.GetActivePlayer() - 1);
     }
 
 
@@ -257,6 +264,13 @@ public class GameBoard : MonoBehaviour
     public void PlayButtonSFX()
     {
         buttonSFX.Play();
+    }
+
+
+    public void DisplayMisteryInputBox()
+    {
+        misteryWordContainer.SetActive(true);
+        GameObject.Find("TopicTextReminder").GetComponent<TextMeshProUGUI>().text = mockStats.GetCurrentTopic();
     }
 
 
@@ -505,7 +519,6 @@ public class GameBoard : MonoBehaviour
         {
             if (i != mockStats.GetActivePlayer())
             {
-                Debug.Log("Trigger");
                 GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("wake", true);
                 GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", true);
             }
@@ -612,7 +625,15 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(5f);
         StartCoroutine(DisplayInfoText("The players have chosen their Topic for this Round. They will now give you clues. Hold on...", true, 2));
         StartCoroutine(ActivePlayerWaitsForClues());
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2.5f);       
+    }
+
+
+    public IEnumerator PlayersEnterMisteryWord()
+    {
+        ForceRemoveInfoBox();
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(DisplayInfoText("Please entere a clue that best describes the current topic (Only a single word)", true, 2));
     }
 }
 

@@ -28,7 +28,6 @@ public class Rounds : MonoBehaviour
 
     private int round = 0; //keeps track of the round number, starts with 0, ends after 12
     private int roundPhase;
-    private int[] topics;
     private bool roundPhase3Wakes = true;
     private bool topicCall = false;
     private bool lastCall = false;
@@ -124,7 +123,6 @@ public class Rounds : MonoBehaviour
             }
             else
             {
-                mockStats.GetTopicInput();
 
                 if (!topicCall)
                 {
@@ -132,16 +130,11 @@ public class Rounds : MonoBehaviour
                     topicCall = true;
                 }
 
-                for (int i = 1; i <= 5; i++)
-                {
-                    GameObject.Find("TopicVoteNumber" + i.ToString()).GetComponent<TextMeshProUGUI>().text = topics[i - 1].ToString();
-                }
-
                 //every player has made his choice conditon
                 int sum = 0;
                 for (int j = 0; j < 5; j++)
                 {
-                    sum += topics[j];
+                    sum += mockStats.GetTopicChoices()[j];
                 }
                 //Everyone has set their vote
                 //Check for draws
@@ -168,6 +161,7 @@ public class Rounds : MonoBehaviour
             {
                 if (!lastCall)
                 {
+
                     StartCoroutine(LastCallForTopics());
                     lastCall = true;
                 }
@@ -187,27 +181,22 @@ public class Rounds : MonoBehaviour
             {
                 Debug.Log("Unity wants to let React know that all topics have been chosen. This failed " + e);
             }
+
             roundPhase = 10;
         }
 
         if(roundPhase == 10)//waits until react sends back the chosen Topic to Unity, then the function ReactSetThisRoundsTopic() from mockStats will set Round = 11
         {
+            //REMOVE AFTERWARDS
             //Just for testing
-            mockStats.ReactSetThisRoundsTopic("Hoi Zamen");
-            //End Testing
-            if(mockStats.GetCurrentTopic() == "")
-            {
-                
-            }
-            else
-            {
-                roundPhase = 11;
-            }
+            mockStats.ReactSetThisRoundsTopic(mockStats.GetCurrentTopic());
+            //Testing Ends
         }
 
         if (roundPhase == 11)
         {
             StartCoroutine(gameBoard.ShowThisRoundsTopic());
+            
             roundPhase = 12;
         }
 
@@ -217,6 +206,20 @@ public class Rounds : MonoBehaviour
         }
 
         if (roundPhase == 13)//Show Player Input Panel
+        {
+            gameBoard.DisplayMisteryInputBox();
+            StartCoroutine(gameBoard.PlayersEnterMisteryWord());
+            roundPhase = 14;
+        }
+
+        //Wait for player to input guess and send it
+        if (roundPhase == 14)
+        {
+
+        }
+
+        //Player waits for other player to make their guess, this phase is set via SubmitButton.cs script
+        if (roundPhase == 15)
         {
 
         }
@@ -255,10 +258,10 @@ public class Rounds : MonoBehaviour
 
 
     //This is called via the MockStats Script. The Mock gets this info from React
-    public void SetTopics(int[] topicsFromBackend)
+    /*public void SetTopics(int[] topicsFromBackend)
     {
         topics = topicsFromBackend;
-    }
+    }*/
 
 
     IEnumerator Phase1Shuffle()
@@ -300,14 +303,20 @@ public class Rounds : MonoBehaviour
     }
 
 
+    //This will tell React to get the Topic Array from the Backend and send it to unity, triggers every 0.5 seconds
     IEnumerator CallForTopicList()
     {
-        try { CallsForTopicList(); }//This will tell React to get the Topic Array from the Backend and send it to unity
+        try { CallsForTopicList(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity has asked for TopicList did not succeeded " + e);
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
+
+        for (int i = 1; i <= 5; i++)
+        {
+            GameObject.Find("TopicVoteNumber" + i.ToString()).GetComponent<TextMeshProUGUI>().text = mockStats.GetTopicChoices()[i-1].ToString();
+        }
         topicCall = false;
     }
 
@@ -315,27 +324,17 @@ public class Rounds : MonoBehaviour
 
     IEnumerator LastCallForTopics()
     {
-        try { CallsForTopicList(); }//This will tell React to get the Topic Array from the Backend and send it to unity
+        try { CallsForTopicList(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity has asked for TopicList did not succeeded " + e);
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         roundPhase = 9;
         lastCall = false;
         topicCall = false;
     }
 
-
-    //React will call this Function to pass the current Topic Array to Unity
-    //Attention, no NULL values, use 0 as empty value
-    public void ReactSetTopicArray(string topicArray)
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            topics[i] = (int)Char.GetNumericValue(topicArray[i]);
-        }
-    }
 
     IEnumerator GetPlayerChoiceInfosFromReact()
     {
