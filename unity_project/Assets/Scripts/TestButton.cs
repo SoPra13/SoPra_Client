@@ -36,5 +36,10 @@ public class TestButton : MonoBehaviour
         mockStats.PlayerHasChosenTopic(4);
         mockStats.PlayerHasChosenTopic(5);
     }
+
+    public void SetTopicText()
+    {
+        mockStats.ReactSetThisRoundsTopic(mockStats.GetCurrentTopic());
+    }
 }
 

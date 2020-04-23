@@ -29,7 +29,7 @@ public class PlayerTopicInput : MonoBehaviour
             GameObject.Find("ButtonSFX").GetComponent<AudioSource>().Play();
         }
 
-        Debug.Log((int)Char.GetNumericValue(this.name[11])-1);
+        //Debug.Log((int)Char.GetNumericValue(this.name[11])-1);
         mockStats.SetPlayerTopicInput((int)Char.GetNumericValue(this.name[11])-1);
     }
 
