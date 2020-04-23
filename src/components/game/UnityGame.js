@@ -395,8 +395,8 @@ export class UnityGame extends React.Component {
 
 
 
-    async currentGame(){
-        try{
+    async currentGame() {
+        try {
             const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
 
             var game = response.data;
@@ -412,6 +412,7 @@ export class UnityGame extends React.Component {
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
+    }
 
     /*
     Structure and design:
