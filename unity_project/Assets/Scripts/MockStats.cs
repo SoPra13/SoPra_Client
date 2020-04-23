@@ -27,9 +27,11 @@ public class MockStats : MonoBehaviour
     private int playerTotal;
     private int activePlayer;
     private int connectedPlayers;
-    private int[] topicChoices; //the topicnumber which this user choose [1,5]
+    //In here, each Field represents a Topic (Field 0 = Topic 1; Field 1 = Topic 2). Each Field contains an integer value
+    //indicating how many votes this Topic has [0,2,0,1,0] means that Topic 2 has 2 votes, Topic 4 has 1 vote, thre rest has 0 votes
+    private int[] topicChoices = { 0, 0, 0, 0, 0 }; //Displays the amount of votes per Topic
     private bool inputLocked = false;
-    private string currentTopic = "";
+    private string currentTopic = "justATest";
 
     private int[] topicChoiceMade = { 0, 0, 0, 0, 0, 0, 0 }; //this array comes from Backend, 0 = not chosen a topic yet; 1 = chosen a topic yet; index 0 = player pos 1 etc.
     private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
@@ -47,12 +49,10 @@ public class MockStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 5;
-        playerPosition = 3; //REACTINPUT, this value needs to come from React
+        activePlayer = 7;
+        playerPosition = 7; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
-        topicChoices = new int[5]; //In here, each Field represents a Topic (Field 0 = Topic 1; Field 1 = Topic 2). Each Field contains an integer value
-                                   //indicating how many votes this Topic has [0,2,0,1,0] means that Topic 2 has 2 votes, Topic 4 has 1 vote, thre rest has 0 votes
     }
 
 
@@ -116,6 +116,12 @@ public class MockStats : MonoBehaviour
     }
 
 
+    public int[] GetTopicChoices()
+    {
+        return topicChoices;
+    }
+
+
     //just for Testing Buttons
     public void PlayerHasChosenTopic(int playerPos)
     {
@@ -130,9 +136,6 @@ public class MockStats : MonoBehaviour
 
 
     //this function will send the topic out to React. React will take the topic number and increment this topic number by +1 in the backend for this game
-    //Then, React will ask for the topic info array for all players from the backend and sends this array back to unity mockStats
-    //where the topicChoices[] will be updated
-    //The Input which I need here from React is int[5], where Field 0 = Amount of Votes for Topic 1; Field 1 = Amount of Votes for Topic 2; etc
     public void SetPlayerTopicInput(int i) //i is either 0,1,2,3 or 4
     {
         if (inputLocked)
@@ -142,7 +145,7 @@ public class MockStats : MonoBehaviour
         else
         {
             
-            try { SendTopicInput(i); }//This will send this players Choice to React so that React can send it to Backend. React will then update Unity with the topic array
+            try { SendTopicInput(i); }
             catch (EntryPointNotFoundException e)
             {
                 Debug.Log("Unity could not send any Topic Output to React" + e);
@@ -153,30 +156,13 @@ public class MockStats : MonoBehaviour
     }
 
 
-    //this has to call for the topic array from React. React will then get the TopicArray from the Backend and call the ReceiveTopicInput() function
-    //to send the up to date array to unity
-    public void GetTopicInput()
-    {
-        //TODO Ask React to get the choices in the backend. React will then itself call the receiveTopicInput() method in here to update topicChoices[]
-        ReceiveTopicInput(topicChoices); //I will have to remove this later on
-    }
-
-
-    //React will call this and send the updated Vote Array to this
-    public void ReceiveTopicInput(int[] topicVotes)
-    {
-        rounds = GameObject.Find("Rounds").GetComponent<Rounds>();
-        rounds.SetTopics(topicVotes);
-    }
-
-
     public void TESTINGsetTopicInputArray()
     {
         topicChoices[0] = 0;
         topicChoices[1] = 2;
         topicChoices[2] = 1;
-        topicChoices[3] = 0;
-        topicChoices[4] = 2;
+        topicChoices[3] = 2;
+        topicChoices[4] = 0;
     }
 
 
@@ -257,6 +243,7 @@ public class MockStats : MonoBehaviour
     //React will send the Topic of this round via this function
     public void ReactSetThisRoundsTopic(string thisRoundsTopic)
     {
+        rounds = GameObject.Find("Rounds").GetComponent<Rounds>(); //needs to be called here because else it calls it in the first scene
         currentTopic = thisRoundsTopic;
         rounds.SetRoundPhase(11);
     }
@@ -296,6 +283,17 @@ public class MockStats : MonoBehaviour
     public void ReactSetRound(int round)
     {
         rounds.SetRound(round);
+    }
+
+
+    //This Function is called by React and gets a string as input. Each index of the string represents a topic. String has length o5
+    //e.g. "02310" meaning topic 1 has 0 votes; topic 2 has 2 votes; topic 3 has 3 votes; topic 4 has 1 vote; topic 5 has 0 votes
+    public void ReactSetTopicVoteList(string topicVoteList)
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            topicChoices[i] = (int)Char.GetNumericValue(topicVoteList[i]);
+        }
     }
 
 

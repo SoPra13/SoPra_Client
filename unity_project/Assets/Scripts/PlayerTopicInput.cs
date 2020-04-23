@@ -29,8 +29,8 @@ public class PlayerTopicInput : MonoBehaviour
             GameObject.Find("ButtonSFX").GetComponent<AudioSource>().Play();
         }
 
-        //Achtung, this.name[11] ist vom Type Char, parsing mit -49 (ASCII CODE)
-        mockStats.SetPlayerTopicInput(this.name[11]-49);
+        Debug.Log((int)Char.GetNumericValue(this.name[11])-1);
+        mockStats.SetPlayerTopicInput((int)Char.GetNumericValue(this.name[11])-1);
     }
 
     IEnumerator AlreadyChosen()

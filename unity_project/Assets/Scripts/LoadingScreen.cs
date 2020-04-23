@@ -51,6 +51,7 @@ public class LoadingScreen : MonoBehaviour
 
     void Start()
     {
+        bgMusic.volume = 0f;
         //The following is for unity-react communication testing ComTest Works, leave unchanged!
         //ComTest(666);
         confirm.volume = 0.25f;
@@ -115,7 +116,13 @@ public class LoadingScreen : MonoBehaviour
     IEnumerator FadeScreen()
     {
         confirm.Play();
-        sfxToogle.SetBool("transition", true);
+        GameObject.Find("OptionIconButton").GetComponent<Animator>().SetBool("transition",true);
+        GameObject.Find("ExitText").GetComponent<Animator>().SetBool("transition", true);
+        GameObject.Find("ToogleText").GetComponent<Animator>().SetBool("transition", true);
+        GameObject.Find("LeaveToogle").GetComponent<Animator>().SetBool("transition", true);
+        GameObject.Find("MusicToogle").GetComponent<Animator>().SetBool("transition", true);
+        GameObject.Find("OptionBG").GetComponent<Animator>().SetBool("transition", true);
+
         ornaBot.SetBool("transition", true);
         ornaTop.SetBool("transition", true);
         playerJoinedAnimator.SetBool("transition", true);
