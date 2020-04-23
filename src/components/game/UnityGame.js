@@ -148,12 +148,48 @@ export class UnityGame extends React.Component {
             this.sendTopicList(this.state.game);
             console.log("Unity asks for the List of voted topics");
         });
+
+/*
+        this.unityContent.on("SendMysteryWord", (mysteryWord) =>{
+            console.log("Unity has send mysteryWord: " + mysteryWord);
+
+            this.setMysteryWord(mysteryWord)
+
+            //this int represents the choice a player made and ranges from 0 to 4
+            //For example 3 meaning a player has voted for mystery word 4; 0 meaning a player has voted for topic 1
+        });
+
+         this.unityContent.on("SendClue", (clue) =>{
+            console.log("Unity has send clue: " + clue);
+
+            this.setClue(clue)
+
+        });
+
+         this.unityContent.on("CallsForClueList", () =>{
+            this.sendClueList(this.state.game);
+            console.log("Unity asks for the List of correct Clues");
+        });
+
+         this.unityContent.on("SendGuess", (guess) =>{
+            console.log("Unity has send clue: " + guess);
+
+            this.setGuess(guess)
+
+        });
+
+         this.unityContent.on("CallsForGuessCorrect", () =>{
+            this.sendGuessCorrect(this.state.game);
+            console.log("Unity asks for boolean of guessCorrect");
+        });
+
+        */
     }
 
 
     async setPlayerArray(game) {
         const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') +
-            '&gameToken=' + localStorage.getItem('gameToken'))
+            '&gameToken=' + localStorage.getItem('gameToken'));
 
         console.log(game);
 
@@ -340,6 +376,7 @@ export class UnityGame extends React.Component {
     }
 
 
+
     async currentGame(){
         try{
         const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
@@ -356,6 +393,91 @@ export class UnityGame extends React.Component {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
 }
+/*
+Structure and design:
+        guesser: I voteForMysteryWord() by onClick (similar to voteForTopic()) and send to the backend an integer(0-4?)
+        player&bot: we send strings to the backend updated a clueList (&timestampList) by PUT request
+        Unity: from backend comes either a string with separator or a string of 0 and 1
+        todo edge case: null clue or time runs out and also results to null clue -> how to solve null in strings?
+        (example: mystery word: Ivan A. clueList: handsome;ugly;clever;funny;bully -> correct response: ;ugly;;;bully
+        or 01001)
+        example((float)timestampList 23.13;3.32;21.02;4.12;7.65)
+        individualScore(correctResponse[i], timeStamp[i])
+        guesser: I passRound() or guessMysteryWord(guess)
+        passRound() discard mystery word and go to nextRound()
+        correct guess: update teamScore += 1 && nextRound()
+        wrong guess: discard actual card and also the card of the top of the deck && nextRound()
+        if deck == 0 then showScoreboard() then stay() or leave() with countdown for tje decision (default: stay())
+        */
+
+    async setMysteryWord(mysteryWord){
+        try{
+            //topic int 0 by default
+            const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' +
+                localStorage.getItem('userToken') +'&mysteryWord=' + mysteryWord);
+
+        } catch (error) {
+            alert(`setMysteryWord: \n${handleError(error)}`);
+        }
+    }
+
+    async setClue(clue){
+        try{
+
+            const response = await api.put('/game/topic?gameToken=' + localStorage.getItem('gameToken' +
+            '&userToken=' + localStorage.getItem('userToken') + '&clue=' + clue));
+
+        }catch(error){
+            alert(`setClue error: \\n${handleError(error)}`);
+        }
+    }
+
+    sendClueList(game){
+
+        let clueList =  this.arrayToString(game.clueList);
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetRound",
+            clueList
+        )
+    }
+
+
+/*
+    async getBotClue(botDifficulty){
+        try{
+
+            const response = await api.get() // todo request
+
+            return response.data;
+        }catch(error){
+            alert(`botClue error: \\n${handleError(error)}`);
+        }
+    }
+*/
+
+    async setGuess(guess){
+        try{
+
+            const response = await api.put('/game/guess?gameToken=' + localStorage.getItem('gameToken' +
+                '&guess=' + guess));
+
+        }catch(error){
+            alert(`guessCorrect error: \\n${handleError(error)}`);
+        }
+    }
+
+
+    async sendGuessCorrect(game){
+        console.log("sending back the topic to unity");
+        let guessCorrected = game.guessCorrect;
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetThisRoundsTopic",
+            guessCorrected
+        )
+    }
+
 
 
     async voteForTopic(topic){
