@@ -140,6 +140,7 @@ class WaitingRoom extends React.Component {
 
         }catch (error) {
             alert(`Ivan is a dictator \n${handleError(error)}`);
+            //todo: wtf message
         }
     }
 

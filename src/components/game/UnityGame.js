@@ -408,10 +408,11 @@ export class UnityGame extends React.Component {
             })
             console.log(this.state.game);
 
+
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
-    }
+
     /*
     Structure and design:
             guesser: I voteForMysteryWord() by onClick (similar to voteForTopic()) and send to the backend an integer(0-4?)
@@ -478,6 +479,11 @@ export class UnityGame extends React.Component {
         //todo: thanh error handling + rounting close unity ivan
     }
 
+    async leaveGame(game){
+        const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
+        //todo: thanh error handling + rounting close unity ivan
+    }
+
     async setGuess(guess){
         try{
 
@@ -504,7 +510,8 @@ export class UnityGame extends React.Component {
 
     async voteForTopic(topic){
         try{
-            const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
+
+         const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
 
         } catch (error) {
             alert(`Something went wrong when trying to set the vote: \n${handleError(error)}`);
