@@ -332,8 +332,12 @@ export class UnityGame extends React.Component {
     //topicArray [0,0,0,1,2], each index represents the number of votes a topic has
     //in this example, topic 4 has 1 vote and topic 5 has 2 votes
     //after having received the Topic List from the backend, send it as string to unity
+
     sendTopicList(game){
-        let topicListString = this.arrayToString(game.voteList)
+        let topicListString = ''
+        for(var i = 0; i<5; i++){
+            topicListString += game.voteList[i].toString();
+        }
         console.log(topicListString);
         this.unityContent.send(
             "MockStats",
