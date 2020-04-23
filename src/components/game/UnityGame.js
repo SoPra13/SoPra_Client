@@ -121,9 +121,9 @@ export class UnityGame extends React.Component {
         //1. there are ties among the votes (ex. topic 1 has 2 votes and topic 2 has 2 votes)
         //2. No votes have been given (all have 0 votes but time is up)
         //Then, this function will send the final chosen topic back to unity via sendRoundsTopic()
-        //Todo not yet implemented correctly --> Backend has to handle edge cases
+        //Todo wird evtl nicht mehr benötigt
         this.unityContent.on("TopicsHaveBeenChosen", () =>{
-            this.sendRoundsTopic(this.state.game);
+            //this.sendRoundsTopic(this.state.game);
             console.log("The Topics for this Round have been chosen");
         });
 
@@ -147,7 +147,6 @@ export class UnityGame extends React.Component {
         });
 
 
-
         this.unityContent.on("CallsForLeaveGame", () =>{
             this.leaveGame(this.state.game);
             console.log("A player wants to leave the game");
@@ -159,41 +158,37 @@ export class UnityGame extends React.Component {
             console.log("A player sent a mistery word: " + message);
         });
 
-/*
-        this.unityContent.on("SendMysteryWord", (mysteryWord) =>{
-            console.log("Unity has send mysteryWord: " + mysteryWord);
 
-            this.setMysteryWord(mysteryWord)
-
-            //this int represents the choice a player made and ranges from 0 to 4
-            //For example 3 meaning a player has voted for mystery word 4; 0 meaning a player has voted for topic 1
+        this.unityContent.on("SendTopicStringToReact", (message) =>{
+            //Todo do something with this rounds topic
+            console.log("This rounds Topic is: " + message);
+            this.sendRoundsTopic(this.state.game); //this will send back the topic to unity
         });
 
-         this.unityContent.on("SendClue", (clue) =>{
-            console.log("Unity has send clue: " + clue);
-
-            this.setClue(clue)
-
-        });
-
-         this.unityContent.on("CallsForClueList", () =>{
-            this.sendClueList(this.state.game);
-            console.log("Unity asks for the List of correct Clues");
-        });
-
-         this.unityContent.on("SendGuess", (guess) =>{
-            console.log("Unity has send clue: " + guess);
-
-            this.setGuess(guess)
-
-        });
-
-         this.unityContent.on("CallsForGuessCorrect", () =>{
-            this.sendGuessCorrect(this.state.game);
-            console.log("Unity asks for boolean of guessCorrect");
-        });
-
-        */
+        /*
+                this.unityContent.on("SendMysteryWord", (mysteryWord) =>{
+                    console.log("Unity has send mysteryWord: " + mysteryWord);
+                    this.setMysteryWord(mysteryWord)
+                    //this int represents the choice a player made and ranges from 0 to 4
+                    //For example 3 meaning a player has voted for mystery word 4; 0 meaning a player has voted for topic 1
+                });
+                 this.unityContent.on("SendClue", (clue) =>{
+                    console.log("Unity has send clue: " + clue);
+                    this.setClue(clue)
+                });
+                 this.unityContent.on("CallsForClueList", () =>{
+                    this.sendClueList(this.state.game);
+                    console.log("Unity asks for the List of correct Clues");
+                });
+                 this.unityContent.on("SendGuess", (guess) =>{
+                    console.log("Unity has send clue: " + guess);
+                    this.setGuess(guess)
+                });
+                 this.unityContent.on("CallsForGuessCorrect", () =>{
+                    this.sendGuessCorrect(this.state.game);
+                    console.log("Unity asks for boolean of guessCorrect");
+                });
+                */
 
     }
 
@@ -297,9 +292,9 @@ export class UnityGame extends React.Component {
             nameString += ';'+game.playerList[i].username;
         }
 
-       /* for (var i = 1; i<game.botList.length; i++) {
-            nameString += ';'+game.botList[i].botname;
-        }*/
+        /* for (var i = 1; i<game.botList.length; i++) {
+             nameString += ';'+game.botList[i].botname;
+         }*/
 
 
         console.log("Names Set Completed");
@@ -354,7 +349,7 @@ export class UnityGame extends React.Component {
     sendRoundsTopic(game){
         console.log("sending back the topic to unity");
         //let topic = game.topic; //todo just4testing
-        let topic = "Animal Crossing"
+        let topic = "SocialDistancing"
         this.unityContent.send(
             "MockStats",
             "ReactSetThisRoundsTopic",
@@ -385,8 +380,8 @@ export class UnityGame extends React.Component {
 
         for (var i = 0; i<game.playerList.length; i++) {
             if(game.playerList[i].voted == true){
-            votedString += '1'
-        }else {
+                votedString += '1'
+            }else {
                 votedString += '0'
             }
         }
@@ -402,37 +397,38 @@ export class UnityGame extends React.Component {
 
     async currentGame(){
         try{
-        const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
+            const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
 
-        var game = response.data;
-        console.log(game);
+            var game = response.data;
+            console.log(game);
             console.log(response);
 
-        this.setState({
-            game: game,
-        })
+            this.setState({
+                game: game,
+            })
             console.log(this.state.game);
 
-    } catch (error) {
-        alert(`Something went wrong during the login: \n${handleError(error)}`);
-    }
-}
-/*
-Structure and design:
-        guesser: I voteForMysteryWord() by onClick (similar to voteForTopic()) and send to the backend an integer(0-4?)
-        player&bot: we send strings to the backend updated a clueList (&timestampList) by PUT request
-        Unity: from backend comes either a string with separator or a string of 0 and 1
-        todo edge case: null clue or time runs out and also results to null clue -> how to solve null in strings?
-        (example: mystery word: Ivan A. clueList: handsome;ugly;clever;funny;bully -> correct response: ;ugly;;;bully
-        or 01001)
-        example((float)timestampList 23.13;3.32;21.02;4.12;7.65)
-        individualScore(correctResponse[i], timeStamp[i])
-        guesser: I passRound() or guessMysteryWord(guess)
-        passRound() discard mystery word and go to nextRound()
-        correct guess: update teamScore += 1 && nextRound()
-        wrong guess: discard actual card and also the card of the top of the deck && nextRound()
-        if deck == 0 then showScoreboard() then stay() or leave() with countdown for tje decision (default: stay())
-        */
+
+        } catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+
+    /*
+    Structure and design:
+            guesser: I voteForMysteryWord() by onClick (similar to voteForTopic()) and send to the backend an integer(0-4?)
+            player&bot: we send strings to the backend updated a clueList (&timestampList) by PUT request
+            Unity: from backend comes either a string with separator or a string of 0 and 1
+            todo edge case: null clue or time runs out and also results to null clue -> how to solve null in strings?
+            (example: mystery word: Ivan A. clueList: handsome;ugly;clever;funny;bully -> correct response: ;ugly;;;bully
+            or 01001)
+            example((float)timestampList 23.13;3.32;21.02;4.12;7.65)
+            individualScore(correctResponse[i], timeStamp[i])
+            guesser: I passRound() or guessMysteryWord(guess)
+            passRound() discard mystery word and go to nextRound()
+            correct guess: update teamScore += 1 && nextRound()
+            wrong guess: discard actual card and also the card of the top of the deck && nextRound()
+            if deck == 0 then showScoreboard() then stay() or leave() with countdown for tje decision (default: stay())
+            */
 
     async setMysteryWord(mysteryWord){
         try{
@@ -449,7 +445,7 @@ Structure and design:
         try{
 
             const response = await api.put('/game/topic?gameToken=' + localStorage.getItem('gameToken' +
-            '&userToken=' + localStorage.getItem('userToken') + '&clue=' + clue));
+                '&userToken=' + localStorage.getItem('userToken') + '&clue=' + clue));
 
         }catch(error){
             alert(`setClue error: \\n${handleError(error)}`);
@@ -467,18 +463,21 @@ Structure and design:
     }
 
 
-/*
-    async getBotClue(botDifficulty){
-        try{
-
-            const response = await api.get() // todo request
-
-            return response.data;
-        }catch(error){
-            alert(`botClue error: \\n${handleError(error)}`);
+    /*
+        async getBotClue(botDifficulty){
+            try{
+                const response = await api.get() // todo request
+                return response.data;
+            }catch(error){
+                alert(`botClue error: \\n${handleError(error)}`);
+            }
         }
+    */
+
+    async leaveGame(game){
+        const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
+        //todo: thanh error handling + rounting close unity ivan
     }
-*/
 
     async leaveGame(game){
         const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
@@ -511,11 +510,12 @@ Structure and design:
 
     async voteForTopic(topic){
         try{
+
          const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
 
-    } catch (error) {
-        alert(`Something went wrong when trying to set the vote: \n${handleError(error)}`);
-    }
+        } catch (error) {
+            alert(`Something went wrong when trying to set the vote: \n${handleError(error)}`);
+        }
     }
 
     componentWillMount() {
