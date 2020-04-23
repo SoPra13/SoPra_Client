@@ -111,6 +111,8 @@ export class UnityGame extends React.Component {
             this.setPlayerNames(this.state.game);
             this.setPlayerAvatars(this.state.game);
             this.setTopics(this.state.game);
+
+            //ladshfjdashf
             console.log("FetchingPlayerInfos");
         });
 
@@ -140,7 +142,7 @@ export class UnityGame extends React.Component {
 
 
         this.unityContent.on("CallsForTopicList", () =>{
-            this.sendTopicList(this.state.game);
+            this.sendTopicList(this.state.game.voteList);
             console.log("Unity asks for the List of voted topics");
         });
 
@@ -226,7 +228,6 @@ export class UnityGame extends React.Component {
 
         console.log(activePlayer.toString()+totalPlayer.toString());
         console.log(str)
-
         this.setPlayerStats(str);
     }
 
@@ -333,10 +334,13 @@ export class UnityGame extends React.Component {
     //in this example, topic 4 has 1 vote and topic 5 has 2 votes
     //after having received the Topic List from the backend, send it as string to unity
 
-    sendTopicList(game){
-        let topicListString = ''
+    sendTopicList(voteList){
+
+        var topicListString = '';
+        console.log(voteList)
+
         for(var i = 0; i<5; i++){
-            topicListString += game.voteList[i].toString();
+            topicListString += voteList[i].toString();
         }
         console.log(topicListString);
         this.unityContent.send(
@@ -408,6 +412,7 @@ export class UnityGame extends React.Component {
             game: game,
         })
             console.log(this.state.game);
+
     } catch (error) {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
@@ -476,7 +481,7 @@ Structure and design:
 */
 
     async leaveGame(game){
-        const response = await api.delete('/game/gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
+        const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
         //todo: thanh error handling + rounting close unity ivan
     }
 
@@ -524,6 +529,7 @@ Structure and design:
         this.timerID = setInterval(
             () => this.currentGame(),
             1000
+
         );
     }
 
