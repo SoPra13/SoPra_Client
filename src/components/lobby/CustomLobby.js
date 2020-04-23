@@ -32,7 +32,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
+  background:  #ed782f;
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -166,15 +166,7 @@ class CustomLobby extends React.Component {
                                 Public
                             </Button>
                             </Active>
-{/*                            <Button
-                                onClick={() => {
-                                    this.setState({
-                                        lobbyType: "PRIVATE"
-                                });
-                                }}
-                            >
-                                Private
-                            </Button>*/}
+
                         </ButtonContainer>
 
                         <ButtonContainer>
@@ -187,6 +179,17 @@ class CustomLobby extends React.Component {
                                 }}
                             >
                                 Create
+                            </Button>
+                        </ButtonContainer>
+
+                        <ButtonContainer>
+                            <Button
+                                width="30%"
+                                onClick={() => {
+                                    this.props.history.push('/dashboard');
+                                }}
+                            >
+                                Back
                             </Button>
                         </ButtonContainer>
                     </Form>

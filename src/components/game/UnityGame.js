@@ -100,7 +100,6 @@ export class UnityGame extends React.Component {
 
         this.unityContent.on("SendTopicInput", (topic) =>{
             console.log("Unity has send topic input at position: " + topic);
-
             this.voteForTopic(topic)
 
             //this int represents the choice a player made and ranges from 0 to 4
@@ -139,6 +138,8 @@ export class UnityGame extends React.Component {
         });
 
 
+        //This is triggered by unity all 0.5 seconds
+        //This has to return the current topic votes to unity
         this.unityContent.on("CallsForTopicList", () =>{
             this.sendTopicList(this.state.game);
             console.log("Unity asks for the List of voted topics");

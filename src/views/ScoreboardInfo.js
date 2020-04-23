@@ -19,7 +19,7 @@ const UserName = styled.div`
 
 const Name = styled.div`
   font-weight: bold;
-  color: #5a5a5a;
+  color: #06c4ff;
 `;
 
 const Id = styled.div`
@@ -28,13 +28,14 @@ const Id = styled.div`
   font-weight: bold;
 `;
 
-const Room = ({ lobby }) => {
+
+const ScoreboardInfo = ({ scoreboard }) => {
     return (
         <Container>
-            <UserName>{lobby.lobbyname}</UserName>
-            <Id>Id: {lobby.id}</Id>
+            <UserName>{scoreboard.playerList}</UserName>
+            <Id>Id: {scoreboard.teamScore}</Id>
         </Container>
     );
 };
 
-export default Room;
+export default ScoreboardInfo;
