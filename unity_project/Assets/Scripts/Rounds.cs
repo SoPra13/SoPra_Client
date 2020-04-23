@@ -19,6 +19,9 @@ public class Rounds : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void SendTopicStringToReact(string message);
 
+    [DllImport("__Internal")]
+    private static extern void CallsForClueReady();
+
 
 
     public GameBoard gameBoard;
@@ -35,6 +38,7 @@ public class Rounds : MonoBehaviour
     private bool topicCall = false;
     private bool lastCall = false;
     private bool gettingTopicChoiceInfo = false;
+    private bool CallsRunning = false;
     private int finalIndex;
 
 
@@ -130,7 +134,6 @@ public class Rounds : MonoBehaviour
 
                 if (!topicCall)
                 {
-                    mockStats.ReactSetTopicVoteList("11131");
                     StartCoroutine(CallForTopicList());
                     topicCall = true;
                 }
@@ -224,6 +227,20 @@ public class Rounds : MonoBehaviour
 
         //Player waits for other player to make their guess, this phase is set via SubmitButton.cs script
         if (roundPhase == 15)
+        {
+            if (!CallsRunning)
+            {
+                StartCoroutine(CallForClueStatus());
+                CallsRunning = true;
+            }
+
+            if (mockStats.GetCluesGiven() == mockStats.GetTotalNumberOfPlayers() - 1)
+            {
+                roundPhase = 16; //ALL PLAYERS HAVE GIVEN THEIR CLUE
+            }
+        }
+
+        if (roundPhase == 16)
         {
 
         }
@@ -379,5 +396,19 @@ public class Rounds : MonoBehaviour
         yield return new WaitForSeconds(1f);
         gettingTopicChoiceInfo = false;
     }
+
+    IEnumerator CallForClueStatus()
+    {
+        try
+        { CallsForClueReady(); }
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity wants to set the current round but failed " + e);
+        }
+        yield return new WaitForSeconds(0.5f);
+        CallsRunning = false;
+    }
+
+
 
 }

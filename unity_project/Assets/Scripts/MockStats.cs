@@ -32,6 +32,7 @@ public class MockStats : MonoBehaviour
     private int[] topicChoices = { 0, 0, 0, 0, 0 }; //Displays the amount of votes per Topic
     private bool inputLocked = false;
     private string currentTopic = "justATest";
+    private int cluesGiven = 0;
 
     private int[] topicChoiceMade = { 0, 0, 0, 0, 0, 0, 0 }; //this array comes from Backend, 0 = not chosen a topic yet; 1 = chosen a topic yet; index 0 = player pos 1 etc.
     private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
@@ -133,6 +134,23 @@ public class MockStats : MonoBehaviour
     {
         return topicChoiceMade;
     }
+
+
+    public void ReactSendClueReady(string clueString)
+    {
+        cluesGiven = 0;
+        for (int i = 0; i < playerTotal-2; i++)
+        {
+            cluesGiven += (int)Char.GetNumericValue(clueString[i]);
+        }
+    }
+
+
+    public int GetCluesGiven()
+    {
+        return cluesGiven;
+    }
+
 
 
     //this function will send the topic out to React. React will take the topic number and increment this topic number by +1 in the backend for this game
