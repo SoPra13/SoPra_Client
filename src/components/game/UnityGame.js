@@ -154,24 +154,26 @@ export class UnityGame extends React.Component {
 
 
         this.unityContent.on("SendGuessToReact", (message) =>{
-            //Todo handle the misteryword with Backend API
-            console.log("A player sent a mistery word: " + message);
+
+            this.sendGuess(message);
+            console.log("A player sent a guess word: " + message);
         });
 
 
         this.unityContent.on("SendTopicStringToReact", (message) =>{
-            //Todo do something with this rounds topic
+            //Todo test this
+            this.setTopic(message)
             console.log("This rounds Topic is: " + message);
             this.sendRoundsTopic(this.state.game); //this will send back the topic to unity
         });
 
+        this.unityContent.on("CallsForClueReady", () =>{
+            this.sendClueReadyString(this.state.game);
+            console.log("Unity asks for the List of correct Clues");
+        });
+
         /*
-                this.unityContent.on("SendMysteryWord", (mysteryWord) =>{
-                    console.log("Unity has send mysteryWord: " + mysteryWord);
-                    this.setMysteryWord(mysteryWord)
-                    //this int represents the choice a player made and ranges from 0 to 4
-                    //For example 3 meaning a player has voted for mystery word 4; 0 meaning a player has voted for topic 1
-                });
+
                  this.unityContent.on("SendClue", (clue) =>{
                     console.log("Unity has send clue: " + clue);
                     this.setClue(clue)
@@ -266,8 +268,6 @@ export class UnityGame extends React.Component {
     }
 
 
-
-
     addPlayer(){
         this.unityContent.send(
             "PlayerTotal",
@@ -301,7 +301,7 @@ export class UnityGame extends React.Component {
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerNames",
-            nameString //Todo This are just dummy values, these values need to come from Backend Gameobject BOTS
+            nameString //TODO: BOTnames
         )
     }
 
@@ -348,8 +348,7 @@ export class UnityGame extends React.Component {
     //React will send the chosen topic for this round back to unity
     sendRoundsTopic(game){
         console.log("sending back the topic to unity");
-        //let topic = game.topic; //todo just4testing
-        let topic = "SocialDistancing"
+        var topic = this.state.game.topic;
         this.unityContent.send(
             "MockStats",
             "ReactSetThisRoundsTopic",
@@ -397,7 +396,10 @@ export class UnityGame extends React.Component {
 
     async currentGame() {
         try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
             const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
+
+
 
             var game = response.data;
             console.log(game);
@@ -431,18 +433,17 @@ export class UnityGame extends React.Component {
             if deck == 0 then showScoreboard() then stay() or leave() with countdown for tje decision (default: stay())
             */
 
-    async setMysteryWord(mysteryWord){
+    async setTopic(topic){
         try{
             //topic int 0 by default
-            const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' +
-                localStorage.getItem('userToken') +'&mysteryWord=' + mysteryWord);
+            const response = await api.put('/game/topic?gameToken=' + this.state.gameToken +'&topic=' + topic);
 
         } catch (error) {
-            alert(`setMysteryWord: \n${handleError(error)}`);
+            alert(`sendTopic: \n${handleError(error)}`);
         }
     }
 
-    async setClue(clue){
+    async sendClue(clue){
         try{
 
             const response = await api.put('/game/topic?gameToken=' + localStorage.getItem('gameToken' +
@@ -453,13 +454,25 @@ export class UnityGame extends React.Component {
         }
     }
 
-    sendClueList(game){
+    sendClueReadyString(game){
 
-        let clueList =  this.arrayToString(game.clueList);
+        var clueGivenString = '';
+
+        for (var i = 0; i<game.playerList.length; i++) {
+            if(game.playerList[i].gaveClue == true){
+                clueGivenString += '1'
+            }else {
+                clueGivenString += '0'
+            }
+        }
+
+        //'0001010'
+
         this.unityContent.send(
+            //todo: unity strings anpassen
             "MockStats",
-            "ReactSetRound",
-            clueList
+            "ReactSendClueReady",
+            clueGivenString
         )
     }
 
@@ -476,16 +489,18 @@ export class UnityGame extends React.Component {
     */
 
     async leaveGame(game){
-        const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
-        //todo: thanh error handling + rounting close unity ivan
+        try {
+            clearInterval(this.timerID);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
+            this.props.history.push('/dashboard')
+        }catch(error) {
+            alert(`leave error: \\n${handleError(error)}`);
+        }
     }
 
-    async leaveGame(game){
-        const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
-        //todo: thanh error handling + rounting close unity ivan
-    }
 
-    async setGuess(guess){
+    async sendGuess(guess){
         try{
 
             const response = await api.put('/game/guess?gameToken=' + localStorage.getItem('gameToken') +
