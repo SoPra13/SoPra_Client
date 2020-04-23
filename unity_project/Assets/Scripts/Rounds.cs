@@ -189,7 +189,7 @@ public class Rounds : MonoBehaviour
         {
             //REMOVE AFTERWARDS
             //Just for testing
-            mockStats.ReactSetThisRoundsTopic(mockStats.GetCurrentTopic());
+            //mockStats.ReactSetThisRoundsTopic(mockStats.GetCurrentTopic());
             //Testing Ends
         }
 

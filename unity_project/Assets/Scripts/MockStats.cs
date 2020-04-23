@@ -49,7 +49,7 @@ public class MockStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 7;
+        activePlayer = 5;
         playerPosition = 7; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
