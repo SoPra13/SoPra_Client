@@ -233,7 +233,6 @@ export class UnityGame extends React.Component {
             this.state.totalPlayers
         )
     }
-    //test
 
     substringOfWordList(str){
         var res = str.split(";");
