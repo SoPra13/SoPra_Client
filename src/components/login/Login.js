@@ -5,6 +5,7 @@ import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 
+
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -82,8 +83,16 @@ class Login extends React.Component {
     super();
     this.state = {
       username: null,
-      password: null
+      password: null,
+      theme: 'light'
     };
+  }
+
+
+  setTheme(str){
+    this.setState({
+      theme: str
+    })
   }
   /**
    * HTTP POST request is sent to the backend.
@@ -135,6 +144,9 @@ class Login extends React.Component {
 
   render() {
     return (
+        <ThemeProvider theme={lightTheme}>
+          <>
+            <GlobalStyles/>
       <BaseContainer>
         <FormContainer>
           <Form>
@@ -186,9 +198,12 @@ class Login extends React.Component {
               </Button>
 
             </ButtonContainer>
+
           </Form>
         </FormContainer>
       </BaseContainer>
+          </>
+        </ThemeProvider>
     );
   }
 }

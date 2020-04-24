@@ -12,6 +12,7 @@ class User {
     this.gameToken = null;
     this.status = null;
     this.voted = null;
+    this.gaveClue = null;
     this.unityReady = null;
     this.score = null;
     this.ready = null; // READY, PREPARING
