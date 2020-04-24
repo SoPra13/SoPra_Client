@@ -202,6 +202,7 @@ export class UnityGame extends React.Component {
         )
     }
 
+
     addPlayer(){
         this.unityContent.send(
             "PlayerTotal",
@@ -210,8 +211,6 @@ export class UnityGame extends React.Component {
         )
     }
 
-
-    //additional small support function
 
     substringOfWordList(str){
         var res = str.split(";");
