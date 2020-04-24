@@ -194,6 +194,58 @@ export class UnityGame extends React.Component {
     }
 
 
+    setPlayers(){
+        this.unityContent.send(
+            "PlayerTotal",
+            "SetPlayerTotal",
+            this.state.totalPlayers
+        )
+    }
+
+    addPlayer(){
+        this.unityContent.send(
+            "PlayerTotal",
+            "SetPlayerCount",
+            4
+        )
+    }
+
+
+    //additional small support function
+
+    substringOfWordList(str){
+        var res = str.split(";");
+        return res;
+    }
+
+    arrayToString(array){
+        var begin = array[0];
+        for (let i = 1; i < array.length; i++){
+            begin += ";"+array[i]
+        }
+    }
+
+    stringToArray(str){
+        let array = [];
+        for (let i = 0; i < str.length; i++){
+            array.push(parseInt(str.charAt(i)));
+        }
+        return array;
+    }
+
+    getIndex(game, token){
+        console.log(token);
+        for(var i = 0; i<game.playerList.length; i++){
+            console.log(game.playerList[i].token)
+            if(token == game.playerList[i].token){
+                return i+1;
+
+            }
+        }
+    }
+
+    //Instantiation of the GameInfo
+
     async setPlayerArray(game) {
         const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') +
             '&gameToken=' + localStorage.getItem('gameToken'));
@@ -227,54 +279,6 @@ export class UnityGame extends React.Component {
         this.setPlayerStats(str);
     }
 
-    setPlayers(){
-        this.unityContent.send(
-            "PlayerTotal",
-            "SetPlayerTotal",
-            this.state.totalPlayers
-        )
-    }
-    //test
-
-    substringOfWordList(str){
-        var res = str.split(";");
-        return res;
-    }
-
-    arrayToString(array){
-        var begin = array[0];
-        for (let i = 1; i < array.length; i++){
-            begin += ";"+array[i]
-        }
-    }
-
-    stringToArray(str){
-        let array = [];
-        for (let i = 0; i < str.length; i++){
-            array.push(parseInt(str.charAt(i)));
-        }
-        return array;
-    }
-
-    getIndex(game, token){
-        console.log(token);
-        for(var i = 0; i<game.playerList.length; i++){
-            console.log(game.playerList[i].token)
-            if(token == game.playerList[i].token){
-                return i+1;
-
-            }
-        }
-    }
-
-
-    addPlayer(){
-        this.unityContent.send(
-            "PlayerTotal",
-            "SetPlayerCount",
-            4
-        )
-    }
 
     setPlayerStats(playerStats){ //activePlayer;playerTotal;playerPosition;connectPlayers
         let infoString = playerStats;//i.e. "1726" String
@@ -315,6 +319,8 @@ export class UnityGame extends React.Component {
         )
     }
 
+    //difference to the origin is to vote the topic instead of the guesser choose a the mystery word
+
     setTopics(game){ //Send a string with a ";" delimiter to unity
         let topicString = this.arrayToString(game.mysteryWords)
         console.log("Topics Set Completed");
@@ -345,6 +351,18 @@ export class UnityGame extends React.Component {
         )
     }
 
+
+
+    async voteForTopic(topic){
+        try{
+
+            const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
+
+        } catch (error) {
+            alert(`Something went wrong when trying to set the vote: \n${handleError(error)}`);
+        }
+    }
+
     //React will send the chosen topic for this round back to unity
     sendRoundsTopic(game){
         console.log("sending back the topic to unity");
@@ -354,6 +372,17 @@ export class UnityGame extends React.Component {
             "ReactSetThisRoundsTopic",
             topic
         )
+    }
+
+    //update topic for this round at backend
+    async setTopic(topic){
+        try{
+            //topic int 0 by default
+            const response = await api.put('/game/topic?gameToken=' + this.state.gameToken +'&topic=' + topic);
+
+        } catch (error) {
+            alert(`sendTopic: \n${handleError(error)}`);
+        }
     }
 
 
@@ -399,8 +428,6 @@ export class UnityGame extends React.Component {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
 
-
-
             var game = response.data;
             console.log(game);
             console.log(response);
@@ -433,15 +460,7 @@ export class UnityGame extends React.Component {
             if deck == 0 then showScoreboard() then stay() or leave() with countdown for tje decision (default: stay())
             */
 
-    async setTopic(topic){
-        try{
-            //topic int 0 by default
-            const response = await api.put('/game/topic?gameToken=' + this.state.gameToken +'&topic=' + topic);
 
-        } catch (error) {
-            alert(`sendTopic: \n${handleError(error)}`);
-        }
-    }
 
     async sendClue(clue){
         try{
@@ -523,16 +542,6 @@ export class UnityGame extends React.Component {
     }
 
 
-
-    async voteForTopic(topic){
-        try{
-
-         const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
-
-        } catch (error) {
-            alert(`Something went wrong when trying to set the vote: \n${handleError(error)}`);
-        }
-    }
 
     componentWillMount() {
         this.setState({
