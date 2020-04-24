@@ -24,7 +24,7 @@
     display: flex;
 }
 .chatbox {
-    height: 100%;
+    height: 380px;
     display: box;
     padding-left: 5px;
     background-color:black;
