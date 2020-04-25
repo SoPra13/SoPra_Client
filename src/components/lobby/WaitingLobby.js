@@ -100,10 +100,10 @@ class WaitingRoom extends React.Component {
      * @param userToken (stored in the lobby)
      */
 
-    kickPlayer(userToken){
+    async kickPlayer(userToken){
         try {
-            const response = api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
-                + '?userToken=' + userToken);
+            const response = await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
+                + '&userToken=' + userToken);
 
             console.log('Player get kicked from the admin: ' + response.data);
 
@@ -133,17 +133,16 @@ class WaitingRoom extends React.Component {
      */
 
     stillInTheLobby(){
-        let inside = this.checkPlayerList();
-
-        console.log(inside)
-        if (inside == false){
+        if(this.checkPlayerList() === false){
             this.getKicked();
         }
+        console.log(this.checkPlayerList());
     }
+
 
     checkPlayerList(){
         for(let i=0; i<this.state.playerList.length; i++){
-            if(this.state.playerList[i].userToken == localStorage.getItem('userToken')){
+            if(this.state.playerList[i].token === localStorage.getItem('userToken')){
                 return true;
 
             }
@@ -324,7 +323,7 @@ class WaitingRoom extends React.Component {
                                             key={user.id}
                                             onClick={() => {
                                                 console.log(user.id)
-                                                this.kickPlayer(user.userToken)
+                                                this.kickPlayer(user.token)
                                             }}>
                                             Kick
                                         </Button1>
@@ -363,7 +362,8 @@ class WaitingRoom extends React.Component {
                                                 disabled = {localStorage.getItem('userToken') != this.state.adminToken}
                                                 key={bot.id}
                                                 onClick={() => {
-                                                    console.log(bot.id)
+                                                    console.log(bot.id);
+                                                    console.log(bot.token);
                                                     this.removeBot(bot.token)
                                                 }}>
                                                 Kick
