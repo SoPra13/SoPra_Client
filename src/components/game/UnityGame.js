@@ -449,8 +449,6 @@ export class UnityGame extends React.Component {
             player&bot: we send strings to the backend updated a clueList (&timestampList) by PUT request
             Unity: from backend comes either a string with separator or a string of 0 and 1
             todo edge case: null clue or time runs out and also results to null clue -> how to solve null in strings?
-            (example: mystery word: Ivan A. clueList: handsome;ugly;clever;funny;bully -> correct response: ;ugly;;;bully
-            or 01001)
             example((float)timestampList 23.13;3.32;21.02;4.12;7.65)
             individualScore(correctResponse[i], timeStamp[i])
             guesser: I passRound() or guessMysteryWord(guess)

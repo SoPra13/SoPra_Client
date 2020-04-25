@@ -238,6 +238,14 @@ class Dashboard extends React.Component {
         })
     }
 
+/*    async deleteLobby(){
+        const response = await api.get('/lobbies');
+        if (response.data.playerList.length == 0){
+            const token = response.data.lobbyToken;
+            await api.delete('/lobby?lobbyToken=' + token);
+        }
+    }*/
+
 
     /**
      *  Every time the user enters something in the input field, the state gets updated.
@@ -290,6 +298,15 @@ class Dashboard extends React.Component {
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
+
+/*        this.timerID = setInterval(
+            () => this.deleteLobby(),
+            1000
+        );*/
+    }
+
+    componentWillUnmount() {
+/*        clearInterval(this.timerID);*/
     }
 
 

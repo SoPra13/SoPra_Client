@@ -7,8 +7,7 @@ import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
 import Lobby from "../shared/models/Lobby";
-
-/*for all players place a ready button, by condition if all players are ready starts a game object automatically*/
+import BotPlayer from "../../views/BotPlayer";
 
 
 const Container = styled(BaseContainer)`
@@ -21,7 +20,21 @@ const Users = styled.ul`
   padding-left: 0;
 `;
 
+const MultipleListsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
 const PlayerContainer = styled.li`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const KickContainer = styled.li`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,7 +52,7 @@ const Button1 = styled.button`
   text-align: center;
   color: #fff;
   width: ${props => props.width || null};
-  height: 35px;
+  height: ${props => props.width || null};
   border: 2px solid;
   border-color: #c5c5c5;
   border-radius: 20px;
@@ -58,18 +71,90 @@ class WaitingRoom extends React.Component {
             lobbyToken: localStorage.getItem('lobbyToken'),
             difficulty: "FRIEND",
             numberOfPlayers: 7,
-            numberOfBots: 0
+            numberOfBots: 0,
+            adminToken: null,
+            isToggleReady: false
         };
     }
 
-    addBot(){
-    const response = api.put('/lobby?lobbyToken=' + this.state.lobbyToken + '&difficulty=' + this.state.difficulty)
+    /**
+     * add a bot with his difficulty
+     * @param str (is his difficulty to add a bot with a certain behaviour to the lobby.botList)
+     */
+
+    addBot(str){
+    const response = api.put('/lobby?lobbyToken=' + this.state.lobbyToken + '&difficulty=' + str);
     }
 
-    removeBot(botToken){
-        const response = api.delete('/lobby?lobbyToken=' + this.state.lobbyToken + '&botToken=' + botToken)
+    /**
+     * bot will be removed from the lobby.botList
+     * @param botToken (bot with unique token)
+     */
 
+    async removeBot(botToken){
+        const response = await api.delete('/lobby?lobbyToken=' + this.state.lobbyToken + '&botToken=' + botToken);
     }
+
+    /**
+     * the user with the userToken xy will be removed from the lobby.playerList
+     * @param userToken (stored in the lobby)
+     */
+
+    kickPlayer(userToken){
+        try {
+            const response = api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
+                + '?userToken=' + userToken);
+
+            console.log('Player get kicked from the admin: ' + response.data);
+
+            this.props.history.push('/dashboard');
+
+        }catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+        }
+    }
+
+    /**
+     * if a player gets kicked, his local lobbyToken will be removed and redirected to /dashboard
+     */
+
+    getKicked(){
+        localStorage.removeItem('lobbyToken');
+
+        console.log('My lobby token is deleted: ' + localStorage.getItem('lobbyToken'));
+
+        this.props.history.push('/dashboard');
+    }
+
+    /**
+     * function to check whether the user part of the lobby is or not
+     * if not, the player will be redirected to redirected to /dashbaord
+     * local lobbyToken will be removed
+     */
+
+    stillInTheLobby(){
+        let inside = this.checkPlayerList();
+
+        console.log(inside)
+        if (inside == false){
+            this.getKicked();
+        }
+    }
+
+    checkPlayerList(){
+        for(let i=0; i<this.state.playerList.length; i++){
+            if(this.state.playerList[i].userToken == localStorage.getItem('userToken')){
+                return true;
+
+            }
+        }
+    }
+
+    /**
+     * deletes the userToken from the lobby
+     * removes the local lobbytoken
+     * routes to the /dashboard
+     */
 
     leaveLobby(){
         try {
@@ -86,10 +171,17 @@ class WaitingRoom extends React.Component {
 
     }
 
+    /**
+     * window pops up to with the token
+     */
 
     getLobbyToken(){
         alert(this.state.lobbyToken);
     }
+
+    /**
+     * function to update the playerList and botList
+     */
 
     async getLobby(){
         try {
@@ -99,7 +191,9 @@ class WaitingRoom extends React.Component {
 
             // Get the returned users and update the state.
             this.setState({
-                playerList: response.data.playerList
+                playerList: response.data.playerList,
+                botList: response.data.botList,
+                adminToken: response.data.adminToken
             });
 
             // See here to get more data.
@@ -109,11 +203,14 @@ class WaitingRoom extends React.Component {
         }
     }
 
+    /**
+     * updates the user status as READY
+     */
+
     ready(){
         try {
             const requestBody = JSON.stringify({
                 lobbyToken: localStorage.getItem('lobbyToken'),
-                /*                password: this.state.password,*/
                 userToken: localStorage.getItem('userToken'),
                 status: "READY"
             });
@@ -125,6 +222,14 @@ class WaitingRoom extends React.Component {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
     }
+
+
+
+    /**
+     * updates the game object
+     * note: lobbyToken = gameToken
+     * routes to /unityGame
+     */
 
     enterGame(){
         try {
@@ -143,6 +248,10 @@ class WaitingRoom extends React.Component {
         }
     }
 
+    /**
+     * componentWillMount() sets the states of playerList and botList before the first rendering
+     */
+
     componentWillMount() {
         const response = api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'))
 
@@ -154,30 +263,45 @@ class WaitingRoom extends React.Component {
             playerList: lobby.playerList,
             botList: lobby.botList
         })
-
     }
 
+
+    /**
+     * componentDidMount() mounts the lobby to change the state of playerList every 1s and botList every 2s
+     * componentWillUnmount resets the timer
+     */
+
+
     componentDidMount() {
-        this.timerID = setInterval(
+        this.timerID1 = setInterval(
             () => this.getLobby(),
             1000
         );
+        this.timerID2 = setInterval(
+            () => this.stillInTheLobby(),
+            2000
+        )
     }
 
     componentWillUnmount() {
-        clearInterval(this.timerID)
+        clearInterval(this.timerID1)
+        clearInterval(this.timerID2)
     }
 
     render() {
         return (
             <BaseContainer>
             <Container>
-                <h2>Players </h2>
+
+                <h2>Players & Bots of Lobby</h2>
                 <div>
+
+
                     {!this.state.playerList ? (
                         <Spinner />
                     ) : (
                         <div>
+                            <MultipleListsContainer>
                             <Users>
                                 {this.state.playerList.map(user => {
                                     return (
@@ -192,20 +316,75 @@ class WaitingRoom extends React.Component {
                                     );
                                 })}
                             </Users>
+                            <Users>
+                                {this.state.playerList.map(user => {
+                                    return (
+                                        <Button1
+                                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
+                                            key={user.id}
+                                            onClick={() => {
+                                                console.log(user.id)
+                                                this.kickPlayer(user.userToken)
+                                            }}>
+                                            Kick
+                                        </Button1>
+                                    );
+                                })}
+                            </Users>
+                            </MultipleListsContainer>
                         </div>
                     )}
-                    <PlayerContainer>
-                        <Button1
-                            width="20%"
-                            onClick={() => {
-                                this.leaveLobby();
-                            }}
-                        >
-                            Leave
-                        </Button1>
 
+
+                    {!this.state.botList ? (
+                        <Spinner />
+                    ) : (
+                        <div>
+                            <MultipleListsContainer>
+                                <Users>
+                                    {this.state.botList.map(bot => {
+                                        return (
+                                            <PlayerContainer
+                                                key={bot.id}
+                                                onClick={() => {
+                                                    console.log(bot.id)
+                                                    /*nothing happens but a console log*/
+                                                }}>
+                                                <BotPlayer bot={bot}/>
+                                            </PlayerContainer>
+                                        );
+                                    })}
+                                </Users>
+                                <Users>
+                                    {this.state.botList.map(bot => {
+                                        return (
+                                            <KickContainer>
+                                            <Button1
+                                                disabled = {localStorage.getItem('userToken') != this.state.adminToken}
+                                                key={bot.id}
+                                                onClick={() => {
+                                                    console.log(bot.id)
+                                                    this.removeBot(bot.token)
+                                                }}>
+                                                Kick
+                                            </Button1>
+                                                </KickContainer>
+                                        );
+                                    })}
+                                </Users>
+                            </MultipleListsContainer>
+                        </div>
+                    )}
+
+
+
+
+
+                    <PlayerContainer>
+
+                        <MultipleListsContainer>
                     <Button1
-                        disabled = {localStorage.getItem('userToken') == this.state.adminToken}
+                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
                         width="20%"
                         onClick={() => {
                             this.getLobbyToken();
@@ -214,14 +393,57 @@ class WaitingRoom extends React.Component {
                         Get the lobby token
                     </Button1>
 
+                        <Button1
+                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
+                            width="20%"
+                            onClick={() => {
+                                this.addBot('FRIEND');
+                            }}
+                        >
+                            ADD FRIENDLY BOT
+                        </Button1>
+
+                        <Button1
+                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
+                            width="20%"
+                            onClick={() => {
+                                this.addBot('NEUTRAL');
+                            }}
+                        >
+                            ADD NEUTRAL BOT
+                        </Button1>
+
+                        <Button1
+                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
+                            width="20%"
+                            onClick={() => {
+                                this.addBot('DARKSOULS');
+                            }}
+                        >
+                            ADD BADASS BOT
+                        </Button1>
+                            </MultipleListsContainer>
+
+
+
+                        <MultipleListsContainer>
+                        <Button1
+                            onClick={() => {
+                                this.leaveLobby();
+                            }}
+                        >
+                            Leave
+                        </Button1>
+
+
                     <Button1
-                        width="20%"
                         onClick={() => {
                             this.enterGame();
                         }}
                     >
                         Join into Game
                     </Button1>
+                            </MultipleListsContainer>
 
                     </PlayerContainer>
                     </div>
