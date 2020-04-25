@@ -6,7 +6,7 @@ export function Message(props) {
     return (
     <div>
         {
-            props.username!=="EVENTEVENTEVENT"
+            props.messageType!=="ACTION"
             ?
             (<><span className="usernametext">{props.username}:</span> <span className="messagetext">{props.message}</span></>)
             :

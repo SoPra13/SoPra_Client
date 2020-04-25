@@ -15,7 +15,7 @@ export default class Chat extends Component {
         return (
                 <div className="form">
                     <div className="chatbox">
-                        {this.state.messages.map(msg =>(<Message username={msg.username} message={msg.message}/>))}
+                        {this.state.messages.map(msg =>(<Message messageType={msg.messageType} username={msg.username} message={msg.message}/>))}
                         {!this.state.active?<p style={{color:"red"}}>Chat closed!</p>:<div style={{ float:"left", clear: "both" }}/>}
                         <div style={{ float:"left", clear: "both" }}
                             ref={(el) => { this.messagesEnd = el; }}>
@@ -31,8 +31,8 @@ export default class Chat extends Component {
 
     handleSend() {
         if (this.state.msginput !== "" && this.state.active) {
-            const json = JSON.stringify({userToken: localStorage.userToken, message: this.state.msginput})
-            api.post("/chat", json, {params: {lobbytoken: "hihi"}});
+            const json = JSON.stringify({message: this.state.msginput})
+            api.post("/chat", json, {params: {userToken: localStorage.userToken, lobbyToken: localStorage.lobbyToken}});
             this.setState({msginput: ""})
         }
     }
@@ -48,14 +48,14 @@ export default class Chat extends Component {
     }
 
     async updateStatus() {
-        const response = await api.get('/chat/active', {params: {lobbytoken: "hihi"}});
+        const response = await api.get('/chat/active', {params: {lobbyToken: localStorage.lobbyToken}});
         if (this.state.active !== response.data) {
             this.setState({active: response.data});
         }
     }
 
     componentDidMount() {
-        api.post('/chat/join',null, {params: {lobbytoken: "hihi", userToken:localStorage.userToken}})
+        api.post('/chat/join',null, {params: {lobbyToken: localStorage.lobbyToken, userToken:localStorage.userToken}})
         this.scrollchat();
         this.timerID = setInterval(() => {
             this.fetchUser();
@@ -73,7 +73,7 @@ export default class Chat extends Component {
 
     async fetchUser() {
         try {
-            const response = await api.get('/chat', {params: {lobbytoken: "hihi"}});
+            const response = await api.get('/chat', {params: {lobbyToken: localStorage.lobbyToken}});
             if (this.state.messages.length < response.data.length) {
                 this.setState({messages: response.data}); 
             }
