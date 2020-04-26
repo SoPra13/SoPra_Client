@@ -144,7 +144,6 @@ class Login extends React.Component {
 
   render() {
     return (
-
       <BaseContainer>
         <FormContainer>
           <Form>
@@ -200,8 +199,6 @@ class Login extends React.Component {
           </Form>
         </FormContainer>
       </BaseContainer>
-
-
     );
   }
 }

@@ -13,8 +13,10 @@ import {RegisterGuard} from "../routeProtectors/RegisterGuard";
 import Register from "../../register/Register";
 import WaitingLobby from "../../lobby/WaitingLobby";
 import {GameGuard} from "../routeProtectors/GameGuard";
+import {LobbyGuard} from "../routeProtectors/LobbyGuard";
 import LoginLobby from "../../lobby/LoginLobby";
 import UnityDummy from "../../game/UnityDummy";
+import Chat from "../../chat/Chat";
 
 
 /**
@@ -51,7 +53,9 @@ class AppRouter extends React.Component {
                   path="/dashboard/profile/editprofile"
                   exact
                   render={() => (
+                    <DashboardGuard>
                       <EditProfile/>
+                    </DashboardGuard>
                   )}
               />
 
@@ -69,9 +73,9 @@ class AppRouter extends React.Component {
                   path="/dashboard/customLobby"
                   exact
                   render={() => (
-                      <CustomLobbyGuard>
+                      <DashboardGuard>
                           <CustomLobby/>
-                      </CustomLobbyGuard>
+                      </DashboardGuard>
                   )}
               />
 
@@ -79,7 +83,9 @@ class AppRouter extends React.Component {
                   path="/dashboard/loginLobby"
                   exact
                   render={() => (
+                    <DashboardGuard>
                       <LoginLobby/>
+                      </DashboardGuard>
                   )}
               />
 
@@ -87,7 +93,9 @@ class AppRouter extends React.Component {
                   path="/dashboard/waitingLobby"
                   exact
                   render={() => (
+                    <LobbyGuard>
                       <WaitingLobby/>
+                    </LobbyGuard>
                   )}
               />
 
@@ -114,7 +122,15 @@ class AppRouter extends React.Component {
                   render={() => (
                       <GameGuard>
                           <UnityGame />
-                          </GameGuard>
+                        </GameGuard>
+                  )}
+              />
+
+                <Route
+                  path="/chat"
+                  exact
+                  render={() => (
+                      <Chat />
                   )}
               />
               <Route path="/" exact render={() => <Redirect to={"/login"} />} />
