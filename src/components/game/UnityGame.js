@@ -97,10 +97,18 @@ export class UnityGame extends React.Component {
 
         });
 
-        this.unityContent.on("SendTopicInput", (topic) =>{
+
+        this.unityContent.on("FetchSubmittedClues", () =>{
+            console.log("FetchSubmittedClues");
+
+            this.sendClueReadyString(this.state.game);
+
+        });
+
+        this.unityContent.on("PlayerVoted", (topic) =>{
             console.log("Unity has send topic input at position: " + topic);
 
-            this.voteForTopic(topic)
+            this.voteForTopic(topic);
 
             //this int represents the choice a player made and ranges from 0 to 4
             //For example 3 meaning a player has voted for topic 4; 0 meaning a player has voted for topic 1
@@ -112,41 +120,29 @@ export class UnityGame extends React.Component {
             this.setTopics(this.state.game);
 
             //ladshfjdashf
-            console.log("FetchingPlayerInfos");
-        });
-
-        //In here, React has to call the backend to get the topic from the topic array for this round
-        //the back end has to handle the edge cases of
-        //1. there are ties among the votes (ex. topic 1 has 2 votes and topic 2 has 2 votes)
-        //2. No votes have been given (all have 0 votes but time is up)
-        //Then, this function will send the final chosen topic back to unity via sendRoundsTopic()
-        //Todo wird evtl nicht mehr benötigt
-        this.unityContent.on("TopicsHaveBeenChosen", () =>{
-            //this.sendRoundsTopic(this.state.game);
-            console.log("The Topics for this Round have been chosen");
+            console.log("FetchingPlayerInfo");
         });
 
 
-        this.unityContent.on("AskForRound", () =>{
-            //Todo fetch round number from backend and pass it to sendRoundNumber
+        this.unityContent.on("FetchRound", () =>{
             this.sendRoundNumber(this.state.game);
             console.log("Unity asks React for the current Round");
         });
 
 
-        this.unityContent.on("FetchPlayerMadeTopicChoice", () =>{
+        this.unityContent.on("FetchVotedString", () =>{
             this.sendPlayerHasChosenTopicInfo(this.state.game);
             console.log("Unity asks for the info about which player has already chosen his topic");
         });
 
 
-        this.unityContent.on("CallsForTopicList", () =>{
+        this.unityContent.on("FetchTopicList", () =>{
             this.sendTopicList(this.state.game.voteList);
             console.log("Unity asks for the List of voted topics");
         });
 
 
-        this.unityContent.on("CallsForLeaveGame", () =>{
+        this.unityContent.on("LeaveGame", () =>{
             this.leaveGame(this.state.game);
             console.log("A player wants to leave the game");
         });
@@ -158,17 +154,30 @@ export class UnityGame extends React.Component {
             console.log("A player sent a guess word: " + message);
         });
 
+        this.unityContent.on("SendClueToReact", (message) =>{
+            //string
+            this.sendClue(message);
+            console.log("A player sent a clue word: " + message);
+        });
 
-        this.unityContent.on("SendTopicStringToReact", (message) =>{
-            //Todo test this
-            this.setTopic(message)
+
+
+        this.unityContent.on("SendTopicToReact", (message) =>{
+            this.setTopic(message);
             console.log("This rounds Topic is: " + message);
-            this.sendRoundsTopic(this.state.game); //this will send back the topic to unity
+            this.sendRoundsTopic(message);
         });
 
         this.unityContent.on("CallsForClueReady", () =>{
             this.sendClueReadyString(this.state.game);
             console.log("Unity asks for the List of correct Clues");
+        });
+
+        this.unityContent.on("FetchCluesString", () =>{
+            //wants list of clues separated by;
+            console.log("FETCH CLUES STING");
+            this.sendClueList(this.state.game);
+            console.log("xxxxxxxxx asks for the List of correct Clues");
         });
 
         /*
@@ -220,8 +229,9 @@ export class UnityGame extends React.Component {
     arrayToString(array){
         var begin = array[0];
         for (let i = 1; i < array.length; i++){
-            begin += ";"+array[i]
+            begin += ";"+array[i];
         }
+        return begin;
     }
 
     stringToArray(str){
@@ -322,6 +332,7 @@ export class UnityGame extends React.Component {
 
     setTopics(game){ //Send a string with a ";" delimiter to unity
         let topicString = this.arrayToString(game.mysteryWords)
+        console.log(topicString);
         console.log("Topics Set Completed");
         this.unityContent.send(
             "MockStats",
@@ -363,13 +374,20 @@ export class UnityGame extends React.Component {
     }
 
     //React will send the chosen topic for this round back to unity
-    sendRoundsTopic(game){
+   async sendRoundsTopic(topic){
         console.log("sending back the topic to unity");
-        var topic = this.state.game.topic;
-        this.unityContent.send(
+        const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
+       await new Promise(resolve => setTimeout(resolve, 5000));
+       var game = response.data;
+       console.log('Resp:' + response);
+       console.log('gameobj:' + game);
+       console.log('topic:' + game.topic);
+
+
+       this.unityContent.send(
             "MockStats",
             "ReactSetThisRoundsTopic",
-            topic
+            game.topic
         )
     }
 
@@ -462,8 +480,8 @@ export class UnityGame extends React.Component {
     async sendClue(clue){
         try{
 
-            const response = await api.put('/game/topic?gameToken=' + localStorage.getItem('gameToken' +
-                '&userToken=' + localStorage.getItem('userToken') + '&clue=' + clue));
+            const response = await api.put('/game/clue?gameToken=' + localStorage.getItem('gameToken') +
+                '&userToken=' + localStorage.getItem('userToken') + '&clue=' + clue);
 
         }catch(error){
             alert(`setClue error: \\n${handleError(error)}`);
@@ -481,16 +499,27 @@ export class UnityGame extends React.Component {
                 clueGivenString += '0'
             }
         }
-
+        console.log(clueGivenString);
         //'0001010'
-
         this.unityContent.send(
-            //todo: unity strings anpassen
             "MockStats",
-            "ReactSendClueReady",
+            "ReactSetPlayerHasSubmittedClue",
             clueGivenString
         )
     }
+
+    sendClueList(game){ //Send a string with a ";" delimiter to unity
+        console.log(game.clueList);
+        let cluesString = this.arrayToString(game.clueList)
+        console.log(cluesString);
+        console.log("clues Set Completed");
+        this.unityContent.send(
+            "MockStats",
+            "ReactSetClueString",
+            cluesString
+        )
+    }
+
 
 
     /*
@@ -579,7 +608,7 @@ export class UnityGame extends React.Component {
                             <Button
                                 width="15%"
                                 onClick={() => {
-                                    this.addPlayer();
+                                    this.sendClueList(this.state.game);
                                 }}
                             >
                                 SetPlayers

@@ -105,7 +105,7 @@ class WaitingRoom extends React.Component {
             const response = await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
                 + '&userToken=' + userToken);
 
-            console.log('Player get kicked from the admin: ' + response.data);
+            console.log('Player get kicked from the admin');
 
             this.props.history.push('/dashboard');
 
@@ -119,6 +119,9 @@ class WaitingRoom extends React.Component {
      */
 
     getKicked(){
+
+        console.log('My lobby token is before: ' + localStorage.getItem('lobbyToken'));
+
         localStorage.removeItem('lobbyToken');
 
         console.log('My lobby token is deleted: ' + localStorage.getItem('lobbyToken'));
@@ -133,8 +136,10 @@ class WaitingRoom extends React.Component {
      */
 
     stillInTheLobby(){
-        if(this.checkPlayerList() === false){
+        console.log('My lobbytoken: ' + localStorage.getItem('lobbyToken'))
+        if(this.checkPlayerList() == undefined){
             this.getKicked();
+            this.props.history.push('/dashboard');
         }
         console.log(this.checkPlayerList());
     }
@@ -142,7 +147,7 @@ class WaitingRoom extends React.Component {
 
     checkPlayerList(){
         for(let i=0; i<this.state.playerList.length; i++){
-            if(this.state.playerList[i].token === localStorage.getItem('userToken')){
+            if(this.state.playerList[i].token == localStorage.getItem('userToken')){
                 return true;
 
             }
@@ -186,7 +191,6 @@ class WaitingRoom extends React.Component {
         try {
             const response = await api.get('/lobby?lobbyToken='+ localStorage.getItem('lobbyToken'));
 
-/*            await new Promise(resolve => setTimeout(resolve, 1000));*/
 
             // Get the returned users and update the state.
             this.setState({
@@ -278,7 +282,8 @@ class WaitingRoom extends React.Component {
         );
         this.timerID2 = setInterval(
             () => this.stillInTheLobby(),
-            2000
+            2000,
+
         )
     }
 
@@ -430,6 +435,7 @@ class WaitingRoom extends React.Component {
                         <Button1
                             onClick={() => {
                                 this.leaveLobby();
+
                             }}
                         >
                             Leave
@@ -437,6 +443,7 @@ class WaitingRoom extends React.Component {
 
 
                     <Button1
+                        //disabled = {this.state.playerList.length + this.state.botList < 3}
                         onClick={() => {
                             this.enterGame();
                         }}
