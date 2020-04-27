@@ -21,20 +21,31 @@ public class MockStats : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void FetchPlayerMadeTopicChoice(); //active player only, checks which player has already chosen his topic
 
+    [DllImport("__Internal")]
+    private static extern void FetchSubmittedClues(); //Asks React to send back the state of the clues already given by players
+
+    [DllImport("__Internal")]
+    private static extern void FetchClueString(); //Asks React to send back a string containing all final clues from the players
+                                                  //React will then call ReactSetClueString()
+    [DllImport("__Internal")]
+    private static extern void UpdateScore(int score); //this will update the gameScore in the backend
+
+
 
     private Rounds rounds;
     private int playerPosition;
     private int playerTotal;
     private int activePlayer;
     private int connectedPlayers;
+    private int score = 0;
     //In here, each Field represents a Topic (Field 0 = Topic 1; Field 1 = Topic 2). Each Field contains an integer value
     //indicating how many votes this Topic has [0,2,0,1,0] means that Topic 2 has 2 votes, Topic 4 has 1 vote, thre rest has 0 votes
     private int[] topicChoices = { 0, 0, 0, 0, 0 }; //Displays the amount of votes per Topic
     private bool inputLocked = false;
     private string currentTopic = "justATest";
-    private int cluesGiven = 0;
 
     private int[] topicChoiceMade = { 0, 0, 0, 0, 0, 0, 0 }; //this array comes from Backend, 0 = not chosen a topic yet; 1 = chosen a topic yet; index 0 = player pos 1 etc.
+    private int[] clueSubmitted = { 0, 0, 0, 0, 0, 0, 0 };  //this array is set from the Backend, 0 = not submitted a cue; 1 = submitted a clue
     private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
     private int[] avatar = { 1, 2, 3, 4, 5, 6, 7 };
     string[] input = { null, null, null, null, null, null, null };
@@ -45,12 +56,13 @@ public class MockStats : MonoBehaviour
         "Roach", "Dog", "Sand", "Swamp", "Face", "Wrench", "Flute", "PC", "Villa", "Bee",
         "Gun", "Cat", "Night", "Fire", "Iron", "Wrench", "Tears", "Mobilephone", "Tree", "Snake",
         "Stone", "Hero", "Lasergun", "Ladybug", "Spike"};
+    private string[] clueList = {"RuleViolation", "RuleViolation", "RuleViolation", "RuleViolation", "RuleViolation", "RuleViolation", "RuleViolation" };
 
 
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 5;
+        activePlayer = 7;
         playerPosition = 7; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
@@ -136,22 +148,6 @@ public class MockStats : MonoBehaviour
     }
 
 
-    public void ReactSendClueReady(string clueString)
-    {
-        cluesGiven = 0;
-        for (int i = 0; i < playerTotal-2; i++)
-        {
-            cluesGiven += (int)Char.GetNumericValue(clueString[i]);
-        }
-    }
-
-
-    public int GetCluesGiven()
-    {
-        return cluesGiven;
-    }
-
-
 
     //this function will send the topic out to React. React will take the topic number and increment this topic number by +1 in the backend for this game
     public void SetPlayerTopicInput(int i) //i is either 0,1,2,3 or 4
@@ -198,6 +194,18 @@ public class MockStats : MonoBehaviour
     public string GetCurrentTopic()
     {
         return currentTopic;
+    }
+
+
+    public int[] GetCluesSubmitted()
+    {
+        return clueSubmitted;
+    }
+
+
+    public string[] GetClueList()
+    {
+        return clueList;
     }
 
 
@@ -313,5 +321,77 @@ public class MockStats : MonoBehaviour
             Debug.Log((int)Char.GetNumericValue(topicVoteList[i]));
             topicChoices[i] = (int)Char.GetNumericValue(topicVoteList[i]);
         }
+    }
+
+
+    //React will send a String containing information about which player has already submitted a clue
+    //1 = has chosen; 0 = has not chosen yet
+    //ex. 100101: Player Pos. 1 & 4 & 6 have submitted a clue, Player Pos. 2 & 3 & 5 have not yet submitted a clue
+    public void ReactSetPlayerHasSubmittedClue(string playerClueSubmitString)
+    {
+        for (int i = 0; i < playerTotal; i++)
+        {
+            if (i + 1 == activePlayer)
+            {
+
+            }
+            else
+            {
+                clueSubmitted[i] = (int)Char.GetNumericValue(playerClueSubmitString[i]);
+            }
+        }
+    }
+
+
+    //this will give us a string containing integers telling us who submitted their clue and who did not
+    public void GetSubmitedCluesFromReact()
+    {
+        try { FetchSubmittedClues(); }//This is triggered after React Set the above values (every second) and will set PlayerNames and PlayerAvatars
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity wants to know who already send his clue but failed " + e);
+        }
+    }
+
+
+    //This will ask for the final clue string from React. React will then call ReactSetClueString()
+    public void GetClueStringFromReact()
+    {
+        try { FetchClueString(); }
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity asks for the clue string from React but failed " + e);
+        }
+    }
+
+
+    //React will return a string containing all final valid clues, delimiter is ;
+    public void ReactSetClueString(string clueString)
+    {
+        char[] separator = { ';' };
+        string[] tempList = clueString.Split(separator, StringSplitOptions.None);
+        for (int i = 0; i < playerTotal; i++)
+        {
+            clueList[i] = tempList[i];
+            Debug.Log(clueList[i]);
+        }
+        rounds = GameObject.Find("Rounds").GetComponent<Rounds>();
+        rounds.SetRoundPhase(12);
+    }
+
+    //score Evaluation is 0 or 1, 0 meaning round loss = 0 points, 1 meaning won = xxx points, has to be handeled in backend/React
+    public void UpdateScoreInReact(int scoreEvaluation)
+    {
+        try { UpdateScore(scoreEvaluation); }
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity wanted to send the score to react but failed" + e);
+        }
+    }
+
+    //Called by React to set the score
+    public void ReactSetScore(int inputScore)
+    {
+        score += inputScore;
     }
 }

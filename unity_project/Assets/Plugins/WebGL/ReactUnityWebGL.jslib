@@ -31,5 +31,14 @@
         },
     SendTopicStringToReact: function(message) {
           ReactUnityWebGL.SendTopicStringToReact(Pointer_stringify(message));
+        },
+    FetchSubmittedClues: function() {
+          ReactUnityWebGL.FetchSubmittedClues();
+        },
+    FetchClueString: function() {
+          ReactUnityWebGL.FetchClueString();
+        },
+    UpdateScore: function(score) {
+          ReactUnityWebGL.UpdateScore(score);
         }
 });

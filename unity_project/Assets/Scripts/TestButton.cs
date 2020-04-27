@@ -41,5 +41,21 @@ public class TestButton : MonoBehaviour
     {
         mockStats.ReactSetThisRoundsTopic(mockStats.GetCurrentTopic());
     }
+
+    public void TriggerClueP1P2()
+    {
+        mockStats.ReactSetPlayerHasSubmittedClue("1100001");
+    }
+
+    public void TriggerClueP3P4p6()
+    {
+        mockStats.ReactSetPlayerHasSubmittedClue("1111111");
+    }
+
+
+    public void SetClueList()
+    {
+        mockStats.ReactSetClueString("green;long;bites;RuleViolation;venomous;RuleViolation;RuleViolation");
+    }
 }
 

@@ -19,8 +19,8 @@ public class Rounds : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void SendTopicStringToReact(string message);
 
-    [DllImport("__Internal")]
-    private static extern void CallsForClueReady();
+    /*[DllImport("__Internal")]
+    private static extern void CallsForClueReady();*/
 
 
 
@@ -38,8 +38,10 @@ public class Rounds : MonoBehaviour
     private bool topicCall = false;
     private bool lastCall = false;
     private bool gettingTopicChoiceInfo = false;
-    private bool CallsRunning = false;
+    //private bool CallsRunning = false;
     private int finalIndex;
+    private bool gettingClueInfos = false;
+    private bool phase8Running = false;
 
 
     void Start()
@@ -50,6 +52,7 @@ public class Rounds : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(roundPhase);
         if(roundPhase == 1)//Shuffling Animation of Cards AND Set the Round (fetched from Backend)
         {
             try { AskForRound(); }//This will tell React to get the Round int for this round
@@ -96,7 +99,7 @@ public class Rounds : MonoBehaviour
             {
                 if (!gettingTopicChoiceInfo)
                 {
-                    //I have to get the topic array from React and adjust the thinking bubbles in the game accordingli
+                    //I have to get the topic array from React and adjust the thinking bubbles in the game accordingly
                     //if a player has made his choice, a thick should appear in his box
                     StartCoroutine(GetPlayerChoiceInfosFromReact());
                     gettingTopicChoiceInfo = true;
@@ -123,11 +126,36 @@ public class Rounds : MonoBehaviour
             }
         }
 
-        if (roundPhase == 7)// Non-Active Players have 30 seconds to pick a Topic
+        if (roundPhase == 7)// Non-Active Players have 30 seconds to pick a Topic OR Active Player waits for Clues to be given
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
-                
+                if (!gettingClueInfos)
+                {
+                    //I have to get the topic array from React and adjust the thinking bubbles in the game accordingly
+                    //if a player has submitted his clue, a thick should appear in his box
+                    StartCoroutine(CallForClueStatus());
+                    gettingClueInfos = true;
+                }
+
+                int sum = 0;
+                for (int i = 0; i < mockStats.GetTotalNumberOfPlayers(); i++)
+                {
+                    if (i == mockStats.GetActivePlayer() - 1)
+                    {
+
+                    }
+                    else
+                    {
+                        sum += mockStats.GetCluesSubmitted()[i];
+                    }
+                }
+
+                if (sum == mockStats.GetTotalNumberOfPlayers() - 1)
+                {
+                    StartCoroutine(CallForClueStatus());
+                    roundPhase = 8; //ALL PLAYERS HAVE GIVEN THEIR CLUE
+                }
             }
             else
             {
@@ -148,7 +176,6 @@ public class Rounds : MonoBehaviour
                 //Check for draws
                 if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
                 {
-                    mockStats.UnlockInputForTopics(); //in order that players can enter their choice in the next round again
                     StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
                     timer.DeactivateTimer();
                     gameBoard.ForceRemoveInfoBox();
@@ -163,7 +190,11 @@ public class Rounds : MonoBehaviour
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
-
+                if (!phase8Running)
+                {
+                    StartCoroutine(gameBoard.PlayersHaveSubmittedTheirClues());
+                    phase8Running = true;
+                }
             }
             else
             {
@@ -177,46 +208,88 @@ public class Rounds : MonoBehaviour
 
         if (roundPhase == 9)
         {
-            //Unity will now trigger the topicsHaveBeenChosen() function in React
-            //This function will tell react to get the final topic in the backend
-            //The backend will take the current topic Array and check if there are duplicates or if all is empty
-            //If there are duplicates: Backend will randomly choose one of the duplicates
-            //if there are no votes, backend will randomly return of the topic to react
-            //React will then set this Rounds Topic in the MockStats Object by calling ReactSetThisRoundsTopic(int string)
-            try { TopicsHaveBeenChosen(); }//This will tell React to get the Topic Array from the Backend and send it to unity
-            catch (EntryPointNotFoundException e)
+            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
-                Debug.Log("Unity wants to let React know that all topics have been chosen. This failed " + e);
+                phase8Running = false;
+                roundPhase = 10;
             }
+            else
+            {
 
-            roundPhase = 10;
+                //Unity will now trigger the topicsHaveBeenChosen() function in React
+                //This function will tell react to get the final topic in the backend
+                //The backend will take the current topic Array and check if there are duplicates or if all is empty
+                //If there are duplicates: Backend will randomly choose one of the duplicates
+                //if there are no votes, backend will randomly return of the topic to react
+                //React will then set this Rounds Topic in the MockStats Object by calling ReactSetThisRoundsTopic(int string)
+                try { TopicsHaveBeenChosen(); }//This will tell React to get the Topic Array from the Backend and send it to unity
+                catch (EntryPointNotFoundException e)
+                {
+                    Debug.Log("Unity wants to let React know that all topics have been chosen. This failed " + e);
+                }
+
+                roundPhase = 10;
+            }
         }
 
         if(roundPhase == 10)//waits until react sends back the chosen Topic to Unity, then the function ReactSetThisRoundsTopic() from mockStats will set Round = 11
+        //OR Active Player has to input his guess
         {
-            //REMOVE AFTERWARDS
-            //Just for testing
-            //mockStats.ReactSetThisRoundsTopic(mockStats.GetCurrentTopic());
-            //Testing Ends
+            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            {
+                gameBoard.DisplayMisteryInputBoxActivePlayer();
+                mockStats.GetClueStringFromReact();
+                roundPhase = 11;
+            }
+            else
+            {
+                //REMOVE AFTERWARDS
+                //Just for testing
+                //mockStats.ReactSetThisRoundsTopic(mockStats.GetCurrentTopic());
+                //Testing Ends
+            }
         }
 
+        //Wait for Backend to send the ClueString to Active Player (mockstats.ReactSetClueString() will advance to rounPhase = 12)
         if (roundPhase == 11)
         {
-            StartCoroutine(gameBoard.ShowThisRoundsTopic());
-            
-            roundPhase = 12;
+            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            {
+
+            }
+            else
+            {
+                StartCoroutine(gameBoard.ShowThisRoundsTopic());
+                roundPhase = 12;
+            }
         }
 
-        if (roundPhase == 12)//Wait until Topic Animation is over in GameBoard
+        if (roundPhase == 12)//Wait until Topic Animation is over in GameBoard OR Active Player displays the other players clues
         {
+            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            {
+                StartCoroutine(gameBoard.DisplayCluesFromPlayers());
+                roundPhase = 13;
+            }
+            else
+            {
 
+            }
         }
 
-        if (roundPhase == 13)//Show Player Input Panel
+        if (roundPhase == 13)//Show Player Input Panel OR Active Player has to input his guess
         {
-            gameBoard.DisplayMisteryInputBox();
-            StartCoroutine(gameBoard.PlayersEnterMisteryWord());
-            roundPhase = 14;
+            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            {
+
+            }
+            else
+            {
+                gameBoard.DisplayMisteryInputBox();
+                StartCoroutine(gameBoard.PlayersEnterMisteryWord());
+                roundPhase = 14;
+            }
+
         }
 
         //Wait for player to input guess and send it
@@ -228,23 +301,77 @@ public class Rounds : MonoBehaviour
         //Player waits for other player to make their guess, this phase is set via SubmitButton.cs script
         if (roundPhase == 15)
         {
-            if (!CallsRunning)
-            {
-                StartCoroutine(CallForClueStatus());
-                CallsRunning = true;
-            }
-
-            if (mockStats.GetCluesGiven() == mockStats.GetTotalNumberOfPlayers() - 1)
-            {
-                roundPhase = 16; //ALL PLAYERS HAVE GIVEN THEIR CLUE
-            }
+            StartCoroutine(gameBoard.PlayersWaitForOthersToSubmitClue());
+            roundPhase = 16;
         }
 
         if (roundPhase == 16)
         {
+            if (!gettingClueInfos)
+            {
+                StartCoroutine(CallForClueStatus());
+                gettingClueInfos = true;
+            }
 
+            int sum = 0;
+            for (int i = 0; i < mockStats.GetTotalNumberOfPlayers(); i++)
+            {
+                if(i == mockStats.GetActivePlayer() - 1)
+                {
+
+                }
+                else
+                {
+                    sum += mockStats.GetCluesSubmitted()[i];
+                }
+            }
+
+            if (sum == mockStats.GetTotalNumberOfPlayers() - 1)
+            {
+                StartCoroutine(CallForClueStatus());
+                roundPhase = 17; //ALL PLAYERS HAVE GIVEN THEIR CLUE
+            }
         }
 
+
+        //Clean up SubmitWindow and continue to PlayersWaitForActivePlayer to commit Guess
+        if (roundPhase == 17)
+        {
+            //roundPhase = 18;
+        }
+
+
+        if (roundPhase == 18)
+        {
+            
+        }
+
+        //SUCCESSFUL ROUND
+        if(roundPhase == 20)
+        {
+            mockStats.UpdateScoreInReact(1);
+            StartCoroutine(gameBoard.ShowRoundEvaluation(true));
+            roundPhase = 22;
+        }
+
+        //UNSUCSESSFUL ROUND
+        if(roundPhase == 21)
+        {
+            mockStats.UpdateScoreInReact(0);
+            StartCoroutine(gameBoard.ShowRoundEvaluation(false));
+            roundPhase = 22;
+        }
+
+        if (roundPhase == 22)
+        {
+            Debug.Log("reset everything for next round");
+        }
+
+        //Start next Round
+        if (roundPhase == 23)
+        {
+            
+        }
     }
 
 
@@ -397,18 +524,15 @@ public class Rounds : MonoBehaviour
         gettingTopicChoiceInfo = false;
     }
 
+
+    //First I need to tell react I want the submitted clue lsit via GetSubmitedCluesFromReact();
+    //Then React will call ReactSetPlayerHasSubmittedClue() in MockStats
+    //Then I set up the bubbles accordingly
     IEnumerator CallForClueStatus()
     {
-        try
-        { CallsForClueReady(); }
-        catch (EntryPointNotFoundException e)
-        {
-            Debug.Log("Unity wants to set the current round but failed " + e);
-        }
+        mockStats.GetSubmitedCluesFromReact();
+        gameBoard.CheckClueBubble();
         yield return new WaitForSeconds(0.5f);
-        CallsRunning = false;
-    }
-
-
-
+        gettingClueInfos = false;
+    }  
 }
