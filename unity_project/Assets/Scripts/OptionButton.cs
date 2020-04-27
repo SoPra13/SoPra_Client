@@ -9,7 +9,7 @@ using System;
 public class OptionButton : MonoBehaviour
 {
     [DllImport("__Internal")]
-    private static extern void CallsForLeaveGame();
+    private static extern void LeaveGame();
 
 
     private Animator OptionIconButton;
@@ -91,7 +91,7 @@ public class OptionButton : MonoBehaviour
 
     public void LeaveGameButtonPressed()
     {
-        try { CallsForLeaveGame(); }
+        try { LeaveGame(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Player wanted to leave game failed " + e);

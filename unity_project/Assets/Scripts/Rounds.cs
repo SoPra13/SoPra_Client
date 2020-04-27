@@ -8,16 +8,16 @@ using System;
 public class Rounds : MonoBehaviour
 {
     [DllImport("__Internal")]
-    private static extern void CallsForTopicList();
+    private static extern void FetchTopicList();
+
+    /*[DllImport("__Internal")]
+    private static extern void TopicsHaveBeenChosen();*/
 
     [DllImport("__Internal")]
-    private static extern void TopicsHaveBeenChosen();
+    private static extern void FetchRound();
 
     [DllImport("__Internal")]
-    private static extern void AskForRound();
-
-    [DllImport("__Internal")]
-    private static extern void SendTopicStringToReact(string message);
+    private static extern void SendTopicToReact(string message);
 
     /*[DllImport("__Internal")]
     private static extern void CallsForClueReady();*/
@@ -42,6 +42,7 @@ public class Rounds : MonoBehaviour
     private int finalIndex;
     private bool gettingClueInfos = false;
     private bool phase8Running = false;
+    private bool cleaningUp = false;
 
 
     void Start()
@@ -52,10 +53,9 @@ public class Rounds : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(roundPhase);
         if(roundPhase == 1)//Shuffling Animation of Cards AND Set the Round (fetched from Backend)
         {
-            try { AskForRound(); }//This will tell React to get the Round int for this round
+            try { FetchRound(); }//This will tell React to get the Round int for this round
             catch (EntryPointNotFoundException e)
             {
                 Debug.Log("Unity wants to set the current round but failed " + e);
@@ -222,11 +222,11 @@ public class Rounds : MonoBehaviour
                 //If there are duplicates: Backend will randomly choose one of the duplicates
                 //if there are no votes, backend will randomly return of the topic to react
                 //React will then set this Rounds Topic in the MockStats Object by calling ReactSetThisRoundsTopic(int string)
-                try { TopicsHaveBeenChosen(); }//This will tell React to get the Topic Array from the Backend and send it to unity
+                /*try { TopicsHaveBeenChosen(); }//This will tell React to get the Topic Array from the Backend and send it to unity
                 catch (EntryPointNotFoundException e)
                 {
                     Debug.Log("Unity wants to let React know that all topics have been chosen. This failed " + e);
-                }
+                }*/
 
                 roundPhase = 10;
             }
@@ -364,12 +364,18 @@ public class Rounds : MonoBehaviour
 
         if (roundPhase == 22)
         {
-            Debug.Log("reset everything for next round");
+            
         }
 
         //Start next Round
         if (roundPhase == 23)
         {
+            if (!cleaningUp)
+            {
+                Debug.Log("reset everything for next round");
+                StartCoroutine(CleanUpRound());
+                cleaningUp = true;
+            }
             
         }
     }
@@ -454,7 +460,7 @@ public class Rounds : MonoBehaviour
     //This will tell React to get the Topic Array from the Backend and send it to unity, triggers every 0.5 seconds
     IEnumerator CallForTopicList()
     {
-        try { CallsForTopicList(); }
+        try { FetchTopicList(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity has asked for TopicList did not succeeded " + e);
@@ -472,11 +478,14 @@ public class Rounds : MonoBehaviour
 
     IEnumerator LastCallForTopics()
     {
-        try { CallsForTopicList(); }
+        
+        try { FetchTopicList(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity has asked for TopicList did not succeeded " + e);
         }
+
+        //yield return new WaitForSeconds(1.5f);
 
         //Sort out duplicates
         int[] finalTopic = mockStats.GetTopicChoices();
@@ -503,12 +512,11 @@ public class Rounds : MonoBehaviour
         finalIndex = UnityEngine.Random.Range(0, finalList.Count - 1);
         chosenTopic = gameBoard.GetCardStack()[round].GetTopics()[finalList[finalIndex]];
 
-        try { SendTopicStringToReact(chosenTopic); }
+        try { SendTopicToReact(chosenTopic); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity wants to send the topic string but failed " + e);
         }
-
         yield return new WaitForSeconds(0.5f);
         roundPhase = 9;
         lastCall = false;
@@ -534,5 +542,13 @@ public class Rounds : MonoBehaviour
         gameBoard.CheckClueBubble();
         yield return new WaitForSeconds(0.5f);
         gettingClueInfos = false;
-    }  
+    }
+
+    //TODO What does Backend have to do after each round?
+    //Clean up for next Round and notify React to set next round
+    IEnumerator CleanUpRound()
+    {
+        yield return new WaitForSeconds(0.5f);
+        cleaningUp = false;
+    }
 }

@@ -8,35 +8,32 @@
     FetchPlayerInfo: function() {
       ReactUnityWebGL.FetchPlayerInfo();
     },
-    SendTopicInput: function(topic) {
-      ReactUnityWebGL.SendTopicInput(topic);
+    PlayerVoted: function(topic) {
+      ReactUnityWebGL.PlayerVoted(topic);
     },
-    TopicsHaveBeenChosen: function() {
-          ReactUnityWebGL.TopicsHaveBeenChosen();
+    FetchVotedString: function() {
+          ReactUnityWebGL.FetchVotedString();
         },
-    FetchPlayerMadeTopicChoice: function() {
-          ReactUnityWebGL.FetchPlayerMadeTopicChoice();
+    FetchRound: function() {
+          ReactUnityWebGL.FetchRound();
         },
-    AskForRound: function() {
-          ReactUnityWebGL.AskForRound();
+    FetchTopicList: function() {
+          ReactUnityWebGL.FetchTopicList();
         },
-    CallsForTopicList: function() {
-          ReactUnityWebGL.CallsForTopicList();
+    LeaveGame: function() {
+          ReactUnityWebGL.LeaveGame();
         },
-    CallsForLeaveGame: function() {
-          ReactUnityWebGL.CallsForLeaveGame();
+    SendClueToReact: function(message) {
+          ReactUnityWebGL.SendClueToReact(Pointer_stringify(message));
         },
-    SendGuessToReact: function(message) {
-          ReactUnityWebGL.SendGuessToReact(Pointer_stringify(message));
-        },
-    SendTopicStringToReact: function(message) {
-          ReactUnityWebGL.SendTopicStringToReact(Pointer_stringify(message));
+    SendTopicToReact: function(message) {
+          ReactUnityWebGL.SendTopicToReact(Pointer_stringify(message));
         },
     FetchSubmittedClues: function() {
           ReactUnityWebGL.FetchSubmittedClues();
         },
-    FetchClueString: function() {
-          ReactUnityWebGL.FetchClueString();
+    FetchCluesString: function() {
+          ReactUnityWebGL.FetchCluesString();
         },
     UpdateScore: function(score) {
           ReactUnityWebGL.UpdateScore(score);

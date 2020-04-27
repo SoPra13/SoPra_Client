@@ -803,8 +803,9 @@ public class GameBoard : MonoBehaviour
 
         }
         ForceRemoveInfoBox();
-        yield return new WaitForSeconds(1f);
-        StartCoroutine(DisplayInfoText("Enter some Text here", true, 2));
+        yield return new WaitForSeconds(2f);
+        round.SetRoundPhase(23);
     }
+    
 }
 
