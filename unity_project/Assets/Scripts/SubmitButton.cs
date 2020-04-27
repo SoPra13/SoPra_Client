@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 public class SubmitButton : MonoBehaviour
 {
     [DllImport("__Internal")]
-    private static extern void SendGuessToReact(string message);
+    private static extern void SendClueToReact(string message);
 
 
     private MockStats mockStats;
@@ -61,7 +61,7 @@ public class SubmitButton : MonoBehaviour
                 if (guessWord != mockStats.GetCurrentTopic()) //check that input is not equal to topic
                 {
                     GameObject.Find("ButtonSFX").GetComponent<AudioSource>().Play();
-                    try { SendGuessToReact(guessWord); }//This will send the clue to React. IMPORTANT, also has to tell backend that this player submitted
+                    try { SendClueToReact(guessWord); }//This will send the clue to React. IMPORTANT, also has to tell backend that this player submitted
                     catch (EntryPointNotFoundException e)
                     {
                         Debug.Log("Unity wants to send the mistery word but failed " + e);

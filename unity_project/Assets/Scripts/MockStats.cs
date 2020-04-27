@@ -16,16 +16,16 @@ public class MockStats : MonoBehaviour
     private static extern void FetchPlayerInfo();
 
     [DllImport("__Internal")]
-    private static extern void SendTopicInput(int topic);
+    private static extern void PlayerVoted(int topic);
 
     [DllImport("__Internal")]
-    private static extern void FetchPlayerMadeTopicChoice(); //active player only, checks which player has already chosen his topic
+    private static extern void FetchVotedString(); //active player only, checks which player has already chosen his topic
 
     [DllImport("__Internal")]
     private static extern void FetchSubmittedClues(); //Asks React to send back the state of the clues already given by players
 
     [DllImport("__Internal")]
-    private static extern void FetchClueString(); //Asks React to send back a string containing all final clues from the players
+    private static extern void FetchCluesString(); //Asks React to send back a string containing all final clues from the players
                                                   //React will then call ReactSetClueString()
     [DllImport("__Internal")]
     private static extern void UpdateScore(int score); //this will update the gameScore in the backend
@@ -62,7 +62,7 @@ public class MockStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 7;
+        activePlayer = 5;
         playerPosition = 7; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
@@ -159,7 +159,7 @@ public class MockStats : MonoBehaviour
         else
         {
             
-            try { SendTopicInput(i); }
+            try { PlayerVoted(i); }
             catch (EntryPointNotFoundException e)
             {
                 Debug.Log("Unity could not send any Topic Output to React" + e);
@@ -297,7 +297,7 @@ public class MockStats : MonoBehaviour
     //This is called by react after player has connected
     public void GetPlayerHaveChosenTopicFromReact()
     {
-        try { FetchPlayerMadeTopicChoice(); }//This is triggered after React Set the above values (every second) and will set PlayerNames and PlayerAvatars
+        try { FetchVotedString(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Could not get any Infos about Players who made Topic Choices " + e);
@@ -318,7 +318,7 @@ public class MockStats : MonoBehaviour
     {
         for(int i = 0; i < 5; i++)
         {
-            Debug.Log((int)Char.GetNumericValue(topicVoteList[i]));
+            //Debug.Log((int)Char.GetNumericValue(topicVoteList[i]));
             topicChoices[i] = (int)Char.GetNumericValue(topicVoteList[i]);
         }
     }
@@ -346,7 +346,7 @@ public class MockStats : MonoBehaviour
     //this will give us a string containing integers telling us who submitted their clue and who did not
     public void GetSubmitedCluesFromReact()
     {
-        try { FetchSubmittedClues(); }//This is triggered after React Set the above values (every second) and will set PlayerNames and PlayerAvatars
+        try { FetchSubmittedClues(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity wants to know who already send his clue but failed " + e);
@@ -357,7 +357,7 @@ public class MockStats : MonoBehaviour
     //This will ask for the final clue string from React. React will then call ReactSetClueString()
     public void GetClueStringFromReact()
     {
-        try { FetchClueString(); }
+        try { FetchCluesString(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity asks for the clue string from React but failed " + e);
