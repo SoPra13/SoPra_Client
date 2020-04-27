@@ -24,6 +24,9 @@ public class GameBoard : MonoBehaviour
     public GameObject infoTagObject;
     public GameObject loadingTagObject;
     public GameObject misteryWordInputContainer;
+    public GameObject ruleBoxContainer;
+    public GameObject clueContainer;
+    public GameObject successParticleMachine;
 
     public Positions positions;
 
@@ -38,6 +41,7 @@ public class GameBoard : MonoBehaviour
     public AudioSource barCheckSFX;
     public AudioSource barAppearsSFX;
     public AudioSource dingSFX;
+    public AudioSource applausSFX;
 
     public Rounds round;
 
@@ -56,6 +60,8 @@ public class GameBoard : MonoBehaviour
     private int[] topics;
     private int dustSeries = 0;
     private GameObject misteryWordContainer;
+    private GameObject rulesBox;
+    private GameObject successParticles;
 
     private bool advanceToState3 = false;
     private bool waitForServerTopicResponse = false;
@@ -64,6 +70,7 @@ public class GameBoard : MonoBehaviour
     private bool startGame = true;
     private bool keepInfoTextIdle = false;
     private bool Phase5HasLoaded = false;
+    private bool Phase16HasLoaded = false;
     //private bool phase6TransitionOngoing = false;
 
 
@@ -71,7 +78,7 @@ public class GameBoard : MonoBehaviour
     void Start()
     {
 
-        gameMusic.volume = 0.5f;
+        gameMusic.volume = 0.0f;  //JUST FOR TESTING, else set = 0.5f
         SetUpInitialBoard();
         StartCoroutine(FadeInScreen());
         StartCoroutine(GameStarts());
@@ -80,6 +87,16 @@ public class GameBoard : MonoBehaviour
 
     private void SetUpInitialBoard()
     {
+        successParticles = Instantiate(successParticleMachine, new Vector3(0, -380, -29), Quaternion.Euler(-90,0,0)) as GameObject;
+        successParticles.name = "SuccessParticles";
+        successParticles.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        successParticles.SetActive(false);
+
+        rulesBox = Instantiate(ruleBoxContainer, new Vector3(0, -220f, 0), Quaternion.identity) as GameObject;
+        rulesBox.name = "Rules";
+        rulesBox.transform.SetParent(GameObject.Find("Interaction").transform, false);
+        rulesBox.SetActive(false);
+
         misteryWordContainer = Instantiate(misteryWordInputContainer, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         misteryWordContainer.name = "MisteryWordInput";
         misteryWordContainer.transform.SetParent(GameObject.Find("Interaction").transform,false);
@@ -164,68 +181,7 @@ public class GameBoard : MonoBehaviour
 
     private void Update()
     {
-        if (startGame)
-        {
-            if (roundState == 1)
-            {
-
-            }
-
-            //Topic Picking Phase//
-            //In here I have to coninuously ask for the topic Choice array which has to be delivered by the Backend
-            /*else if (roundState == 2)
-            {
-                topics = mockStats.GetTopicInput();
-
-                for (int i = 1; i <= 5; i++)
-                {
-                    GameObject.Find("TopicVoteNumber" + i.ToString()).GetComponent<TextMeshProUGUI>().text = topics[i - 1].ToString();
-                }
-
-                //every player has made his choice conditon
-                int sum = 0;
-                for (int j = 0; j < 5; j++)
-                {
-                    sum += topics[j];
-                }
-                //Everyone has set their vote
-                //Check for draws
-                if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || timerPhase1Ended)
-                {
-                    StartCoroutine(RemoveTopicCard()); //remove the topic card and then continue
-                    roundState = 3;
-                }
-            }*/
-
-            //Topic votes have been send, now we check if there are any duplicate votes//
-            else if (roundState == 3 && advanceToState3)
-            {
-                //I need to check whether there is a category that has the same amount of votes:
-                if (topics.Length != topics.Distinct().Count()) //If yes, array contains duplictes
-                {
-                    if (!waitForServerTopicResponse)//Just for animation purposes
-                    {
-                        StartCoroutine(DuplicatetTopicVotesAnimationScreen());
-                        waitForServerTopicResponse = true;
-                    }
-
-                    if (serverRespondedToTopic)//Wait for the Server to pick the topic
-                    {
-
-                    }
-                }
-
-                timer.DeactivateTimer();
-            }
-            else if (roundState == 4)
-            {
-
-            }
-            else
-            {
-
-            }
-        }
+        
     }
 
 
@@ -271,6 +227,16 @@ public class GameBoard : MonoBehaviour
     {
         misteryWordContainer.SetActive(true);
         GameObject.Find("TopicTextReminder").GetComponent<TextMeshProUGUI>().text = mockStats.GetCurrentTopic();
+        rulesBox.SetActive(true);
+    }
+
+
+    public void DisplayMisteryInputBoxActivePlayer()
+    {
+        misteryWordContainer.SetActive(true);
+        GameObject.Find("TopicTextReminder").GetComponent<TextMeshProUGUI>().text = "Guess the correct Mistery Word!";
+        GameObject.Find("topicStaleText").GetComponent<TextMeshProUGUI>().text = "";
+        GameObject.Find("Placeholder").GetComponent<TextMeshProUGUI>().text = "Enter your guess here...";
     }
 
 
@@ -314,6 +280,41 @@ public class GameBoard : MonoBehaviour
     }
 
 
+    //this is for the inactive players to see who has already submitted a clue word
+    public void CheckClueBubble()
+    {
+        for (int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
+        {
+            if (i == mockStats.GetActivePlayer() || i == mockStats.GetPlayerPosition())
+            {
+
+            }
+            else
+            {
+                if (mockStats.GetCluesSubmitted()[i - 1] == 1 && GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().GetBool("finished") == false)
+                {
+                    dingSFX.Play();
+                    GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("finished", true);
+                }
+            }
+        }
+
+        if (Phase16HasLoaded)
+        {
+            int sum = 0;
+            for (int i = 0; i < mockStats.GetTotalNumberOfPlayers(); i++)
+            {
+                sum += mockStats.GetCluesSubmitted()[i];
+            }
+            if (sum == mockStats.GetTotalNumberOfPlayers() - 1)
+            {
+                //round.SetRoundPhase(6);
+                Phase16HasLoaded = false;
+            }
+        }
+    }
+
+
     public IEnumerator ShowThisRoundsTopic()
     {
         GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
@@ -345,6 +346,26 @@ public class GameBoard : MonoBehaviour
         barAppearsSFX.Play();
         GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your Team has chosen...";
         GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...a Topic for this Round!";
+        yield return new WaitForSeconds(1.0f);
+        barCheckSFX.Play();
+        yield return new WaitForSeconds(3.2f);
+        Destroy(GameObject.Find("TopicBar"));
+        Destroy(GameObject.Find("BlackScreen"));
+    }
+
+
+    public IEnumerator NotifyPlayerhaveSubmittedTheirClue()
+    {
+        GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
+        blackScreen.name = "BlackScreen";
+        blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        yield return new WaitForSeconds(1.0f);
+        GameObject topicBar = Instantiate(topicBarObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        topicBar.name = "TopicBar";
+        topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        barAppearsSFX.Play();
+        GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your Team has submitted...";
+        GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...their clues!";
         yield return new WaitForSeconds(1.0f);
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
@@ -425,7 +446,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator RemoveTopicCard()
     {
-        //round.InterruptTimer();
+        yield return new WaitForSeconds(0.5f);
         GameObject.Find("TopicCard").GetComponent<Animator>().SetBool("disappear", true);
         for (int j = 0; j < 5; j++)
         {
@@ -437,7 +458,7 @@ public class GameBoard : MonoBehaviour
         {
             Destroy(GameObject.Find("TopicButton" + (j + 1).ToString()));
         }
-        advanceToState3 = true;
+        mockStats.UnlockInputForTopics(); //in order that players can enter their choice in the next round again
     }
 
 
@@ -530,6 +551,25 @@ public class GameBoard : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(0.1f);
+    }
+
+
+    public IEnumerator PlayersWaitForOthersToSubmitClue()
+    {
+        for (int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
+        {
+            if (i != mockStats.GetActivePlayer() && i != mockStats.GetPlayerPosition())
+            {
+                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("wake", true);
+                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", true);
+            }
+        }
+        ForceRemoveInfoBox();
+        yield return new WaitForSeconds(1.5f);
+        StartCoroutine(DisplayInfoText("Wait for the rest of your team to submit their clues", true, 2));
+        Phase5HasLoaded = true;
+        yield return new WaitForSeconds(1f);
+        Phase16HasLoaded = true;
     }
 
 
@@ -634,12 +674,137 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(2.5f);       
     }
 
+    public IEnumerator PlayersHaveSubmittedTheirClues()
+    {
+        for (int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
+        {
+            if (i == mockStats.GetActivePlayer())
+            {
+
+            }
+            else
+            {
+                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("finished", false);
+                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", false);
+                GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("wake", false);
+            }
+        }
+        ForceRemoveInfoBox();
+        StartCoroutine(NotifyPlayerhaveSubmittedTheirClue());
+        yield return new WaitForSeconds(5f);
+        StartCoroutine(DisplayInfoText("Now it's your turn to guess the correct Mistery Word...", true, 2));
+        yield return new WaitForSeconds(2f);
+        round.SetRoundPhase(9);
+
+    }
+
 
     public IEnumerator PlayersEnterMisteryWord()
     {
+        Debug.Log("Trigger");
         ForceRemoveInfoBox();
         yield return new WaitForSeconds(1f);
         StartCoroutine(DisplayInfoText("Please entere a clue that best describes the current topic (Only a single word)", true, 2));
+    }
+
+
+    //Display the clues of the other players
+    public IEnumerator DisplayCluesFromPlayers()
+    {
+        int count = 0;
+        for (int i = 0; i < mockStats.GetTotalNumberOfPlayers(); i++)
+        {
+            if(i == mockStats.GetActivePlayer())
+            {
+
+            }
+            else
+            {
+                if (count == 0)
+                {
+                    GameObject clue = Instantiate(clueContainer, new Vector3(-105f, -290f, 0), Quaternion.identity) as GameObject;
+                    clue.name = "clue" + i;
+                    clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                    GameObject.Find("ClueText").name = "ClueText" + i;
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueTitle").name = "ClueTitle" + i;
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                }
+                else if (count == 1)
+                {
+                    GameObject clue = Instantiate(clueContainer, new Vector3(109f, -290f, 0), Quaternion.identity) as GameObject;
+                    clue.name = "clue" + i;
+                    clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                    GameObject.Find("ClueText").name = "ClueText" + i;
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueTitle").name = "ClueTitle" + i;
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                }
+                else if (count == 2)
+                {
+                    GameObject clue = Instantiate(clueContainer, new Vector3(-316f, -290f, 0), Quaternion.identity) as GameObject;
+                    clue.name = "clue" + i;
+                    clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                    GameObject.Find("ClueText").name = "ClueText" + i;
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueTitle").name = "ClueTitle" + i;
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                }
+                else if (count == 3)
+                {
+                    GameObject clue = Instantiate(clueContainer, new Vector3(321f, -290f, 0), Quaternion.identity) as GameObject;
+                    clue.name = "clue" + i;
+                    clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                    GameObject.Find("ClueText").name = "ClueText" + i;
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueTitle").name = "ClueTitle" + i;
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                }
+                else if (count == 4)
+                {
+                    GameObject clue = Instantiate(clueContainer, new Vector3(-528f, -290f, 0), Quaternion.identity) as GameObject;
+                    clue.name = "clue" + i;
+                    clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                    GameObject.Find("ClueText").name = "ClueText" + i;
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueTitle").name = "ClueTitle" + i;
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                }
+                else if (count == 5)
+                {
+                    GameObject clue = Instantiate(clueContainer, new Vector3(536f, -290f, 0), Quaternion.identity) as GameObject;
+                    clue.name = "clue" + i;
+                    clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                    GameObject.Find("ClueText").name = "ClueText" + i;
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueTitle").name = "ClueTitle" + i;
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                }
+                count += 1;
+                yield return new WaitForSeconds(0.25f);
+            }                
+        }
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    public IEnumerator ShowRoundEvaluation(bool success)
+    {
+        if (success)
+        {
+            applausSFX.Play();
+            successParticles.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            applausSFX.Play();
+            yield return new WaitForSeconds(3f);
+            successParticles.SetActive(false);
+        }
+        else
+        {
+
+        }
+        ForceRemoveInfoBox();
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(DisplayInfoText("Enter some Text here", true, 2));
     }
 }
 
