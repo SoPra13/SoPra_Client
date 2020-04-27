@@ -6,7 +6,7 @@ import { api } from "./helpers/api";
 class App extends Component {
   componentDidMount() {
     api.get("/user", {params: { token:localStorage.userToken}}).catch(() => {localStorage.removeItem("userToken")})
-    api.get("/lobby", {params: { token:localStorage.lobbyToken}}).catch(() => {localStorage.removeItem("lobbyToken")})
+    api.get("/lobby", {params: { lobbyToken:localStorage.lobbyToken}}).catch(() => {localStorage.removeItem("lobbyToken")})
     api.get("/game", {params: { token:localStorage.userToken}}).catch(() => {localStorage.removeItem("gameToken")})
   }
   render() {
