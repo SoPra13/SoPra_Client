@@ -8,6 +8,7 @@ import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
 import Lobby from "../shared/models/Lobby";
 import BotPlayer from "../../views/BotPlayer";
+import Chat from '../chat/Chat';
 
 
 const Container = styled(BaseContainer)`
@@ -335,6 +336,9 @@ class WaitingRoom extends React.Component {
                                     );
                                 })}
                             </Users>
+                            <Users>
+                                <Chat/>
+                            </Users>
                             </MultipleListsContainer>
                         </div>
                     )}
@@ -454,9 +458,6 @@ class WaitingRoom extends React.Component {
 
                     </PlayerContainer>
                     </div>
-
-
-
             </Container>
             </BaseContainer>
         );

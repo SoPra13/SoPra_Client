@@ -13,12 +13,12 @@ export default class Chat extends Component {
     }
     render() {   
         return (
-                <div className="form">
+                <div className={"form " + (localStorage.theme === "dark"?"dark":"light")}>
                     <div className="chatbox">
                         {this.state.messages.map(msg =>(<Message messageType={msg.messageType} username={msg.username} message={msg.message}/>))}
                         {!this.state.active?<p style={{color:"red"}}>Chat closed!</p>:<div style={{ float:"left", clear: "both" }}/>}
                         <div style={{ float:"left", clear: "both" }}
-                            ref={(el) => { this.messagesEnd = el; }}>
+                            ref={(el) => { this.messagesEnd = el;}}>
                         </div>
                     </div>
                     <div className="submitbox">
@@ -61,6 +61,10 @@ export default class Chat extends Component {
             this.fetchUser();
             this.updateStatus();
         }, 200);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
     }
 
     componentDidUpdate() {
