@@ -14,12 +14,9 @@ export default class Chat extends Component {
     render() {   
         return (
                 <div className={"form " + (localStorage.theme === "dark"?"dark":"light")}>
-                    <div className="chatbox">
+                    <div className="chatbox" ref={(el) => {this.chat = el;}}>
                         {this.state.messages.map(msg =>(<Message messageType={msg.messageType} username={msg.username} message={msg.message}/>))}
                         {!this.state.active?<p style={{color:"red"}}>Chat closed!</p>:<div style={{ float:"left", clear: "both" }}/>}
-                        <div style={{ float:"left", clear: "both" }}
-                            ref={(el) => { this.messagesEnd = el;}}>
-                        </div>
                     </div>
                     <div className="submitbox">
                         <input type="text" className="usermsg" id="" value={this.state.msginput} onKeyUp={this.handleSendOnEnter} onChange={this.updateInputText}/>
@@ -72,7 +69,7 @@ export default class Chat extends Component {
     }
 
     scrollchat() {
-        this.messagesEnd.scrollIntoView();
+        this.chat.scrollTop = this.chat.scrollHeight;
     }
 
     async fetchUser() {
