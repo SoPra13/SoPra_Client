@@ -88,7 +88,7 @@ export class UnityGame extends React.Component {
             console.log("Es funzt!" + score);
         });
 
-        //!!
+
 
         this.unityContent.on("PlayerHasConnected", () =>{
             console.log("PlayerHasConnected");
@@ -168,6 +168,7 @@ export class UnityGame extends React.Component {
             this.sendRoundsTopic(message);
         });
 
+        //Todo wird glaube ich nicht mehr verwendet, heisst neu: FetchSubmittedClues()
         this.unityContent.on("CallsForClueReady", () =>{
             this.sendClueReadyString(this.state.game);
             console.log("Unity asks for the List of correct Clues");
