@@ -160,12 +160,10 @@ export class UnityGame extends React.Component {
             console.log("A player sent a clue word: " + message);
         });
 
-
-
         this.unityContent.on("SendTopicToReact", (message) =>{
             this.setTopic(message);
-            console.log("This rounds Topic is: " + message);
-            this.sendRoundsTopic(message);
+            console.log("Sent this to backend as topic: " + message);
+            this.sendRoundsTopic();
         });
 
         this.unityContent.on("CallsForClueReady", () =>{
@@ -349,10 +347,12 @@ export class UnityGame extends React.Component {
 
         var topicListString = '';
         console.log(voteList)
+        var nrOfVotes = 0;
 
         for(var i = 0; i<5; i++){
             topicListString += voteList[i].toString();
         }
+
         console.log(topicListString);
         this.unityContent.send(
             "MockStats",
@@ -364,31 +364,28 @@ export class UnityGame extends React.Component {
 
 
     async voteForTopic(topic){
-        try{
+            try{
 
-            const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
+                const response = await api.put('/game/vote?gameToken=' + this.state.gameToken + '&userToken=' + localStorage.getItem('userToken') +'&topic=' + topic);
 
-        } catch (error) {
-            alert(`Something went wrong when trying to set the vote: \n${handleError(error)}`);
-        }
+            } catch (error) {
+                alert(`Something went wrong when trying to set the vote: \n${handleError(error)}`);
+            }
     }
 
     //React will send the chosen topic for this round back to unity
-   async sendRoundsTopic(topic){
-        console.log("sending back the topic to unity");
+   async sendRoundsTopic(){
+        /*console.log("sending back the topic to unity");
         const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
-       await new Promise(resolve => setTimeout(resolve, 5000));
-       var game = response.data;
-       console.log('Resp:' + response);
-       console.log('gameobj:' + game);
-       console.log('topic:' + game.topic);
+        var game = await response.data;
+        console.log('Resp:' + response);
+        console.log('gameobj:' + game);
+        console.log('topic:' + game.topic);*/
 
-
-       this.unityContent.send(
-            "MockStats",
-            "ReactSetThisRoundsTopic",
-            game.topic
-        )
+           this.unityContent.send(
+               "MockStats",
+               "ReactSetThisRoundsTopic"
+           )
     }
 
     //update topic for this round at backend
@@ -401,7 +398,6 @@ export class UnityGame extends React.Component {
             alert(`sendTopic: \n${handleError(error)}`);
         }
     }
-
 
     //The round number is an int  in Range [0,12]; 0 = round 1; 12 = round 13
     sendRoundNumber(game){

@@ -324,6 +324,7 @@ class WaitingRoom extends React.Component {
                             <Users>
                                 {this.state.playerList.map(user => {
                                     return (
+                                        <KickContainer>
                                         <Button1
                                             disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
                                             key={user.id}
@@ -333,6 +334,7 @@ class WaitingRoom extends React.Component {
                                             }}>
                                             Kick
                                         </Button1>
+                                            </KickContainer>
                                     );
                                 })}
                             </Users>
