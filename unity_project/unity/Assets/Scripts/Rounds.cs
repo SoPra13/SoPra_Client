@@ -266,7 +266,10 @@ public class Rounds : MonoBehaviour
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
-
+                if (mockStats.GetBuxFix())
+                {
+                    roundPhase = 12;
+                }
             }
             else
             {
@@ -279,6 +282,7 @@ public class Rounds : MonoBehaviour
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
+                mockStats.SetBuxFix();
                 StartCoroutine(gameBoard.DisplayCluesFromPlayers());
                 gameBoard.DisplayMisteryInputBoxActivePlayer();
                 roundPhase = 13;
@@ -363,7 +367,6 @@ public class Rounds : MonoBehaviour
             }
             if (mockStats.GetActivePlayerSubmittedGuess() == 1) //Topic has been chosen
             {
-                Debug.Log("Trigger");
                 //Todo Start evaluation if players won or not
                 StartCoroutine(gameBoard.ActivePlayerHasSubmittedHisGuess());
                 mockStats.NotifyReactToEvaluateTheRound();

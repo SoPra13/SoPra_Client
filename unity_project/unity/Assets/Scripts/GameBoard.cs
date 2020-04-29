@@ -29,6 +29,7 @@ public class GameBoard : MonoBehaviour
     public GameObject ruleBoxContainer;
     public GameObject clueContainer;
     public GameObject successParticleMachine;
+    public GameObject thanhPilotObject;
 
     public Positions positions;
 
@@ -45,6 +46,7 @@ public class GameBoard : MonoBehaviour
     public AudioSource dingSFX;
     public AudioSource applausSFX;
     public AudioSource failSFX;
+    public AudioSource butterflyBGM;
 
     public Rounds round;
 
@@ -142,6 +144,14 @@ public class GameBoard : MonoBehaviour
         timer.name = "Timer";
         timer.transform.SetParent(GameObject.Find("Canvas").transform, false);
         timer.SetActive(false);
+        for (int i = 0; i < mockStats.GetTotalNumberOfPlayers(); i++)
+        {
+            if (mockStats.GetName(i) == "thanh" || mockStats.GetName(i) == "Thanh")
+            {
+                butterflyBGM.Play();
+                StartCoroutine(EasterEgg());
+            }
+        }
     }
 
 
@@ -1062,6 +1072,19 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(2f);
         round.SetRoundPhase(23);
     }
-    
+
+
+    public IEnumerator EasterEgg()
+    {
+        successParticles.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        GameObject thanh = Instantiate(thanhPilotObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        thanh.name = "ThanhPilot";
+        thanh.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        yield return new WaitForSeconds(9f);
+        GameObject.Find("ThanhPilot").GetComponent<Animator>().SetBool("away", true);
+        successParticles.SetActive(false);
+    }
+
 }
 

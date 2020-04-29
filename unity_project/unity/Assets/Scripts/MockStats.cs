@@ -59,7 +59,7 @@ public class MockStats : MonoBehaviour
 
     private int[] topicChoiceMade = { 0, 0, 0, 0, 0, 0, 0 }; //this array comes from Backend, 0 = not chosen a topic yet; 1 = chosen a topic yet; index 0 = player pos 1 etc.
     private int[] clueSubmitted = { 0, 0, 0, 0, 0, 0, 0 };  //this array is set from the Backend, 0 = not submitted a cue; 1 = submitted a clue
-    private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
+    private string[] names = { "Chris", "Thanhh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
     private int[] avatar = { 1, 2, 3, 4, 5, 6, 7 };
     string[] topicArray = { "Fever", "River", "Candy", "Rainbow", "Hammer", "Wrench", "Zebra", "Ivy", "Airplane", "Bridge",
         "Frost", "Lollipop", "Parachute", "Day", "Hammer", "Witch", "Lasso", "Burger", "Lotto Ticket", "Worm",
@@ -73,16 +73,27 @@ public class MockStats : MonoBehaviour
 
     private bool giveReactTime = false;
     private bool hasLostLastRound = false;
+    private bool bugFix = false;
 
     // Start is called before the first frame update
     void Start()
     {
         activePlayer = 7;
-        playerPosition = 7; //REACTINPUT, this value needs to come from React
+        playerPosition = 6; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
     }
 
+
+    public bool GetBuxFix()
+    {
+        return bugFix;
+    }
+
+    public void SetBuxFix()
+    {
+        bugFix = false;
+    }
 
     public string GetName(int i)
     {
@@ -342,6 +353,7 @@ public class MockStats : MonoBehaviour
     //This is called by react to update the Round value (round can be 0 - 12 (0 for round 1))
     public void ReactSetRound(int round)
     {
+        rounds = GameObject.Find("Rounds").GetComponent<Rounds>();
         rounds.SetRound(round);
     }
 
@@ -407,10 +419,10 @@ public class MockStats : MonoBehaviour
         for (int i = 0; i < playerTotal; i++)
         {
             clueList[i] = tempList[i];
-            Debug.Log(clueList[i]);
         }
-        rounds = GameObject.Find("Rounds").GetComponent<Rounds>();
-        rounds.SetRoundPhase(12);
+        bugFix = true;
+        //rounds = GameObject.Find("Rounds").GetComponent<Rounds>();
+        //rounds.SetRoundPhase(12);
     }
 
 
@@ -464,7 +476,8 @@ public class MockStats : MonoBehaviour
     //0 = lost
     public void ReactTellRoundWin(int evaluation)
     {
-        if(evaluation == 1)
+        rounds = GameObject.Find("Rounds").GetComponent<Rounds>();
+        if (evaluation == 1)
         {
             SetRoundOutcome(false);
             rounds.SetRoundPhase(20);
