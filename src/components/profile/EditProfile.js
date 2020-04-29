@@ -71,6 +71,7 @@ class EditProfile extends React.Component {
             username: null
         };
     }
+    
 
     //update user
     async update() {

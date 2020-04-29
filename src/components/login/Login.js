@@ -144,9 +144,6 @@ class Login extends React.Component {
 
   render() {
     return (
-        <ThemeProvider theme={lightTheme}>
-          <>
-            <GlobalStyles/>
       <BaseContainer>
         <FormContainer>
           <Form>
@@ -202,8 +199,6 @@ class Login extends React.Component {
           </Form>
         </FormContainer>
       </BaseContainer>
-          </>
-        </ThemeProvider>
     );
   }
 }

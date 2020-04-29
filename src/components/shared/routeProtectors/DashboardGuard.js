@@ -11,8 +11,13 @@ import { Redirect } from "react-router-dom";
  * @param props
  */
 export const DashboardGuard = props => {
-    if (localStorage.getItem("userToken")) {
-        return props.children;
+    if(localStorage.getItem("gameToken")){
+        return <Redirect to={"/unityGame"} />;
+    } else if (localStorage.getItem("lobbyToken")) {
+        return <Redirect to={"/dashboard/waitingLobby"} />;
+    } else if(localStorage.getItem("userToken")) {
+        return props.children; 
+    } else {
+        return <Redirect to={"/login"} />; 
     }
-    return <Redirect to={"/login"} />;
 };
