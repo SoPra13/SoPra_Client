@@ -88,7 +88,7 @@ export class UnityGame extends React.Component {
             console.log("Es funzt!" + score);
         });
 
-        //!!
+
 
         this.unityContent.on("PlayerHasConnected", () =>{
             console.log("PlayerHasConnected");
