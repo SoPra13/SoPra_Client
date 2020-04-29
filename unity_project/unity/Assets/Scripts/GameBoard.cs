@@ -1009,6 +1009,7 @@ public class GameBoard : MonoBehaviour
             }                
         }
         yield return new WaitForSeconds(0.1f);
+        //round.SetRoundPhase(13);
     }
 
     public IEnumerator RemoveClues()
