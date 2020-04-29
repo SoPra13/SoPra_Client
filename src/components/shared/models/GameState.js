@@ -12,6 +12,7 @@ class GameState {
         this.voteList = null;
         this.playerList = null;
         this.botList = null;
+        this.guessGiven = null;
 
 /*        this.wordList = null;
         this.status = null;
