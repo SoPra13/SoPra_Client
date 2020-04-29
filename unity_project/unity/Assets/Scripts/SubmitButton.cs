@@ -43,18 +43,6 @@ public class SubmitButton : MonoBehaviour
                     Debug.Log("Unity wants to send the guess but failed " + e);
                 }
                 mockStats.NotifyReactToEvaluateTheRound(); //tell react to check if the round was won or lost
-
-                /*
-                if (misteryWord.ToLower() == mockStats.GetCurrentTopic().ToLower()) //check if the guess is correct
-                {
-                    Debug.Log("You guessed correclty");
-                    GameObject.Find("Rounds").GetComponent<Rounds>().SetRoundPhase(20);
-                }
-                else
-                {
-                    Debug.Log("Your guess was wrong");
-                    GameObject.Find("Rounds").GetComponent<Rounds>().SetRoundPhase(21);
-                }*/
             }
             else
             {
@@ -94,8 +82,6 @@ public class SubmitButton : MonoBehaviour
         yield return new WaitForSeconds(2f);
         GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", false);
         Destroy(GameObject.Find("MisteryWordInput"));
-
-
 
         if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition()) //this happens when the active player submits his guess
         {

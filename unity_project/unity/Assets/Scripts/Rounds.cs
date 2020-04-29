@@ -252,7 +252,6 @@ public class Rounds : MonoBehaviour
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
-                gameBoard.DisplayMisteryInputBoxActivePlayer();
                 mockStats.GetClueStringFromReact();
                 roundPhase = 11;
             }
@@ -281,6 +280,7 @@ public class Rounds : MonoBehaviour
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
                 StartCoroutine(gameBoard.DisplayCluesFromPlayers());
+                gameBoard.DisplayMisteryInputBoxActivePlayer();
                 roundPhase = 13;
             }
             else
@@ -619,14 +619,14 @@ public class Rounds : MonoBehaviour
 
     IEnumerator WaitToFetchInfosForNewRound()
     {
-        //JUST FOR TESTING REMOVE AFTERWARDS, This input all has to come from react
+        /*//JUST FOR TESTING REMOVE AFTERWARDS, This input all has to come from react
         mockStats.ReactSetPlayerStats("7777");
         round += 2;
         mockStats.ReactSetPlayerHasSubmittedClue("0000000");
         mockStats.ReactSetPlayerHasChosenTopic("0000000");
         mockStats.ReactSetTopicVoteList("00000");
         mockStats.ReactSetActivePlayerMadeGuess(0);
-        //JUFT FOR TESTING
+        //JUFT FOR TESTING*/
 
         if(round >= 13)//EndGame
         {
