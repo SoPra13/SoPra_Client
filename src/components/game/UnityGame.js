@@ -69,6 +69,7 @@ export class UnityGame extends React.Component {
             lobbyToken: localStorage.getItem('lobbyToken'),
             userToken: localStorage.getItem('userToken'),
             gameToken: localStorage.getItem('gameToken'),
+            round:0,
             game: null,
             name: null,
             username: null,
@@ -256,6 +257,7 @@ export class UnityGame extends React.Component {
     async setPlayerArray(game) {
         const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') + '&gameToken=' + localStorage.getItem('gameToken'));
 
+        this.state.round = this.state.game.currentRound;
         console.log(game);
 
         var playerIndex = this.getIndex(game, localStorage.getItem('userToken'));
@@ -441,8 +443,6 @@ export class UnityGame extends React.Component {
             const response = await api.get('/game?token=' + localStorage.getItem('gameToken'));
 
             var game = response.data;
-            console.log(game);
-
 
             this.setState({
                 game: game,
@@ -573,7 +573,9 @@ export class UnityGame extends React.Component {
     async nextRound(){
 
         try{
-            if(this.state.game.playerList[this.state.game.guesser].userToken==localStorage.getItem('userToken')) {
+            console.log(this.state.game.playerList[this.state.game.guesser].token);
+            console.log(localStorage.getItem('userToken'));
+            if(this.state.game.playerList[this.state.game.guesser].token==localStorage.getItem('userToken') && this.state.round == this.state.game.currentRound) {
                 console.log("RESET CALLED")
                 const response = await api.put('/game/round?gameToken=' + localStorage.getItem('gameToken'));
                 this.state.game = response.data;
@@ -581,7 +583,20 @@ export class UnityGame extends React.Component {
             const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') + '&gameToken=' + localStorage.getItem('gameToken'));
             var index = this.getIndex(this.state.game,localStorage.getItem('userToken'));
             while(this.state.game.playerList[index-1].unityReady === false){
-                //
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+             var ready = 0;
+            for (var i = 0; i<this.state.game.playerList.length; i++) {
+                if (this.state.game.playerList[i].unityReady == true) {
+                    ready += 1;
+                }
+            }
+
+            if(this.state.game.currentRound!= this.state.round){
+                this.unityContent.send(
+                    "MockStats",
+                    "ReactStartNextRound"
+                )
             }
 
             this.setPlayerArray(this.state.game);
