@@ -193,6 +193,11 @@ export class UnityGame extends React.Component {
             this.nextRound()
         });
 
+        this.unityContent.on("UpdateScore", (score) =>{
+            //score is int 1= win 0=lose
+            //backendScore
+        });
+
     }
 
 
@@ -290,9 +295,11 @@ export class UnityGame extends React.Component {
         )
     }
 
-    setPlayerNames(game){ //Send a string with a ";" delimiter to unity
+    async setPlayerNames(game){ //Send a string with a ";" delimiter to unity
 
-        let nameString = game.playerList[0].username;
+
+        var nameString = [];
+        nameString = game.playerList[0].username;
         for (var i = 1; i<game.playerList.length; i++) {
             nameString += ';'+game.playerList[i].username;
         }
@@ -301,7 +308,7 @@ export class UnityGame extends React.Component {
              nameString += ';'+game.botList[i].botname;
          }*/
 
-
+        console.log(nameString)
         console.log("Names Set Completed");
         this.unityContent.send(
             "MockStats",
@@ -435,7 +442,7 @@ export class UnityGame extends React.Component {
 
             var game = response.data;
             console.log(game);
-            console.log(response);
+
 
             this.setState({
                 game: game,
@@ -505,7 +512,7 @@ export class UnityGame extends React.Component {
         this.unityContent.send(
             "MockStats",
             "ReactSetClueString",
-            "green;long;bites;RuleViolation"
+            cluesString
         )
     }
 
@@ -564,11 +571,22 @@ export class UnityGame extends React.Component {
     }
 
     async nextRound(){
-        try{
 
-            const response = await api.put('/game/round?gameToken=' + localStorage.getItem('gameToken'));
-            var game = response.data;
-            this.setPlayerArray(game);
+        try{
+            if(this.state.game.playerList[this.state.game.guesser].userToken==localStorage.getItem('userToken')) {
+                console.log("RESET CALLED")
+                const response = await api.put('/game/round?gameToken=' + localStorage.getItem('gameToken'));
+                this.state.game = response.data;
+            }
+            const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') + '&gameToken=' + localStorage.getItem('gameToken'));
+            var index = this.getIndex(this.state.game,localStorage.getItem('userToken'));
+            while(this.state.game.playerList[index-1].unityReady === false){
+                //
+            }
+
+            this.setPlayerArray(this.state.game);
+
+
         }catch(error){
             alert(`guessCorrect error: \\n${handleError(error)}`);
         }
@@ -591,11 +609,11 @@ export class UnityGame extends React.Component {
 
     async sendGuessCorrect(game){
         console.log("sending back the topic to unity");
-        let guessCorrected = game.guessCorrect;
+        let guessCorrect = game.guessCorrect;
         this.unityContent.send(
             "MockStats",
             "ReactSetThisRoundsTopic",
-            guessCorrected
+            guessCorrect
         )
     }
 
