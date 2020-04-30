@@ -24,8 +24,7 @@ public class Easteregg : MonoBehaviour
         {
             if (mockStats.GetName(i) == "thanh" || mockStats.GetName(i) == "Thanh")
             {
-                butterflyBGM.Play();
-                
+                butterflyBGM.Play();       
             }
         }
     }
@@ -35,8 +34,14 @@ public class Easteregg : MonoBehaviour
     {
         if (!randomizer)
         {
-            StartCoroutine(EasterEgg());
-            randomizer = true;
+            for (int i = 0; i < mockStats.GetTotalNumberOfPlayers(); i++)
+            {
+                if (mockStats.GetName(i) == "thanh" || mockStats.GetName(i) == "Thanh")
+                {
+                    StartCoroutine(EasterEgg());
+                    randomizer = true;
+                }
+            }
         }
     }
 

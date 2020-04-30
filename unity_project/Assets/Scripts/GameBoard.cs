@@ -987,7 +987,7 @@ public class GameBoard : MonoBehaviour
         {
             if(i == mockStats.GetActivePlayer()-1)
             {
-
+                i -= 1;
             }
             else
             {
@@ -1060,7 +1060,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator RemoveClues()
     {
-        for (int i = 0; i < mockStats.GetTotalNumberOfPlayers()-1; i++)
+        for (int i = 0; i <= mockStats.GetTotalNumberOfPlayers()-1; i++)
         {
             if (i == mockStats.GetActivePlayer()-1)
             {
