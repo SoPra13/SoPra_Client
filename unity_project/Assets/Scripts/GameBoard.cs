@@ -362,7 +362,6 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-
     public IEnumerator ShowThisRoundsTopic()
     {
         GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
@@ -537,7 +536,8 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
         //TODO here I have to add the correct topics
         float y = 164.6f;
-        StartCoroutine(DisplayInfoText("You have <color=#001AF6>30</color> Seconds to pick a Topic for this Round!",true,0));
+        //StartCoroutine(DisplayInfoText("You have <color=#001AF6>30</color> Seconds to pick a Topic for this Round!",true,0));
+        StartCoroutine(DisplayInfoText("Please vote for a Topic. The active player will have to guess the topic afterwards!", true, 2));
         for (int j = 0; j < 5; j++)
         {
             GameObject topicButton = Instantiate(topicButtonObject, new Vector3(-7.6f, y, 0), Quaternion.identity) as GameObject;
@@ -742,9 +742,6 @@ public class GameBoard : MonoBehaviour
             StartCoroutine(AnimateUnflippBox(mockStats.GetActivePlayer()));
         }
         yield return new WaitForSeconds(1.5f);
-        //TODO React has to call ReactSetPlayerHasSubmittedClue() with string "0000*" (*anzahl spieler)
-        //TODO React has to call ReactSetPlayerHasChosenTopic() with string "0000*" (*anzahl spieler)
-        //Todo React has to call ReactSetTopicVoteList() and send the string "00000", needs to have 5 zeros exactly
         round.SetRoundPhase(25);
     }
 
@@ -983,11 +980,12 @@ public class GameBoard : MonoBehaviour
     public IEnumerator DisplayCluesFromPlayers()
     {
         int count = 0;
+        int j = 0;
         for (int i = 0; i <= mockStats.GetTotalNumberOfPlayers()-1; i++)
         {
             if(i == mockStats.GetActivePlayer()-1)
             {
-                i -= 1;
+                //j -= 1;
             }
             else
             {
@@ -997,7 +995,7 @@ public class GameBoard : MonoBehaviour
                     clue.name = "clue" + i;
                     clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
                     GameObject.Find("ClueText").name = "ClueText" + i;
-                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
                     GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
                 }
@@ -1007,7 +1005,7 @@ public class GameBoard : MonoBehaviour
                     clue.name = "clue" + i;
                     clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
                     GameObject.Find("ClueText").name = "ClueText" + i;
-                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
                     GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
                 }
@@ -1017,7 +1015,7 @@ public class GameBoard : MonoBehaviour
                     clue.name = "clue" + i;
                     clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
                     GameObject.Find("ClueText").name = "ClueText" + i;
-                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
                     GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
                 }
@@ -1027,7 +1025,7 @@ public class GameBoard : MonoBehaviour
                     clue.name = "clue" + i;
                     clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
                     GameObject.Find("ClueText").name = "ClueText" + i;
-                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
                     GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
                 }
@@ -1037,7 +1035,7 @@ public class GameBoard : MonoBehaviour
                     clue.name = "clue" + i;
                     clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
                     GameObject.Find("ClueText").name = "ClueText" + i;
-                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
                     GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
                 }
@@ -1047,10 +1045,11 @@ public class GameBoard : MonoBehaviour
                     clue.name = "clue" + i;
                     clue.transform.SetParent(GameObject.Find("Canvas").transform, false);
                     GameObject.Find("ClueText").name = "ClueText" + i;
-                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[i];
+                    GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
                     GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
                 }
+                j += 1;
                 count += 1;
                 yield return new WaitForSeconds(0.25f);
             }                
@@ -1133,7 +1132,7 @@ public class GameBoard : MonoBehaviour
     IEnumerator SetUpScoreBoard()
     {
         yield return new WaitForSeconds(2f);
-        scoreBoard = Instantiate(scoreBoardContainer, new Vector3(0, 100, 0), Quaternion.identity) as GameObject;
+        scoreBoard = Instantiate(scoreBoardContainer, new Vector3(-6, 280, 0), Quaternion.identity) as GameObject;
         scoreBoard.name = "ScoreBoard";
         scoreBoard.transform.SetParent(GameObject.Find("Canvas").transform, false);
         GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = mockStats.GetScore().ToString();
@@ -1161,5 +1160,27 @@ public class GameBoard : MonoBehaviour
             }
         }
     }
+
+
+    public IEnumerator NewRoundStartsAnimation()
+    {
+        GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
+        blackScreen.name = "BlackScreen";
+        blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        yield return new WaitForSeconds(1.0f);
+        GameObject topicBar = Instantiate(topicBarObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        topicBar.name = "TopicBar";
+        topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        barAppearsSFX.Play();
+        GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "The next round is about to start...";
+        GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...prepare yourselfs!";
+        yield return new WaitForSeconds(1.0f);
+        barCheckSFX.Play();
+        yield return new WaitForSeconds(3.2f);
+        Destroy(GameObject.Find("TopicBar"));
+        Destroy(GameObject.Find("BlackScreen"));
+        round.SetRoundPhase(1);
+    }
+
 }
 
