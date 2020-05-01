@@ -59,7 +59,7 @@ public class MockStats : MonoBehaviour
 
     private int[] topicChoiceMade = { 0, 0, 0, 0, 0, 0, 0 }; //this array comes from Backend, 0 = not chosen a topic yet; 1 = chosen a topic yet; index 0 = player pos 1 etc.
     private int[] clueSubmitted = { 0, 0, 0, 0, 0, 0, 0 };  //this array is set from the Backend, 0 = not submitted a cue; 1 = submitted a clue
-    private string[] names = { "Chris", "Thanh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
+    private string[] names = { "Chris", "Thanhh", "Marc", "Ivan", "Simon", "Rambo", "E.T." };
     private int[] avatar = { 1, 2, 3, 4, 5, 6, 7 };
     string[] topicArray = { "Fever", "River", "Candy", "Rainbow", "Hammer", "Wrench", "Zebra", "Ivy", "Airplane", "Bridge",
         "Frost", "Lollipop", "Parachute", "Day", "Hammer", "Witch", "Lasso", "Burger", "Lotto Ticket", "Worm",
@@ -68,7 +68,7 @@ public class MockStats : MonoBehaviour
         "Roach", "Dog", "Sand", "Swamp", "Face", "Wrench", "Flute", "PC", "Villa", "Bee",
         "Gun", "Cat", "Night", "Fire", "Iron", "Wrench", "Tears", "Mobilephone", "Tree", "Snake",
         "Stone", "Hero", "Lasergun", "Ladybug", "Spike"};
-    private string[] clueList = {"RuleViolation", "RuleViolation", "RuleViolation", "RuleViolation", "RuleViolation", "RuleViolation", "RuleViolation" };
+    private string[] clueList = {"1", "2", "3", "4", "5", "6", "7" };
     private int activePlayerGuess = 0; //0 = player has not made a guess; 1 = player has made a guess
 
     private bool giveReactTime = false;
@@ -80,7 +80,7 @@ public class MockStats : MonoBehaviour
     void Start()
     {
         activePlayer = 7;
-        playerPosition = 6; //REACTINPUT, this value needs to come from React
+        playerPosition = 7; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
     }

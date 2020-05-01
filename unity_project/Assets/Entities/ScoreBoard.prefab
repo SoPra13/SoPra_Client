@@ -316,7 +316,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Score Board
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e315bd8ab93413c4a9ce1645ae6099ad, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 361926752401206779, guid: e315bd8ab93413c4a9ce1645ae6099ad,
     type: 2}
   m_fontSharedMaterials: []

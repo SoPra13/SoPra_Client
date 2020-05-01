@@ -5,6 +5,9 @@ using UnityEngine;
 public class TestButton : MonoBehaviour
 {
     public MockStats mockStats;
+    private int roundTesting = 0;
+
+    private Rounds round;
 
     private void Start()
     {
@@ -56,17 +59,60 @@ public class TestButton : MonoBehaviour
 
     public void SetClueList()
     {
-        mockStats.ReactSetClueString("green;long;bites;RuleViolation;venomous;RuleViolation;RuleViolation");
+        mockStats.ReactSetClueString("1;2;3;4;5;6;gaggi");
     }
 
     public void EvaluateRound()
     {
-        mockStats.ReactTellRoundWin(1);
+        mockStats.ReactTellRoundWin(0);
     }
 
     public void AtivePlayerGuessed()
     {
         mockStats.ReactSetActivePlayerMadeGuess(1);
+    }
+
+
+    public void AdvanceRound()
+    {
+        if(roundTesting == 0)
+        {
+            round = GameObject.Find("Rounds").GetComponent<Rounds>();
+            mockStats.ReactSetPlayerStats("4444");
+            round.SetRound(roundTesting + 2);
+
+        }
+        else if (roundTesting == 1)
+        {
+            round = GameObject.Find("Rounds").GetComponent<Rounds>();
+            mockStats.ReactSetPlayerStats("1444");
+            round.SetRound(roundTesting + 2);
+
+        }
+        if (roundTesting == 2)
+        {
+            round = GameObject.Find("Rounds").GetComponent<Rounds>();
+            mockStats.ReactSetPlayerStats("2444");
+            round.SetRound(roundTesting + 2);
+        }
+        else if (roundTesting == 3)
+        {
+            round = GameObject.Find("Rounds").GetComponent<Rounds>();
+            mockStats.ReactSetPlayerStats("3444");
+            round.SetRound(roundTesting + 2);
+        }
+        else if (roundTesting == 4)
+        {
+            round = GameObject.Find("Rounds").GetComponent<Rounds>();
+            mockStats.ReactSetPlayerStats("4444");
+            round.SetRound(roundTesting + 2);
+        }
+
+        mockStats.ReactSetPlayerHasSubmittedClue("0000000");
+        mockStats.ReactSetPlayerHasChosenTopic("0000000");
+        mockStats.ReactSetTopicVoteList("00000");
+        mockStats.ReactSetActivePlayerMadeGuess(0);
+        mockStats.ReactStartNextRound();
     }
 }
 

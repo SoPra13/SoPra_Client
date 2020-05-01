@@ -57,8 +57,10 @@ public class Rounds : MonoBehaviour
     {
         if(roundPhase == 1)//Shuffling Animation of Cards AND Set the Round (fetched from Backend)
         {
+            //Reset things at the beginning of each round:
             mockStats.SetStartNextRound();
             waitForSettingUpNextRound = false;
+            roundPhase3Wakes = true;
 
             try { FetchRound(); }//This will tell React to get the Round int for this round
             catch (EntryPointNotFoundException e)
@@ -138,7 +140,7 @@ public class Rounds : MonoBehaviour
             }
             else
             {
-                timer.StartTimer(30);
+                //timer.StartTimer(30);
                 roundPhase = 7;
             }
         }
@@ -190,10 +192,11 @@ public class Rounds : MonoBehaviour
                 }
                 //Everyone has set their vote
                 //Check for draws
-                if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
+                //if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
+                if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1))
                 {
                     StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
-                    timer.DeactivateTimer();
+                    //timer.DeactivateTimer();
                     gameBoard.ForceRemoveInfoBox();
                     topicCall = false;
                     roundPhase = 8;
@@ -444,8 +447,6 @@ public class Rounds : MonoBehaviour
         {
             if (!waitForSettingUpNextRound)
             {
-                StartCoroutine(WaitToFetchInfosForNewRound());
-                Debug.Log("Next Round is about to start...fetching Data from React");
                 try { StartNextRound(); }
                 catch (EntryPointNotFoundException e)
                 {
@@ -454,10 +455,23 @@ public class Rounds : MonoBehaviour
                 waitForSettingUpNextRound = true;
             }
 
+
             if (mockStats.GetStartNextRound())
             {
-                roundPhase = 1;
+                StartCoroutine(gameBoard.NewRoundStartsAnimation());
+                roundPhase = 26;
             }
+        }
+
+        if (roundPhase == 26)
+        {
+            //Wait for the next round to be started and check if game is over
+            if (round >= 12)//EndGame
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            }
+            //Todo Check if game is over and also check Edge case that if we are in round 12 and fail, round 13 is skipped and the game ends and
+            //edge case if we are in round 13 and fail, game ends and 1 successful round is subtracted
         }
     }
 
@@ -560,15 +574,13 @@ public class Rounds : MonoBehaviour
 
     IEnumerator LastCallForTopics()
     {
-        
+        yield return new WaitForSeconds(2f);
         try { FetchTopicList(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity has asked for TopicList did not succeeded " + e);
         }
-
-        yield return new WaitForSeconds(1.5f);
-
+        yield return new WaitForSeconds(1f);
         //Sort out duplicates
         int[] finalTopic = mockStats.GetTopicChoices();
         int max = 0;
@@ -597,10 +609,9 @@ public class Rounds : MonoBehaviour
 
 
         //finalIndex = UnityEngine.Random.Range(0, finalList.Count - 1);
-        //finalIndex = 0;
+        finalIndex = 0;
         chosenTopic = gameBoard.GetCardStack()[round].GetTopics()[finalList[finalIndex]];
         mockStats.SetCurrentTopic(chosenTopic);
-
         yield return new WaitForSeconds(0.25f);
 
         try { SendTopicToReact(chosenTopic); }
@@ -609,9 +620,10 @@ public class Rounds : MonoBehaviour
             Debug.Log("Unity wants to send the topic string but failed " + e);
         }
         yield return new WaitForSeconds(1f);
+
         roundPhase = 9;
-        lastCall = false;
         topicCall = false;
+        lastCall = false;
     }
 
 
@@ -633,30 +645,6 @@ public class Rounds : MonoBehaviour
         gameBoard.CheckClueBubble();
         yield return new WaitForSeconds(0.5f);
         gettingClueInfos = false;
-    }
-
-
-    IEnumerator WaitToFetchInfosForNewRound()
-    {
-        /*/JUST FOR TESTING REMOVE AFTERWARDS, This input all has to come from react
-        mockStats.ReactSetPlayerStats("7767");
-        round += 1;
-        mockStats.ReactSetPlayerHasSubmittedClue("0000000");
-        mockStats.ReactSetPlayerHasChosenTopic("0000000");
-        mockStats.ReactSetTopicVoteList("00000");
-        mockStats.ReactSetActivePlayerMadeGuess(0);
-        //JUFT FOR TESTING*/
-
-        if(round >= 13)//EndGame
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
-        //Todo Check if game is over and also check Edge case that if we are in round 12 and fail, round 13 is skipped and the game ends and
-        //edge case if we are in round 13 and fail, game ends and 1 successful round is subtracted
-
-        roundPhase3Wakes = true;
-        yield return new WaitForSeconds(1f);
-        //roundPhase = 1;
     }
 
     IEnumerator WaitForArrowToDisappear()
