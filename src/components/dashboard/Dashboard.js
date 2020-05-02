@@ -2,61 +2,22 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import Lobby from "../shared/models/Lobby";
 import { Spinner} from "../../views/design/Spinner";
 import Player from "../../views/Player";
 import Room from "../../views/Room";
-import EditProfile from "../profile/EditProfile";
 import ProfileInfo from "../../views/ProfileInfo";
 import Gamedescription from "../../views/Gamedescription";
+import Header from "../../views/Header";
 
 const Container = styled(BaseContainer)`
   color: white;
   text-align: center;
 `;
 
-const FormContainer = styled.div`
-  margin-top: 2em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 300px;
-  justify-content: center;
-`;
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: 375px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
-  transition: opacity 0.5s ease, transform 0.5s ease;
-`;
-
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
-  border: none;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-`;
 
 const Label = styled.label`
   color: white;
@@ -77,12 +38,6 @@ const PlayerContainer = styled.li`
   justify-content: center;
 `;
 
-const LobbyContainer = styled.li`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
 
 const Users = styled.ul`
   list-style: none;
@@ -97,94 +52,6 @@ const User1 = styled.ul`
 `;
 
 
-const Lobbies = styled.ul`
-  list-style: none;
-  padding-left: 0;
-`;
-
-const central = styled.div`
-  text-align: center;
-`;
-
-const centralFlexbox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
-
-const LoginForm = styled.div`
-  width: 40%;
-  height: 300px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  background-color: #ffca65;
-  text-align: center;
-`;
-
-const titleh2 = styled.h2`
-text-align: center;
-`;
-
-const List1 = styled.ul`
-  list-style-type: none;
-  text-align: center;
-  margin-bottom: 40px;
-  `;
-
-const UsersContainer = styled.div`
-  margin-top: 50px;
-  height: 150px;
-  overflow: auto;
-`;
-
-const LobbiesContainer = styled.div`
-  margin-top: 50px;
-  margin-bottom: 50px;
-  height: 150px;
-  overflow: auto;
-`;
-
-const PlayerButton = styled.li`
-width: 300px;
-color: #fff;
-background-color: #0e3d61;
-border: 2px solid;
-border-color: #c5c5c5;
-border-radius: 20px;
-height: 50px;
-line-height: 38px;
-padding: 5px 20px;
-margin-bottom: 10px;
-text-align: center;
-box-sizing: border-box;
-`;
-
-const LobbyButton = styled.li`
-color: #5a5a5a;
-background-color: #ffa700;
-border: 2px solid;
-border-color: #5a5a5a;
-border-radius: 5px;
-height: 50px;
-line-height: 38px;
-padding: 5px 20px;
-margin-bottom: 10px;
-text-align: center;
-box-sizing: border-box;
-`;
-
-/**
- * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
- * You should have a class (instead of a functional component) when:
- * - You need an internal state that cannot be achieved via props from other parent components
- * - You fetch data from the server (e.g., in componentDidMount())
- * - You want to access the DOM via Refs
- * https://reactjs.org/docs/react-component.html
- * @Class
- */
 class Dashboard extends React.Component {
 
     constructor() {
@@ -238,25 +105,26 @@ class Dashboard extends React.Component {
         })
     }
 
-/*    async deleteLobby(){
-        const response = await api.get('/lobbies');
-        if (response.data.playerList.length == 0){
-            const token = response.data.lobbyToken;
-            await api.delete('/lobby?lobbyToken=' + token);
+    async getUsers(){
+        try{
+            const response = await api.get('/users');
+            this.setState({ users: response.data });
+        }catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
-    }*/
 
-
-    /**
-     *  Every time the user enters something in the input field, the state gets updated.
-     * @param key (the key of the state for identifying the field that needs to be updated)
-     * @param value (the value that gets assigned to the identified state key)
-     */
-    handleInputChange(key, value) {
-        // Example: if the key is username, this statement is the equivalent to the following one:
-        // this.setState({'username': value});
-        this.setState({ [key]: value });
     }
+
+    async getLobbies(){
+        try{
+            const response = await api.get('/lobbies');
+            this.setState({ lobbies: response.data });
+        }catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+        }
+
+    }
+
 
     async componentWillMount(){
         try {
@@ -268,45 +136,32 @@ class Dashboard extends React.Component {
             this.setState({user: respo.data});
             console.log(respo);
 
-            const response = await api.get('/users');
-            this.setState({ users: response.data });
-            console.log(response);
-
-
-            const resp = await api.get('/lobbies');
-            this.setState({ lobbies: resp.data });
-            console.log(resp);
-
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
+        this.getLobbies();
+        console.log(this.state.lobbies);
+
+        this.getUsers();
+        console.log(this.state.users);
 
     }
 
     async componentDidMount() {
-        try {
-            const response = await api.get('/users');
-            // delays continuous execution of an async operation for 1 second.
-            // This is just a fake async call, so that the spinner can be displayed
-            // feel free to remove it :)
-            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Get the returned users and update the state.
-            this.setState({ users: response.data });
-
-            console.log(response);
-        } catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
-        }
-
-/*        this.timerID = setInterval(
-            () => this.deleteLobby(),
+       this.timerID1 = setInterval(
+            () => this.getUsers(),
             1000
-        );*/
+        );
+          this.timerID2 = setInterval(
+                    () => this.getLobbies(),
+                    1000
+        );
     }
 
     componentWillUnmount() {
-/*        clearInterval(this.timerID);*/
+        clearInterval(this.timerID1);
+        clearInterval(this.timerID2);
     }
 
 
@@ -473,6 +328,7 @@ class Dashboard extends React.Component {
 
         return (
             <div>
+                <Header height={"80"} />
                 {tabComp}
             </div>
 

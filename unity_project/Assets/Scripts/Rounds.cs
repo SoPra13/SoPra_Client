@@ -20,8 +20,8 @@ public class Rounds : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void SendTopicToReact(string message);
 
-    /*[DllImport("__Internal")]
-    private static extern void CallsForClueReady();*/
+    [DllImport("__Internal")]
+    private static extern void GameHasEnded(int score); //tell react that the game has ended
 
 
 
@@ -45,6 +45,7 @@ public class Rounds : MonoBehaviour
     private bool phase8Running = false;
     private bool waitForSettingUpNextRound = false;
     private bool askingForActivePlayer = false;
+    private bool waiter = false;
 
 
     void Start()
@@ -61,6 +62,7 @@ public class Rounds : MonoBehaviour
             mockStats.SetStartNextRound();
             waitForSettingUpNextRound = false;
             roundPhase3Wakes = true;
+            DeactivateWater();
 
             try { FetchRound(); }//This will tell React to get the Round int for this round
             catch (EntryPointNotFoundException e)
@@ -134,9 +136,17 @@ public class Rounds : MonoBehaviour
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
-                StartCoroutine(gameBoard.PlayersHaveChosenTheirTopic());
-                gettingTopicChoiceInfo = false;
-                roundPhase = 7;
+                if (!waiter)
+                {
+
+                }
+                else
+                {
+                    StartCoroutine(gameBoard.PlayersHaveChosenTheirTopic());
+                    gettingTopicChoiceInfo = false;
+                    roundPhase = 7;
+                }
+
             }
             else
             {
@@ -235,19 +245,6 @@ public class Rounds : MonoBehaviour
             }
             else
             {
-
-                //Unity will now trigger the topicsHaveBeenChosen() function in React
-                //This function will tell react to get the final topic in the backend
-                //The backend will take the current topic Array and check if there are duplicates or if all is empty
-                //If there are duplicates: Backend will randomly choose one of the duplicates
-                //if there are no votes, backend will randomly return of the topic to react
-                //React will then set this Rounds Topic in the MockStats Object by calling ReactSetThisRoundsTopic(int string)
-                /*try { TopicsHaveBeenChosen(); }//This will tell React to get the Topic Array from the Backend and send it to unity
-                catch (EntryPointNotFoundException e)
-                {
-                    Debug.Log("Unity wants to let React know that all topics have been chosen. This failed " + e);
-                }*/
-
                 roundPhase = 10;
             }
         }
@@ -468,6 +465,12 @@ public class Rounds : MonoBehaviour
             //Wait for the next round to be started and check if game is over
             if (round >= 12)//EndGame
             {
+                //ToDo Tell React that game is finished
+                try { GameHasEnded(mockStats.GetScore()); }//This will tell React to get the Round int for this round
+                catch (EntryPointNotFoundException e)
+                {
+                    Debug.Log("Unity wants to tell React that the game has ended " + e);
+                }
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             }
             //Todo Check if game is over and also check Edge case that if we are in round 12 and fail, round 13 is skipped and the game ends and
@@ -499,6 +502,16 @@ public class Rounds : MonoBehaviour
         return round;
     }
 
+
+    public void ActivateWaiter()
+    {
+        waiter = true;
+    }
+
+    public void DeactivateWater()
+    {
+        waiter = false;
+    }
 
     //REACT calls this function to set the current round
     public void SetRound(int roundInput)

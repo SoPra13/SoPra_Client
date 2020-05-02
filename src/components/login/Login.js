@@ -4,6 +4,7 @@ import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import Header from "../../views/Header";
 
 
 const FormContainer = styled.div`
@@ -118,9 +119,11 @@ class Login extends React.Component {
     }
   }
 
-  unityTesting(){
+  //dummy test for unity
+
+/*  unityTesting(){
     this.props.history.push(`/unitydummy`);
-  }
+  }*/
 
   /**
    *  Every time the user enters something in the input field, the state gets updated.
@@ -144,6 +147,8 @@ class Login extends React.Component {
 
   render() {
     return (
+        <div>
+          <Header height={"80"} />
       <BaseContainer>
         <FormContainer>
           <Form>
@@ -186,19 +191,20 @@ class Login extends React.Component {
               </Button>
             </Central>
 
-              <Button
+{/*              <Button
                   onClick={() => {
                     this.unityTesting();
                   }}
               >
                 Unity Testing
-              </Button>
+              </Button>*/}
 
             </ButtonContainer>
 
           </Form>
         </FormContainer>
       </BaseContainer>
+        </div>
     );
   }
 }

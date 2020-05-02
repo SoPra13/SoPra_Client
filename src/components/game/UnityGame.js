@@ -7,6 +7,18 @@ import { Button } from '../../views/design/Button';
 import Unity, { UnityContent } from "react-unity-webgl";
 import { api, handleError } from '../../helpers/api';
 
+const Central1 = styled.div`
+  flex-direction: column;
+`;
+
+const Central2 = styled.div`
+  flex-direction: row;
+`;
+
+const UnityBody = styled.body`
+  background: #404040;
+`;
+
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -669,64 +681,65 @@ export class UnityGame extends React.Component {
 
     render() {
         return (
-            <BaseContainer>
-                <FormContainer>
-                    <Form>
-                        <Label><b>Unity React Control-Room</b></Label>
-                        <ButtonContainer>
-                            <Label> Force Connect Users: <br/> </Label>
-                            <Button
-                                width="15%"
-                                onClick={() => {
-                                    this.setState({totalPlayers: this.state.totalPlayers +1});
-                                    console.log(this.state.totalPlayers)
-                                }}
-                            >
-                                AddToTotal
-                            </Button>
-                            <Button
-                                width="15%"
-                                onClick={() => {
-                                    this.sendClueList(this.state.game);
-                                }}
-                            >
-                                SetPlayers
-                            </Button>
-                            <Button
-                                width="15%"
-                                onClick={() => {
-                                    console.log(this.state.score)
-                                }}
-                            >
-                                Check If Unity Talks
-                            </Button>
-                            <Button
-                                width="15%"
-                                onClick={() => {
-                                    //send to unity
-                                }}
-                            >
-                                P4-Connect
-                            </Button>
-                            <Button
-                                width="15%"
-                                onClick={() => {
-                                    //send to unity
-                                }}
-                            >
-                                P5-Connect
-                            </Button>
-                            <Button
-                                width="15%"
-                                onClick={() => {
-                                    //send to unity
-                                }}
-                            >
-                                P6-Connect
-                            </Button>
-                        </ButtonContainer>
-                    </Form>
-                </FormContainer>
+            <UnityBody>
+            <BaseContainer background="#404040">
+                {/*<FormContainer>*/}
+                {/*<Form>*/}
+                {/*  <Label><b>Unity React Control-Room</b></Label>*/}
+                {/*<ButtonContainer>*/}
+                {/*                <Label> Force Connect Users: <br/> </Label>*/}
+                {/*<Button
+                    width="15%"
+                    onClick={() => {
+                      this.setState({totalPlayers: this.state.totalPlayers +1});
+                      console.log(this.state.totalPlayers)
+                    }}
+                >
+                  AddToTotal
+                </Button>
+                <Button
+                    width="15%"
+                    onClick={() => {
+                      this.addPlayer();
+                    }}
+                >
+                  SetPlayers
+                </Button>
+                <Button
+                    width="15%"
+                    onClick={() => {
+                      console.log(this.state.score)
+                    }}
+                >
+                  Check If Unity Talks
+                </Button>
+                <Button
+                    width="15%"
+                    onClick={() => {
+                      //send to unity
+                    }}
+                >
+                  P4-Connect
+                </Button>
+                <Button
+                    width="15%"
+                    onClick={() => {
+                      //send to unity
+                    }}
+                >
+                  P5-Connect
+                </Button>
+                <Button
+                    width="15%"
+                    onClick={() => {
+                      //send to unity
+                    }}
+                >
+                  P6-Connect
+                </Button>
+              </ButtonContainer>
+            </Form>
+          </FormContainer>*/}
 
                 <div
                     style={{
@@ -739,8 +752,9 @@ export class UnityGame extends React.Component {
                 >
                     <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
                 </div>
-                <br/>
+                {/*<br/>*/}
             </BaseContainer>
+                </UnityBody>
         );
     }
 }
