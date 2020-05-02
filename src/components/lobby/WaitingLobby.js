@@ -108,6 +108,7 @@ class WaitingRoom extends React.Component {
         try {
             const response = await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
                 + '&userToken=' + userToken);
+            localStorage.removeItem('lobbyToken')
 
             console.log('Player get kicked from the admin');
 
@@ -307,7 +308,7 @@ class WaitingRoom extends React.Component {
             <Container>
 
                 <h2>Players & Bots of Lobby {this.state.lobbyname}</h2>
-                <h2> {this.state.lobbyToken}</h2>
+                <h2> {this.state.joinToken}</h2>
                 <div>
 
 

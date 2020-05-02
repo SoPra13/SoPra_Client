@@ -13,6 +13,8 @@ class GameState {
         this.playerList = null;
         this.botList = null;
         this.guessGiven = null;
+        this.botsClueGiven = null;
+        this.botsVoted = null;
 
 /*        this.wordList = null;
         this.status = null;

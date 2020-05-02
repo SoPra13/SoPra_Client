@@ -322,9 +322,9 @@ export class UnityGame extends React.Component {
             nameString += ';'+game.playerList[i].username;
         }
 
-        /* for (var i = 1; i<game.botList.length; i++) {
+         for (var i = 0; i<game.botList.length; i++) {
              nameString += ';'+game.botList[i].botname;
-         }*/
+         }
 
         console.log(nameString)
         console.log("Names Set Completed");
@@ -443,6 +443,13 @@ export class UnityGame extends React.Component {
                 votedString += '0'
             }
         }
+        for (var i = 0; i < game.botList.length; i++) {
+            if(this.state.game.botsVoted) {
+                votedString += '1'
+            }else {
+                votedString += '0'
+            }
+        }
         console.log(votedString)
         this.unityContent.send(
             "MockStats",
@@ -505,6 +512,14 @@ export class UnityGame extends React.Component {
 
         for (var i = 0; i<game.playerList.length; i++) {
             if(game.playerList[i].gaveClue == true){
+                clueGivenString += '1'
+            }else {
+                clueGivenString += '0'
+            }
+        }
+
+        for (var i = 0; i < game.botList.length; i++) {
+            if(this.state.game.botsClueGiven) {
                 clueGivenString += '1'
             }else {
                 clueGivenString += '0'
@@ -591,6 +606,7 @@ export class UnityGame extends React.Component {
     async nextRound(){
 
         try{
+
             console.log(this.state.game.playerList[this.state.game.guesser].token);
             console.log(localStorage.getItem('userToken'));
 
@@ -605,12 +621,14 @@ export class UnityGame extends React.Component {
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
 
+
+
                 this.unityContent.send(
                     "MockStats",
                     "ReactStartNextRound"
                 )
 
-
+            if(this.state.game.currentRound>12){return};
             this.setPlayerArray(this.state.game);
 
 
@@ -625,8 +643,10 @@ export class UnityGame extends React.Component {
     try{
         clearInterval(this.timerID);
         await new Promise(resolve => setTimeout(resolve, 1000));
-        await api.delete('/game/end?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken')+'&score='+ score);
+        await api.put('/game/end?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken')+'&score='+ score);
         localStorage.removeItem('gameToken');
+        console.log(localStorage.getItem('gameToken'));
+        this.props.history.push('/dashboard/waitingLobby');
 
     }catch(error){
         alert(`end Game error: \\n${handleError(error)}`);
@@ -680,6 +700,7 @@ export class UnityGame extends React.Component {
     }
 
     render() {
+        var height = window.innerHeight
         return (
             <UnityBody>
             <BaseContainer background="#404040">
@@ -744,7 +765,7 @@ export class UnityGame extends React.Component {
                 <div
                     style={{
                         position: "center",
-                        top: 0,
+                        top: (height+540)/2,
                         left: 0,
                         width: "1080px",
                         height: "600px"
