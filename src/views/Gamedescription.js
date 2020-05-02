@@ -14,9 +14,6 @@ const Container = styled.div`
   border: 1px solid #ffffff26;
 `;
 
-const JO = styled.img`
-height: 50%;
-`;
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -44,23 +41,6 @@ const TextContainer = styled.div`
   height: 300px;
   justify-content: center;
   overflow: auto;
-`;
-
-
-const UserName = styled.div`
-  font-weight: lighter;
-  margin-left: 5px;
-`;
-
-const Name = styled.div`
-  font-weight: bold;
-  color: #06c4ff;
-`;
-
-const Id = styled.div`
-  margin-left: auto;
-  margin-right: 10px;
-  font-weight: bold;
 `;
 
 /**

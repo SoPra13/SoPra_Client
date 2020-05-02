@@ -17,11 +17,6 @@ const UserName = styled.div`
   margin-left: 5px;
 `;
 
-const Name = styled.div`
-  font-weight: bold;
-  color: #5a5a5a;
-`;
-
 const Id = styled.div`
   margin-left: auto;
   margin-right: 10px;

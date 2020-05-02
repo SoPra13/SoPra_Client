@@ -6,6 +6,7 @@ import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
 import User from "../shared/models/User";
+import Header from "../../views/Header";
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -114,6 +115,7 @@ class EditProfile extends React.Component {
 
     render() {
         return (
+            <div>        <Header height={"80"} />
             <Container>
                 <h2>EditProfile</h2>
                 {!this.state.user ? (
@@ -158,6 +160,7 @@ class EditProfile extends React.Component {
                 )}
 
             </Container>
+            </div>
         )
 
     }

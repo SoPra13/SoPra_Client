@@ -5,6 +5,7 @@ import { api, handleError } from '../../helpers/api';
 import Lobby from "../shared/models/Lobby";
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import Header from "../../views/Header";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -136,6 +137,7 @@ class CustomLobby extends React.Component {
 
     render() {
         return (
+            <div>        <Header height={"80"} />
             <BaseContainer>
                 <FormContainer>
                     <Form>
@@ -195,6 +197,7 @@ class CustomLobby extends React.Component {
                     </Form>
                 </FormContainer>
             </BaseContainer>
+            </div>
         );
     }
 }

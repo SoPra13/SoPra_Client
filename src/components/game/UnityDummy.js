@@ -1,66 +1,11 @@
 //Unity Component in here
 import React from 'react';
 import styled from 'styled-components';
-import User from "../shared/models/User";
 import { BaseContainer } from '../../helpers/layout';
 import { withRouter } from 'react-router-dom';
-import { Button } from '../../views/design/Button';
+/*import { Button } from '../../views/design/Button';*/
 import Unity, { UnityContent } from "react-unity-webgl";
 import { api, handleError } from '../../helpers/api';
-
-const FormContainer = styled.div`
-  margin-top: 2em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 300px;
-  justify-content: center;
-`;
-
-//test
-
-const Form = styled.div`
-  display: block;
-  flex-direction: column;
-  justify-content: center;
-  width: 80%;
-  height: 200px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-radius: 5px;
-  background: none;
-  border-style: solid;
-  border-width: 2px;
-  border-color: white;
-`;
-
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
-  border: none;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-`;
-
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-`;
-
-const ButtonContainer = styled.div`
-  display: block;
-  justify-content: center;
-  margin-top: 20px;
-`;
 
 export class UnityDummy extends React.Component {
   async;
@@ -324,12 +269,12 @@ export class UnityDummy extends React.Component {
   render() {
     return (
         <BaseContainer>
-          <FormContainer>
-            <Form>
-              <Label><b>Unity React Control-Room</b></Label>
-              <ButtonContainer>
-                <Label> Force Connect Users: <br/> </Label>
-                <Button
+          {/*<FormContainer>*/}
+            {/*<Form>*/}
+            {/*  <Label><b>Unity React Control-Room</b></Label>*/}
+              {/*<ButtonContainer>*/}
+{/*                <Label> Force Connect Users: <br/> </Label>*/}
+                {/*<Button
                     width="15%"
                     onClick={() => {
                       this.setState({totalPlayers: this.state.totalPlayers +1});
@@ -380,7 +325,7 @@ export class UnityDummy extends React.Component {
                 </Button>
               </ButtonContainer>
             </Form>
-          </FormContainer>
+          </FormContainer>*/}
 
           <div
               style={{
@@ -393,7 +338,7 @@ export class UnityDummy extends React.Component {
           >
             <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
           </div>
-          <br/>
+          {/*<br/>*/}
         </BaseContainer>
     );
   }

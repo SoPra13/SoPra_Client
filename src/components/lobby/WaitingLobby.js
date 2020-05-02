@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import Lobby from "../shared/models/Lobby";
 import BotPlayer from "../../views/BotPlayer";
 import Chat from '../chat/Chat';
+import Header from "../../views/Header";
 
 
 const Container = styled(BaseContainer)`
@@ -75,7 +76,8 @@ class WaitingRoom extends React.Component {
             numberOfBots: 0,
             adminToken: null,
             joinToken: null,
-            isToggleReady: false
+            isToggleReady: false,
+            lobbyname: null
         };
     }
 
@@ -199,7 +201,8 @@ class WaitingRoom extends React.Component {
                 playerList: response.data.playerList,
                 botList: response.data.botList,
                 adminToken: response.data.adminToken,
-                joinToken: response.data.joinToken
+                joinToken: response.data.joinToken,
+                lobbyname: response.data.name
             });
 
             // See here to get more data.
@@ -298,10 +301,13 @@ class WaitingRoom extends React.Component {
 
     render() {
         return (
+    <div>
+        <Header height={"80"} />
             <BaseContainer>
             <Container>
 
-                <h2>Players & Bots of Lobby</h2>
+                <h2>Players & Bots of Lobby {this.state.lobbyname}</h2>
+                <h2> {this.state.lobbyToken}</h2>
                 <div>
 
 
@@ -465,6 +471,7 @@ class WaitingRoom extends React.Component {
                     </div>
             </Container>
             </BaseContainer>
+    </div>
         );
     }
 }
