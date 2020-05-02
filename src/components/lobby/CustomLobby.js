@@ -99,11 +99,12 @@ class CustomLobby extends React.Component {
             // Get the returned user and update a new object.
             const lobby = new Lobby(response.data);
 
+            localStorage.setItem('lobbyToken', lobby.lobbyToken);
             console.log(lobby);
             console.log(lobby.lobbyToken);
 
             // Store the token into the local storage.
-            localStorage.setItem('lobbyToken', lobby.lobbyToken);
+
 
 
             this.props.history.push(`/dashboard/waitingLobby`);

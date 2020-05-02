@@ -198,6 +198,10 @@ export class UnityGame extends React.Component {
             //score is int 1= win 0=lose
             //backendScore
         });
+        this.unityContent.on("GameHasEnded", (score) =>{
+            this.endGame(score);
+        });
+
 
     }
 
@@ -577,29 +581,23 @@ export class UnityGame extends React.Component {
         try{
             console.log(this.state.game.playerList[this.state.game.guesser].token);
             console.log(localStorage.getItem('userToken'));
+
             if(this.state.game.playerList[this.state.game.guesser].token==localStorage.getItem('userToken') && this.state.round == this.state.game.currentRound) {
                 console.log("RESET CALLED")
                 const response = await api.put('/game/round?gameToken=' + localStorage.getItem('gameToken'));
                 this.state.game = response.data;
             }
-            const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') + '&gameToken=' + localStorage.getItem('gameToken'));
-            var index = this.getIndex(this.state.game,localStorage.getItem('userToken'));
-            while(this.state.game.playerList[index-1].unityReady === false){
+
+            while(this.state.round == this.state.game.currentRound){
+
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
-             var ready = 0;
-            for (var i = 0; i<this.state.game.playerList.length; i++) {
-                if (this.state.game.playerList[i].unityReady == true) {
-                    ready += 1;
-                }
-            }
 
-            if(this.state.game.currentRound!= this.state.round){
                 this.unityContent.send(
                     "MockStats",
                     "ReactStartNextRound"
                 )
-            }
+
 
             this.setPlayerArray(this.state.game);
 
@@ -607,6 +605,20 @@ export class UnityGame extends React.Component {
         }catch(error){
             alert(`guessCorrect error: \\n${handleError(error)}`);
         }
+
+    }
+
+    async endGame(score){
+
+    try{
+        clearInterval(this.timerID);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await api.delete('/game/end?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken')+'&score='+ score);
+        localStorage.removeItem('gameToken');
+
+    }catch(error){
+        alert(`end Game error: \\n${handleError(error)}`);
+    }
 
     }
 
