@@ -32,6 +32,8 @@ public class GameBoard : MonoBehaviour
     public GameObject thanhPilotObject;
     public GameObject scoreBoardContainer;
     public GameObject miniCardObject;
+    public GameObject skipButtonObject;
+    public GameObject skipTextObject;
 
     public Positions positions;
 
@@ -70,6 +72,8 @@ public class GameBoard : MonoBehaviour
     private GameObject rulesBox;
     private GameObject successParticles;
     private GameObject scoreBoard;
+    private GameObject skipButton;
+    private GameObject skipText;
 
     private bool advanceToState3 = false;
     private bool waitForServerTopicResponse = false;
@@ -86,7 +90,7 @@ public class GameBoard : MonoBehaviour
     void Start()
     {
 
-        gameMusic.volume = 0.0f;  //JUST FOR TESTING, else set = 0.5f
+        gameMusic.volume = 0.5f;
         SetUpInitialBoard();
         StartCoroutine(FadeInScreen());
         StartCoroutine(GameStarts());
@@ -148,15 +152,6 @@ public class GameBoard : MonoBehaviour
         timer.name = "Timer";
         timer.transform.SetParent(GameObject.Find("Canvas").transform, false);
         timer.SetActive(false);
-        /*
-        for (int i = 0; i < mockStats.GetTotalNumberOfPlayers(); i++)
-        {
-            if (mockStats.GetName(i) == "thanh" || mockStats.GetName(i) == "Thanh")
-            {
-                butterflyBGM.Play();
-                StartCoroutine(EasterEgg());
-            }
-        }*/
 
         StartCoroutine(SetUpScoreBoard());
     }
@@ -192,12 +187,16 @@ public class GameBoard : MonoBehaviour
     public void TriggerMiniCard(bool success)
     {
         GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = mockStats.GetScore().ToString();
-        if (round.GetRound() == 13)
+        if (round.GetRound() == 12)
         {
             GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("success", success);
             GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("transition", true);
             GameObject.Find("ScoreBoard").GetComponent<Animator>().SetBool("success", success);
             GameObject.Find("ScoreBoard").GetComponent<Animator>().SetBool("transition", true);
+
+        }
+        else if (round.GetRound() > 12)
+        {
 
         }
         else
@@ -282,6 +281,10 @@ public class GameBoard : MonoBehaviour
         misteryWordContainer.name = "MisteryWordInput";
         misteryWordContainer.transform.SetParent(GameObject.Find("Interaction").transform, false);
 
+        skipButton = Instantiate(skipButtonObject, new Vector3(-210, -87, 0), Quaternion.identity) as GameObject;
+        skipButton.name = "SkipButton";
+        skipButton.transform.SetParent(GameObject.Find("Interaction").transform, false);
+
         GameObject.Find("TopicTextReminder").GetComponent<TextMeshProUGUI>().text = "Guess the correct Mistery Word!";
         GameObject.Find("topicStaleText").GetComponent<TextMeshProUGUI>().text = "";
         GameObject.Find("Placeholder").GetComponent<TextMeshProUGUI>().text = "Enter your guess here...";
@@ -320,6 +323,7 @@ public class GameBoard : MonoBehaviour
             }
             if (sum == mockStats.GetTotalNumberOfPlayers() - 1)
             {
+                StartCoroutine(WaitShortly());
                 round.SetRoundPhase(6);
                 Phase5HasLoaded = false;
             }
@@ -516,7 +520,7 @@ public class GameBoard : MonoBehaviour
             drawCard.Play();
             yield return new WaitForSeconds(0.5f);
             GameObject.Find("CardsLeftText").GetComponent<TextMeshProUGUI>().text = "< " + (12 - roundNr).ToString() + " Left >";
-            GameObject.Find("CardsLeftText").transform.localPosition = positions.DecreaseCardLeftTextPosition();
+            GameObject.Find("CardsLeftText").transform.localPosition = positions.DecreaseCardLeftTextPositionLoss();
             Destroy(GameObject.Find("Card" + (12 - roundNr).ToString()));
             Destroy(GameObject.Find("Card" + (12 - roundNr + 1).ToString()));
         }
@@ -588,7 +592,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator RemoveTopicCard()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         GameObject.Find("TopicCard").GetComponent<Animator>().SetBool("disappear", true);
         for (int j = 0; j < 5; j++)
         {
@@ -906,6 +910,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator PlayersHaveSubmittedTheirClues(bool activePlayer)
     {
+        yield return new WaitForSeconds(1f);
         if (activePlayer) //the Active Player is calling this function
         {
             for (int i = 1; i <= mockStats.GetTotalNumberOfPlayers(); i++)
@@ -1164,22 +1169,36 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator NewRoundStartsAnimation()
     {
-        GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
-        blackScreen.name = "BlackScreen";
-        blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        if(round.GetRound() >= 12)
+        {
+
+        }
+        else
+        {
+            GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
+            blackScreen.name = "BlackScreen";
+            blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
+            yield return new WaitForSeconds(1.0f);
+            GameObject topicBar = Instantiate(topicBarObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            topicBar.name = "TopicBar";
+            topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
+            barAppearsSFX.Play();
+            GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "The next round is about to start...";
+            GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...prepare yourselfs!";
+            yield return new WaitForSeconds(1.0f);
+            barCheckSFX.Play();
+            yield return new WaitForSeconds(3.2f);
+            Destroy(GameObject.Find("TopicBar"));
+            Destroy(GameObject.Find("BlackScreen"));
+            round.SetRoundPhase(1);
+        }
+    }
+
+
+    public IEnumerator WaitShortly()
+    {
         yield return new WaitForSeconds(1.0f);
-        GameObject topicBar = Instantiate(topicBarObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        topicBar.name = "TopicBar";
-        topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        barAppearsSFX.Play();
-        GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "The next round is about to start...";
-        GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...prepare yourselfs!";
-        yield return new WaitForSeconds(1.0f);
-        barCheckSFX.Play();
-        yield return new WaitForSeconds(3.2f);
-        Destroy(GameObject.Find("TopicBar"));
-        Destroy(GameObject.Find("BlackScreen"));
-        round.SetRoundPhase(1);
+        round.ActivateWaiter();
     }
 
 }

@@ -49,5 +49,8 @@
         },
     TellReactToEvaluateRound: function() {
           ReactUnityWebGL.TellReactToEvaluateRound();
+        },
+    GameHasEnded: function(score) {
+          ReactUnityWebGL.GameHasEnded(score);
         }
 });

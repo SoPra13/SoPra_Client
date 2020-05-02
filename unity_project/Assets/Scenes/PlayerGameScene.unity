@@ -195,6 +195,8 @@ MonoBehaviour:
   thanhPilotObject: {fileID: 0}
   scoreBoardContainer: {fileID: 0}
   miniCardObject: {fileID: 0}
+  skipButtonObject: {fileID: 0}
+  skipTextObject: {fileID: 0}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
   drawCard: {fileID: 1207197612}
@@ -426,7 +428,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &286966778
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1006,7 +1008,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &459562942
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1586,7 +1588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &780798484
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1781,7 +1783,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b5cc7b0c6acd4bf4388dc4d5677f9e35, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 779421a9e21587b499816398bf18e6d3, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -2464,7 +2466,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &968680363
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2807,7 +2809,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1035554229
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3077,7 +3079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1108370016
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3313,7 +3315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1170022786
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4077,6 +4079,10 @@ MonoBehaviour:
     type: 3}
   miniCardObject: {fileID: 8447439183324773391, guid: 0a0225ee4088c9c44852ace9a46b4337,
     type: 3}
+  skipButtonObject: {fileID: 7790685274362195318, guid: d97b0df974ff8584f83e40e4fde5488b,
+    type: 3}
+  skipTextObject: {fileID: 7844843096483160408, guid: 623cdc284cf27af4fbd045f7bbe63486,
+    type: 3}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
   drawCard: {fileID: 1207197612}
@@ -4442,7 +4448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1651907519
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4585,7 +4591,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1726216948
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5165,7 +5171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1816823865
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5926,7 +5932,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f2c8a249fde53624d97b9709d4ea2c68, type: 3}
+  m_audioClip: {fileID: 8300000, guid: d831a831edc83be48aa2e480e05970c9, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
