@@ -314,10 +314,6 @@ class Dashboard extends React.Component {
 
         const localToken = localStorage.getItem("userToken");
 
-
-
-
-
         const tabComp =(
             <Tabs defaultIndex={0} onSelect={index => console.log(index)}>
                 <TabList>

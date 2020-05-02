@@ -95,7 +95,7 @@ class CustomLobby extends React.Component {
                 lobbyType: this.state.lobbyType
             });
             const response = await api.post('/lobby', requestBody);
-
+            await new Promise(resolve => setTimeout(resolve, 1000));
             // Get the returned user and update a new object.
             const lobby = new Lobby(response.data);
 

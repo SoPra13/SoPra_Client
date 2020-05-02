@@ -75,24 +75,27 @@ class LoginLobby extends React.Component {
         this.state = {
             lobbyname: null,
             userToken: localStorage.getItem(`userToken`),
-            lobbyToken: null
+            lobbyToken: null,
+            joinToken: null
         };
     }
 
     async login() {
         try {
-            const response = await api.put('/lobby?lobbyToken='+ this.state.lobbyToken +
+            const response = await api.put('/lobby?joinToken='+ this.state.joinToken +
                 `&userToken=` + localStorage.getItem('userToken'));
 
             // Get the returned user and update a new object.
             console.log(response.data);
 
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             // Store the token into the local storage.
-            localStorage.setItem('lobbyToken', this.state.lobbyToken);
+            localStorage.setItem('lobbyToken', response.data.lobbyToken);
 
             this.props.history.push('/dashboard/waitingLobby');
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong during the lobbyJoin: \n${handleError(error)}`);
         }
     }
 
@@ -122,14 +125,14 @@ class LoginLobby extends React.Component {
                         <InputField
                             placeholder="Enter here your lobby token"
                             onChange={e => {
-                                this.handleInputChange('lobbyToken', e.target.value);
+                                this.handleInputChange('joinToken', e.target.value);
                             }}
                         />
                         <ButtonContainer>
 
                             <central>
                                 <Button
-                                    disabled={!this.state.lobbyToken}
+                                    disabled={!this.state.joinToken}
                                     width="30%"
                                     onClick={() => {
                                         this.login();

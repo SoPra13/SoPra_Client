@@ -534,6 +534,8 @@ export class UnityGame extends React.Component {
             clearInterval(this.timerID);
             await new Promise(resolve => setTimeout(resolve, 1000));
             const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
+            localStorage.removeItem('lobbyToken');
+            localStorage.removeItem('gameToken');
             this.props.history.push('/dashboard')
         }catch(error) {
             alert(`leave error: \\n${handleError(error)}`);

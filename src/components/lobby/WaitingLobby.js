@@ -74,6 +74,7 @@ class WaitingRoom extends React.Component {
             numberOfPlayers: 7,
             numberOfBots: 0,
             adminToken: null,
+            joinToken: null,
             isToggleReady: false
         };
     }
@@ -181,7 +182,7 @@ class WaitingRoom extends React.Component {
      */
 
     getLobbyToken(){
-        alert(this.state.lobbyToken);
+        alert(this.state.joinToken);
     }
 
     /**
@@ -197,13 +198,15 @@ class WaitingRoom extends React.Component {
             this.setState({
                 playerList: response.data.playerList,
                 botList: response.data.botList,
-                adminToken: response.data.adminToken
+                adminToken: response.data.adminToken,
+                joinToken: response.data.joinToken
             });
 
             // See here to get more data.
             console.log(response.data.playerList);
         } catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+            alert(`Something went wrong while fetching the lobby: \n${handleError(error)}`);
+            this.props.history.push('/dashboard');
         }
     }
 
