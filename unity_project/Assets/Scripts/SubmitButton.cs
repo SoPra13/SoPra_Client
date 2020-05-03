@@ -82,14 +82,14 @@ public class SubmitButton : MonoBehaviour
     IEnumerator SetMisteryWordBoxInactive()
     {
         yield return new WaitForSeconds(2f);
-        GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", false);
         GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", false);
         Destroy(GameObject.Find("MisteryWordInput"));
-        Destroy(GameObject.Find("CluesBGTemp"));
+
 
         if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition()) //this happens when the active player submits his guess
         {
-
+            GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", false);
+            Destroy(GameObject.Find("CluesBGTemp"));
         }
         else
         {

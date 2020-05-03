@@ -1008,7 +1008,7 @@ public class GameBoard : MonoBehaviour
     public IEnumerator PlayersEnterMisteryWord()
     {
         ForceRemoveInfoBox();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         //HardDeleteInfoBox();
         StartCoroutine(DisplayInfoText("Please entere a clue that best describes the current topic (Only a single word)", true, 2));
     }
