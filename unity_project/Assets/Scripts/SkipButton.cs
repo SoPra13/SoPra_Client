@@ -7,18 +7,30 @@ public class SkipButton : MonoBehaviour
     public GameObject skipText;
 
     private bool isOver = false;
+    private MockStats mockStats;
+
+    public void Start()
+    {
+        mockStats = GameObject.Find("MockStats").GetComponent<MockStats>();
+    }
 
     public void ClickSkip()
     {
-
+        GameObject.Find("DenySFX").GetComponent<AudioSource>().Play();
+        GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", true);
+        GameObject.Find("SkipButton").GetComponent<Animator>().SetBool("disappear", true);
+        Destroy(GameObject.Find("SkipText"));
+        GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", true);
+        Destroy(GameObject.Find("Placeholder"));
+        mockStats.NotifyReactToEvaluateTheRound();
+        StartCoroutine(SetMisteryWordBoxInactive());
     }
 
     void OnMouseOver()
     {
         if (!isOver)
         {
-            Debug.Log("Gib");
-            GameObject sText = Instantiate(skipText, new Vector3(-12f, 260f, 0), Quaternion.identity) as GameObject;
+            GameObject sText = Instantiate(skipText, new Vector3(-100f, -84f, 0), Quaternion.identity) as GameObject;
             sText.name = "SkipText";
             sText.transform.SetParent(GameObject.Find("Interaction").transform, false);
             isOver = true;
@@ -31,4 +43,15 @@ public class SkipButton : MonoBehaviour
         isOver = false;
     }
 
+
+    IEnumerator SetMisteryWordBoxInactive()
+    {
+        yield return new WaitForSeconds(2f);
+        GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", false);
+        GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", false);
+        GameObject.Find("SkipButton").GetComponent<Animator>().SetBool("disappear", false);
+        Destroy(GameObject.Find("MisteryWordInput"));
+        Destroy(GameObject.Find("CluesBGTemp"));
+        Destroy(GameObject.Find("SkipButton"));
+    }
 }

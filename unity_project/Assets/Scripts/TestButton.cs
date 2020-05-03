@@ -36,8 +36,8 @@ public class TestButton : MonoBehaviour
     public void TriggerTopicChoiceP2P5P6()
     {
         mockStats.PlayerHasChosenTopic(1);
-        mockStats.PlayerHasChosenTopic(4);
-        mockStats.PlayerHasChosenTopic(5);
+        mockStats.PlayerHasChosenTopic(2);
+        mockStats.PlayerHasChosenTopic(3);
     }
 
     public void SetTopicText()
@@ -79,33 +79,33 @@ public class TestButton : MonoBehaviour
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("4444");
-            round.SetRound(roundTesting + 2);
+            round.SetRound(2);
 
         }
         else if (roundTesting == 1)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("1444");
-            round.SetRound(roundTesting + 2);
+            round.SetRound(4);
 
         }
         if (roundTesting == 2)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("2444");
-            round.SetRound(roundTesting + 2);
+            round.SetRound(6);
         }
         else if (roundTesting == 3)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("3444");
-            round.SetRound(roundTesting + 2);
+            round.SetRound(8);
         }
         else if (roundTesting == 4)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("4444");
-            round.SetRound(roundTesting + 2);
+            round.SetRound(10);
         }
 
         mockStats.ReactSetPlayerHasSubmittedClue("0000000");
@@ -113,6 +113,7 @@ public class TestButton : MonoBehaviour
         mockStats.ReactSetTopicVoteList("00000");
         mockStats.ReactSetActivePlayerMadeGuess(0);
         mockStats.ReactStartNextRound();
+        roundTesting += 1;
     }
 }
 

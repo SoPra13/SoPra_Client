@@ -34,6 +34,7 @@ public class GameBoard : MonoBehaviour
     public GameObject miniCardObject;
     public GameObject skipButtonObject;
     public GameObject skipTextObject;
+    public GameObject cluesBG;
 
     public Positions positions;
 
@@ -83,6 +84,7 @@ public class GameBoard : MonoBehaviour
     private bool keepInfoTextIdle = false;
     private bool Phase5HasLoaded = false;
     private bool Phase16HasLoaded = false;
+    private bool skipOutcomeText = false;
     //private bool phase6TransitionOngoing = false;
 
 
@@ -211,13 +213,22 @@ public class GameBoard : MonoBehaviour
             }
             else
             {
-                Debug.Log("MiniCard" + (round.GetRound() + 1).ToString());
-                GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("success", success);
-                GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("transition", true);
-                GameObject.Find("MiniCard" + (round.GetRound() + 2).ToString()).GetComponent<Animator>().SetBool("success", success);
-                GameObject.Find("MiniCard" + (round.GetRound() + 2).ToString()).GetComponent<Animator>().SetBool("transition", true);
-                GameObject.Find("ScoreBoard").GetComponent<Animator>().SetBool("success", success);
-                GameObject.Find("ScoreBoard").GetComponent<Animator>().SetBool("transition", true);
+                if (skipOutcomeText)
+                {
+                    GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("success", success);
+                    GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("transition", true);
+                    GameObject.Find("ScoreBoard").GetComponent<Animator>().SetBool("success", success);
+                    GameObject.Find("ScoreBoard").GetComponent<Animator>().SetBool("transition", true);
+                }
+                else
+                {
+                    GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("success", success);
+                    GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("transition", true);
+                    GameObject.Find("MiniCard" + (round.GetRound() + 2).ToString()).GetComponent<Animator>().SetBool("success", success);
+                    GameObject.Find("MiniCard" + (round.GetRound() + 2).ToString()).GetComponent<Animator>().SetBool("transition", true);
+                    GameObject.Find("ScoreBoard").GetComponent<Animator>().SetBool("success", success);
+                    GameObject.Find("ScoreBoard").GetComponent<Animator>().SetBool("transition", true);
+                }
             }
         }
         StartCoroutine(ResetScoreBoardAni());
@@ -262,6 +273,16 @@ public class GameBoard : MonoBehaviour
     }
 
 
+    public void ActivateskipOutcome()
+    {
+        skipOutcomeText = true;
+    }
+
+    public void DeativateskipOutcome()
+    {
+        skipOutcomeText = false;
+    }
+
     public void DisplayMisteryInputBox()
     {
         rulesBox = Instantiate(ruleBoxContainer, new Vector3(0, -220f, 0), Quaternion.identity) as GameObject;
@@ -286,7 +307,8 @@ public class GameBoard : MonoBehaviour
         skipButton.transform.SetParent(GameObject.Find("Interaction").transform, false);
 
         GameObject.Find("TopicTextReminder").GetComponent<TextMeshProUGUI>().text = "Guess the correct Mistery Word!";
-        GameObject.Find("topicStaleText").GetComponent<TextMeshProUGUI>().text = "";
+        GameObject.Find("TopicTextReminder").GetComponent<TextMeshProUGUI>().fontSize = 28;
+        GameObject.Find("topicStaleText").GetComponent<TextMeshProUGUI>().text = "Guess";
         GameObject.Find("Placeholder").GetComponent<TextMeshProUGUI>().text = "Enter your guess here...";
     }
 
@@ -437,7 +459,7 @@ public class GameBoard : MonoBehaviour
         barAppearsSFX.Play();
         if (success)
         {
-            if(mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
                 GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your guess was...";
                 GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...correct!";
@@ -449,23 +471,39 @@ public class GameBoard : MonoBehaviour
             }
 
         }
-        else
+        else if (!success)
         {
-            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            if (!skipOutcomeText)
             {
-                GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your guess was...";
-                GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...incorrect!";
+                if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+                {
+                    GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your guess was...";
+                    GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...incorrect!";
+                }
+                else
+                {
+                    GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has guessed...";
+                    GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...wrong! Better luck next time...";
+                }
             }
             else
             {
-                GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has guessed...";
-                GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...wrong! Better luck next time...";
-            }
+                if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+                {
+                    GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "You decided to...";
+                    GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...skip this turn!";
+                }
+                else
+                {
+                    GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has decided...";
+                    GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...to skip this turn...";
+                }
+            }                    
         }
-
         yield return new WaitForSeconds(1.0f);
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
+        DeativateskipOutcome();
         Destroy(GameObject.Find("TopicBar"));
         Destroy(GameObject.Find("BlackScreen"));
     }
@@ -518,9 +556,9 @@ public class GameBoard : MonoBehaviour
 
             GameObject.Find("Card" + (12 - roundNr).ToString()).GetComponent<Animator>().SetBool("drawCard", true);
             drawCard.Play();
-            yield return new WaitForSeconds(0.5f);
             GameObject.Find("CardsLeftText").GetComponent<TextMeshProUGUI>().text = "< " + (12 - roundNr).ToString() + " Left >";
             GameObject.Find("CardsLeftText").transform.localPosition = positions.DecreaseCardLeftTextPositionLoss();
+            yield return new WaitForSeconds(0.5f);
             Destroy(GameObject.Find("Card" + (12 - roundNr).ToString()));
             Destroy(GameObject.Find("Card" + (12 - roundNr + 1).ToString()));
         }
@@ -528,8 +566,8 @@ public class GameBoard : MonoBehaviour
         {
             GameObject.Find("Card" + (12 - roundNr).ToString()).GetComponent<Animator>().SetBool("drawCard", true);
             drawCard.Play();
-            yield return new WaitForSeconds(0.5f);
             GameObject.Find("CardsLeftText").GetComponent<TextMeshProUGUI>().text = "< " + (12 - roundNr).ToString() + " Left >";
+            yield return new WaitForSeconds(0.5f);
             GameObject.Find("CardsLeftText").transform.localPosition = positions.DecreaseCardLeftTextPosition();
             Destroy(GameObject.Find("Card" + (12 - roundNr).ToString()));
         }
@@ -592,7 +630,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator RemoveTopicCard()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         GameObject.Find("TopicCard").GetComponent<Animator>().SetBool("disappear", true);
         for (int j = 0; j < 5; j++)
         {
@@ -664,7 +702,6 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator AnimateUnflippBox(int activePlayer)
     {
-        Debug.Log("activeplayer: " + activePlayer);
         Animator dustAnimator;
 
         spinBubble.Play();
@@ -723,7 +760,7 @@ public class GameBoard : MonoBehaviour
                 GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", true);
             }
         }
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(1.5f);
         StartCoroutine(DisplayInfoText("As you are the active player, you need to wait for the others to choose a Topic for this round!",true,2));
         Phase5HasLoaded = true;
         yield return new WaitForSeconds(0.1f);
@@ -776,6 +813,7 @@ public class GameBoard : MonoBehaviour
         }
         ForceRemoveInfoBox();
         yield return new WaitForSeconds(1.5f);
+        //HardDeleteInfoBox();
         StartCoroutine(DisplayInfoText("Wait for the rest of your team to submit their clues", true, 2));
         Phase5HasLoaded = true;
         yield return new WaitForSeconds(1f);
@@ -835,7 +873,7 @@ public class GameBoard : MonoBehaviour
         }
         else
         {
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(4.9f);
         }
 
         infoBarAnimator.SetBool("displayInfoBar", false);
@@ -855,33 +893,38 @@ public class GameBoard : MonoBehaviour
             GameObject.Find("loadingTag").GetComponent<Animator>().SetBool("disappear", true);
             yield return new WaitForSeconds(1f);
             Destroy(GameObject.Find("loadingTag"));
-            /*
-            try {
-                GameObject.Find("loadingTag").GetComponent<Animator>().SetBool("disappear", true);
-            }
-            catch (EntryPointNotFoundException e)
-            {
-                Debug.Log("Tag Not Found" + e);
-            }
-
-            yield return new WaitForSeconds(1f);
-
-            try
-            {
-                Destroy(GameObject.Find("loadingTag"));
-            }
-            catch (EntryPointNotFoundException e)
-            {
-                Debug.Log("Tag Not Found" + e);
-            }*/
-
-            
-            
-
-
         }
         Destroy(GameObject.Find("Infoboard"));
         Destroy(GameObject.Find("InfoText"));
+        if (mode == 1)
+        {
+            Destroy(GameObject.Find("infoTag"));
+        }
+        else if (mode == 2)
+        {
+            Destroy(GameObject.Find("loadingTag"));
+        }
+    }
+
+
+    public void HardDeleteInfoBox()
+    {
+        if (GameObject.Find("Infoboard") != null)
+        {
+            Destroy(GameObject.Find("Infoboard"));
+        }
+        if (GameObject.Find("InfoText") != null)
+        {
+            Destroy(GameObject.Find("InfoText"));
+        }
+        if (GameObject.Find("infoTag") != null)
+        {
+            Destroy(GameObject.Find("infoTag"));
+        }
+        if (GameObject.Find("loadingTag") != null)
+        {
+            Destroy(GameObject.Find("loadingTag"));
+        }
     }
 
     //This is just an Animaton notation for the Active Player once the players have chosen their topic
@@ -903,6 +946,7 @@ public class GameBoard : MonoBehaviour
         ForceRemoveInfoBox();
         StartCoroutine(NotifyPlayerThatTopicHasBeenChosen());
         yield return new WaitForSeconds(5f);
+        //HardDeleteInfoBox();
         StartCoroutine(DisplayInfoText("The players have chosen their Topic for this Round. They will now give you clues. Hold on...", true, 2));
         StartCoroutine(ActivePlayerWaitsForClues());
         yield return new WaitForSeconds(2.5f);       
@@ -929,6 +973,7 @@ public class GameBoard : MonoBehaviour
             ForceRemoveInfoBox();
             StartCoroutine(NotifyPlayerhaveSubmittedTheirClue());
             yield return new WaitForSeconds(5f);
+            //HardDeleteInfoBox();
             StartCoroutine(DisplayInfoText("Now it's your turn to guess the correct Mistery Word...", true, 2));
             yield return new WaitForSeconds(2f);
             round.SetRoundPhase(9);
@@ -951,6 +996,7 @@ public class GameBoard : MonoBehaviour
             ForceRemoveInfoBox();
             StartCoroutine(NotifyPlayerhaveSubmittedTheirClue());
             yield return new WaitForSeconds(5f);
+            //HardDeleteInfoBox();
             StartCoroutine(DisplayInfoText("The active player is now guessing...wait for him to submit his guess", true, 2));
             GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("wake", true);
             GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("thinking", true);
@@ -961,9 +1007,9 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator PlayersEnterMisteryWord()
     {
-        Debug.Log("Trigger");
         ForceRemoveInfoBox();
         yield return new WaitForSeconds(1f);
+        //HardDeleteInfoBox();
         StartCoroutine(DisplayInfoText("Please entere a clue that best describes the current topic (Only a single word)", true, 2));
     }
 
@@ -978,19 +1024,23 @@ public class GameBoard : MonoBehaviour
         GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("thinking", false);
         GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("wake", false);
         ForceRemoveInfoBox();
+        //HardDeleteInfoBox();
     }
 
 
     //Display the clues of the other players
     public IEnumerator DisplayCluesFromPlayers()
     {
+        GameObject cluesBGTemp = Instantiate(cluesBG, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        cluesBGTemp.name = "CluesBGTemp";
+        cluesBGTemp.transform.SetParent(GameObject.Find("Canvas").transform, false);
         int count = 0;
         int j = 0;
         for (int i = 0; i <= mockStats.GetTotalNumberOfPlayers()-1; i++)
         {
             if(i == mockStats.GetActivePlayer()-1)
             {
-                //j -= 1;
+                j -= 1;
             }
             else
             {
@@ -1054,6 +1104,10 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
                     GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
                 }
+                else
+                {
+
+                }
                 j += 1;
                 count += 1;
                 yield return new WaitForSeconds(0.25f);
@@ -1110,6 +1164,7 @@ public class GameBoard : MonoBehaviour
         }
         ForceRemoveInfoBox();
         yield return new WaitForSeconds(2f);
+        //HardDeleteInfoBox();
         round.SetRoundPhase(23);
     }
 

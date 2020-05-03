@@ -197,6 +197,7 @@ MonoBehaviour:
   miniCardObject: {fileID: 0}
   skipButtonObject: {fileID: 0}
   skipTextObject: {fileID: 0}
+  cluesBG: {fileID: 0}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
   drawCard: {fileID: 1207197612}
@@ -428,7 +429,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &286966778
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1008,7 +1009,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &459562942
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1588,7 +1589,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &780798484
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2466,7 +2467,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &968680363
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2809,7 +2810,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1035554229
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3079,7 +3080,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1108370016
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3315,7 +3316,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1170022786
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3450,6 +3451,7 @@ GameObject:
   - component: {fileID: 1193818366}
   - component: {fileID: 1193818365}
   - component: {fileID: 1193818364}
+  - component: {fileID: 1193818367}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3539,6 +3541,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1193818367
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193818363}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9241d9bab498f694ea6efd8ef5485876, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1207197611
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4083,6 +4104,7 @@ MonoBehaviour:
     type: 3}
   skipTextObject: {fileID: 7844843096483160408, guid: 623cdc284cf27af4fbd045f7bbe63486,
     type: 3}
+  cluesBG: {fileID: 8305364509126771671, guid: cf625e79f26872d40ad7a095eceec438, type: 3}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
   drawCard: {fileID: 1207197612}
@@ -4448,7 +4470,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1651907519
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4591,7 +4613,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1726216948
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5171,7 +5193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1816823865
 RectTransform:
   m_ObjectHideFlags: 0
