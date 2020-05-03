@@ -1114,9 +1114,9 @@ public class GameBoard : MonoBehaviour
                 {
 
                 }
+                count += 1;
             }
             j += 1;
-            count += 1;
             yield return new WaitForSeconds(0.25f);
         }
         yield return new WaitForSeconds(0.1f);
