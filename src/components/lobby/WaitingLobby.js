@@ -458,7 +458,7 @@ class WaitingRoom extends React.Component {
 
 
                     <Button1
-                        /*disabled = {this.state.playerList.length < 3}*/
+                        disabled = {this.state.playerList === null || (this.state.playerList.length < 3 && this.state.playerList.length !== null)}
                         onClick={() => {
                             this.enterGame();
                         }}
