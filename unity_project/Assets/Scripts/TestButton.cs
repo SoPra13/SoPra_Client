@@ -36,8 +36,8 @@ public class TestButton : MonoBehaviour
     public void TriggerTopicChoiceP2P5P6()
     {
         mockStats.PlayerHasChosenTopic(1);
-        mockStats.PlayerHasChosenTopic(2);
-        mockStats.PlayerHasChosenTopic(3);
+        mockStats.PlayerHasChosenTopic(4);
+        mockStats.PlayerHasChosenTopic(5);
     }
 
     public void SetTopicText()
