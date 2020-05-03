@@ -35,6 +35,7 @@ public class SubmitButton : MonoBehaviour
             if (Regex.IsMatch(misteryWord, @"^[a-zA-Z]+$"))
             {         
                 GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", true);
+                GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", true);
                 StartCoroutine(SetMisteryWordBoxInactive());
                 GameObject.Find("ButtonSFX").GetComponent<AudioSource>().Play();
                 try { SendGuessToReact(misteryWord); }
@@ -43,6 +44,7 @@ public class SubmitButton : MonoBehaviour
                     Debug.Log("Unity wants to send the guess but failed " + e);
                 }
                 mockStats.NotifyReactToEvaluateTheRound(); //tell react to check if the round was won or lost
+                Destroy(GameObject.Find("SkipButton"));
             }
             else
             {
@@ -80,8 +82,10 @@ public class SubmitButton : MonoBehaviour
     IEnumerator SetMisteryWordBoxInactive()
     {
         yield return new WaitForSeconds(2f);
+        GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", false);
         GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", false);
         Destroy(GameObject.Find("MisteryWordInput"));
+        Destroy(GameObject.Find("CluesBGTemp"));
 
         if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition()) //this happens when the active player submits his guess
         {
@@ -93,7 +97,5 @@ public class SubmitButton : MonoBehaviour
             Destroy(GameObject.Find("Rules"));
             GameObject.Find("Rounds").GetComponent<Rounds>().SetRoundPhase(15);
         }
-        
-
     }
 }

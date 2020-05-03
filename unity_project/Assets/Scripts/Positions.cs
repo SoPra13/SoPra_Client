@@ -58,7 +58,7 @@ public class Positions : MonoBehaviour
     public Vector3 DecreaseCardLeftTextPosition()
     {
         //cardLeftTextX += 3;
-        cardLeftTextY -= 4;
+        cardLeftTextY -= 5;
         cardTextPosition = new Vector3(cardLeftTextX, cardLeftTextY, 0);
         return cardTextPosition;
     }
@@ -67,7 +67,7 @@ public class Positions : MonoBehaviour
     public Vector3 DecreaseCardLeftTextPositionLoss()
     {
         //cardLeftTextX += 6;
-        cardLeftTextY -= 8;
+        cardLeftTextY -= 10;
         cardTextPosition = new Vector3(cardLeftTextX, cardLeftTextY, 0);
         return cardTextPosition;
     }

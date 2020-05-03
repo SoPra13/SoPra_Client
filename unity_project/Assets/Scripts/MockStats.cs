@@ -79,7 +79,7 @@ public class MockStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 3;
+        activePlayer = 4;
         playerPosition = 4; //REACTINPUT, this value needs to come from React
         playerTotal = 4; // REACTINPUT, this value needs to come from React
         connectedPlayers = 0; //REACTINPUT, this value needs to come from React
@@ -484,6 +484,7 @@ public class MockStats : MonoBehaviour
 
 
     //After React has been called via TellReactToEvaluateRound() it will tell unity via this function if the round is won or not
+    //2 = skip
     //1 = won
     //0 = lost
     public void ReactTellRoundWin(int evaluation)
@@ -498,6 +499,11 @@ public class MockStats : MonoBehaviour
         {
             SetRoundOutcome(true);
             rounds.SetRoundPhase(21);
+        }
+        else if (evaluation == 2)
+        {
+            SetRoundOutcome(false);
+            rounds.SetRoundPhase(27);
         }
     }
 

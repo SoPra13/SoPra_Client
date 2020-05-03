@@ -205,9 +205,11 @@ public class Rounds : MonoBehaviour
                 //if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
                 if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1))
                 {
+                    StartCoroutine(CallForTopicList());
                     StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
                     //timer.DeactivateTimer();
                     gameBoard.ForceRemoveInfoBox();
+                    //gameBoard.HardDeleteInfoBox();
                     topicCall = false;
                     roundPhase = 8;
                 }
@@ -419,6 +421,24 @@ public class Rounds : MonoBehaviour
             roundPhase = 22;
         }
 
+        if (roundPhase == 27) //this phase triggers if the player skipped his guess
+        {
+            if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
+            {
+                StartCoroutine(gameBoard.RemoveClues());
+            }
+            else
+            {
+
+            }
+            gameBoard.ActivateskipOutcome();
+            StartCoroutine(gameBoard.NotifySuccessOrFail(false));
+            mockStats.UpdateScoreInReact(0);
+            StartCoroutine(gameBoard.ShowRoundEvaluation(false));
+            gameBoard.TriggerMiniCard(false);
+            roundPhase = 22;
+        }
+
         if (roundPhase == 22)
         {
             
@@ -427,7 +447,6 @@ public class Rounds : MonoBehaviour
         //Start next Round
         if (roundPhase == 23)
         {
-            Debug.Log("reset everything for next round");
             StartCoroutine(gameBoard.CleanUpRound());
             roundPhase = 24;
         }
