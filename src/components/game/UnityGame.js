@@ -591,7 +591,9 @@ export class UnityGame extends React.Component {
     componentWillMount() {
         this.setState({
             game: this.currentGame(),
-        })
+
+        });
+
 
     }
 
@@ -601,16 +603,18 @@ export class UnityGame extends React.Component {
             1000
 
         );
+        document.body.style.backgroundColor = '#404040';
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID);
+        document.body.style.backgroundColor = '#ffeaaa';
     }
 
     render() {
         var height = window.innerHeight;
         return (
-            <UnityBody>
+            /*<UnityBody>*/
             <BaseContainer>
                 <div
                     style={{
@@ -624,7 +628,7 @@ export class UnityGame extends React.Component {
                     <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
                 </div>
             </BaseContainer>
-                </UnityBody>
+                /*</UnityBody>*/
         );
     }
 }
