@@ -90,11 +90,6 @@ class Login extends React.Component {
   }
 
 
-  setTheme(str){
-    this.setState({
-      theme: str
-    })
-  }
   /**
    * HTTP POST request is sent to the backend.
    * If the request is successful, a new user is returned to the front-end

@@ -63,15 +63,6 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-function ready(){
-    const requestBody = JSON.stringify({
-        lobbyname: this.state.lobbyname,
-        userToken: this.state.userToken,
-        lobbyType: this.state.lobbyType
-    });
-    const response = api.post(`/lobby/ready` + `?userToken={userToken}` + localStorage.getItem(`userToken`)
-    + `&gameToken={gameToken}` + localStorage.getItem(`gameToken`), requestBody)
-}
 
 /**
  * https://reactjs.org/docs/react-component.html

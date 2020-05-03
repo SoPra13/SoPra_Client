@@ -67,7 +67,7 @@ class Dashboard extends React.Component {
     }
 
     async logout() {
-        const key = localStorage.getItem(('userToken'))
+        const key = localStorage.getItem(('userToken'));
 
         console.log(key);
 
@@ -129,7 +129,7 @@ class Dashboard extends React.Component {
     async componentWillMount(){
         try {
 
-            const key = localStorage.getItem('userToken')
+            const key = localStorage.getItem('userToken');
 
 
             const respo = await api.get('/user/?token=' + key);
@@ -248,7 +248,7 @@ class Dashboard extends React.Component {
                                             <PlayerContainer
                                                 key={user.id}
                                                 onClick={() => {
-                                                    console.log(user.id)
+                                                    console.log(user.id);
                                                     this.showProfile(user.id);
                                                 }}>
                                                 <Player user={user}/>
@@ -286,7 +286,7 @@ class Dashboard extends React.Component {
                                             <PlayerContainer
                                                 key={lobby.id}
                                                 onClick={() => {
-                                                    console.log(lobby.id)
+                                                    console.log(lobby.id);
                                                     this.enterLoginLobby(lobby.id);
                                                 }}>
                                                 <Room lobby={lobby}/>

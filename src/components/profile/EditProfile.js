@@ -5,7 +5,6 @@ import { api, handleError } from '../../helpers/api';
 import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
-import User from "../shared/models/User";
 import Header from "../../views/Header";
 
 const Container = styled(BaseContainer)`
@@ -81,7 +80,7 @@ class EditProfile extends React.Component {
                 username: this.state.username,
             });
 
-            const response = await api.put('/user' + localStorage.getItem('userToken'), requestBody);
+            await api.put('/user' + localStorage.getItem('userToken'), requestBody);
             this.props.history.push({
                 pathname: '/dashboard',
                 id: this.state.id
@@ -101,12 +100,12 @@ class EditProfile extends React.Component {
     //called after mounting
     async componentDidMount() {
         try {
-            console.log(this.state.id)
+            console.log(this.state.id);
             const response = await api.get('/user/?token=' + localStorage.getItem('userToken'));
 
             this.setState({ user: response.data });
-            console.log(this.state.user)
-            console.log(this.state.id)
+            console.log(this.state.user);
+            console.log(this.state.id);
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }

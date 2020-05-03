@@ -3,74 +3,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { withRouter } from 'react-router-dom';
-import { Button } from '../../views/design/Button';
 import Unity, { UnityContent } from "react-unity-webgl";
 import { api, handleError } from '../../helpers/api';
 
-const Central1 = styled.div`
-  flex-direction: column;
-`;
-
-const Central2 = styled.div`
-  flex-direction: row;
-`;
 
 const UnityBody = styled.body`
+  height: 768px;
   background: #404040;
 `;
 
-const FormContainer = styled.div`
-  margin-top: 2em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 300px;
-  justify-content: center;
-`;
-
-const Form = styled.div`
-  display: block;
-  flex-direction: column;
-  justify-content: center;
-  width: 80%;
-  height: 200px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-radius: 5px;
-  background: none;
-  border-style: solid;
-  border-width: 2px;
-  border-color: white;
-`;
-
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
-  border: none;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-`;
-
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-`;
-
-const ButtonContainer = styled.div`
-  display: block;
-  justify-content: center;
-  margin-top: 20px;
-`;
-//test
 export class UnityGame extends React.Component {
     async;
 
@@ -217,30 +158,6 @@ export class UnityGame extends React.Component {
 
     }
 
-
-    setPlayers(){
-        this.unityContent.send(
-            "PlayerTotal",
-            "SetPlayerTotal",
-            this.state.totalPlayers
-        )
-    }
-
-
-    addPlayer(){
-        this.unityContent.send(
-            "PlayerTotal",
-            "SetPlayerCount",
-            4
-        )
-    }
-
-
-    substringOfWordList(str){
-        var res = str.split(";");
-        return res;
-    }
-
     arrayToString(array){
         var begin = array[0];
         for (let i = 1; i < array.length; i++){
@@ -249,18 +166,11 @@ export class UnityGame extends React.Component {
         return begin;
     }
 
-    stringToArray(str){
-        let array = [];
-        for (let i = 0; i < str.length; i++){
-            array.push(parseInt(str.charAt(i)));
-        }
-        return array;
-    }
 
     getIndex(game, token){
         console.log(token);
         for(var i = 0; i<game.playerList.length; i++){
-            console.log(game.playerList[i].token)
+            console.log(game.playerList[i].token);
             if(token == game.playerList[i].token){
                 return i+1;
 
@@ -271,8 +181,7 @@ export class UnityGame extends React.Component {
     //Instantiation of the GameInfo
 
     async setPlayerArray(game) {
-        const response = await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') + '&gameToken=' + localStorage.getItem('gameToken'));
-
+        await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') + '&gameToken=' + localStorage.getItem('gameToken'));
         this.state.round = this.state.game.currentRound;
         console.log(game);
 
@@ -299,7 +208,7 @@ export class UnityGame extends React.Component {
         str= (activePlayer.toString()+ totalPlayer.toString()+ playerIndex.toString()+ ready.toString());
 
         console.log(activePlayer.toString()+totalPlayer.toString());
-        console.log(str)
+        console.log(str);
         this.setPlayerStats(str);
     }
 
@@ -326,7 +235,7 @@ export class UnityGame extends React.Component {
              nameString += ';'+game.botList[i].botname;
          }
 
-        console.log(nameString)
+        console.log(nameString);
         console.log("Names Set Completed");
         this.unityContent.send(
             "MockStats",
@@ -348,7 +257,7 @@ export class UnityGame extends React.Component {
     //difference to the origin is to vote the topic instead of the guesser choose a the mystery word
 
     setTopics(game){ //Send a string with a ";" delimiter to unity
-        let topicString = this.arrayToString(game.mysteryWords)
+        let topicString = this.arrayToString(game.mysteryWords);
         console.log(topicString);
         console.log("Topics Set Completed");
         this.unityContent.send(
@@ -365,8 +274,7 @@ export class UnityGame extends React.Component {
     sendTopicList(voteList){
 
         var topicListString = '';
-        console.log(voteList)
-        var nrOfVotes = 0;
+        console.log(voteList);
 
         for(var i = 0; i<5; i++){
             topicListString += voteList[i].toString();
@@ -450,7 +358,7 @@ export class UnityGame extends React.Component {
                 votedString += '0'
             }
         }
-        console.log(votedString)
+        console.log(votedString);
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerHasChosenTopic",
@@ -469,7 +377,7 @@ export class UnityGame extends React.Component {
 
             this.setState({
                 game: game,
-            })
+            });
             console.log(this.state.game);
 
 
@@ -537,7 +445,7 @@ export class UnityGame extends React.Component {
     sendClueList(){ //Send a string with a ";" delimiter to unity
 
         console.log(this.state.game.clueList);
-        let cluesString = this.arrayToString(this.state.game.clueList)
+        let cluesString = this.arrayToString(this.state.game.clueList);
         console.log(cluesString);
         console.log("clues Set Completed");
         this.unityContent.send(
@@ -564,7 +472,7 @@ export class UnityGame extends React.Component {
         try {
             clearInterval(this.timerID);
             await new Promise(resolve => setTimeout(resolve, 1000));
-            const response = await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
+            await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
             localStorage.removeItem('lobbyToken');
             localStorage.removeItem('gameToken');
             this.props.history.push('/dashboard')
@@ -626,7 +534,7 @@ export class UnityGame extends React.Component {
                 this.unityContent.send(
                     "MockStats",
                     "ReactStartNextRound"
-                )
+                );
 
             if(this.state.game.currentRound>12){return};
             this.setPlayerArray(this.state.game);
@@ -700,68 +608,10 @@ export class UnityGame extends React.Component {
     }
 
     render() {
-        var height = window.innerHeight
+        var height = window.innerHeight;
         return (
             <UnityBody>
-            <BaseContainer background="#404040">
-                {/*<FormContainer>*/}
-                {/*<Form>*/}
-                {/*  <Label><b>Unity React Control-Room</b></Label>*/}
-                {/*<ButtonContainer>*/}
-                {/*                <Label> Force Connect Users: <br/> </Label>*/}
-                {/*<Button
-                    width="15%"
-                    onClick={() => {
-                      this.setState({totalPlayers: this.state.totalPlayers +1});
-                      console.log(this.state.totalPlayers)
-                    }}
-                >
-                  AddToTotal
-                </Button>
-                <Button
-                    width="15%"
-                    onClick={() => {
-                      this.addPlayer();
-                    }}
-                >
-                  SetPlayers
-                </Button>
-                <Button
-                    width="15%"
-                    onClick={() => {
-                      console.log(this.state.score)
-                    }}
-                >
-                  Check If Unity Talks
-                </Button>
-                <Button
-                    width="15%"
-                    onClick={() => {
-                      //send to unity
-                    }}
-                >
-                  P4-Connect
-                </Button>
-                <Button
-                    width="15%"
-                    onClick={() => {
-                      //send to unity
-                    }}
-                >
-                  P5-Connect
-                </Button>
-                <Button
-                    width="15%"
-                    onClick={() => {
-                      //send to unity
-                    }}
-                >
-                  P6-Connect
-                </Button>
-              </ButtonContainer>
-            </Form>
-          </FormContainer>*/}
-
+            <BaseContainer>
                 <div
                     style={{
                         position: "center",
@@ -773,7 +623,6 @@ export class UnityGame extends React.Component {
                 >
                     <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
                 </div>
-                {/*<br/>*/}
             </BaseContainer>
                 </UnityBody>
         );

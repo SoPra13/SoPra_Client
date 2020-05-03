@@ -4,7 +4,6 @@ import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import Player from '../../views/Player';
 import { Spinner } from '../../views/design/Spinner';
-import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
 import Lobby from "../shared/models/Lobby";
 import BotPlayer from "../../views/BotPlayer";
@@ -87,7 +86,7 @@ class WaitingRoom extends React.Component {
      */
 
     addBot(str){
-    const response = api.put('/lobby?lobbyToken=' + this.state.lobbyToken + '&difficulty=' + str);
+    api.put('/lobby?lobbyToken=' + this.state.lobbyToken + '&difficulty=' + str);
     }
 
     /**
@@ -96,7 +95,7 @@ class WaitingRoom extends React.Component {
      */
 
     async removeBot(botToken){
-        const response = await api.delete('/lobby?lobbyToken=' + this.state.lobbyToken + '&botToken=' + botToken);
+        await api.delete('/lobby?lobbyToken=' + this.state.lobbyToken + '&botToken=' + botToken);
     }
 
     /**
@@ -106,9 +105,9 @@ class WaitingRoom extends React.Component {
 
     async kickPlayer(userToken){
         try {
-            const response = await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
+            await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
                 + '&userToken=' + userToken);
-            localStorage.removeItem('lobbyToken')
+            localStorage.removeItem('lobbyToken');
 
             console.log('Player get kicked from the admin');
 
@@ -141,7 +140,7 @@ class WaitingRoom extends React.Component {
      */
 
     stillInTheLobby(){
-        console.log('My lobbytoken: ' + localStorage.getItem('lobbyToken'))
+        console.log('My lobbytoken: ' + localStorage.getItem('lobbyToken'));
         if(this.checkPlayerList() == undefined){
             this.getKicked();
             this.props.history.push('/dashboard');
@@ -225,7 +224,7 @@ class WaitingRoom extends React.Component {
                 userToken: localStorage.getItem('userToken'),
                 status: "READY"
             });
-            const response = api.put('/lobby/ready?userToken=' + localStorage.getItem('userToken')
+            api.put('/lobby/ready?userToken=' + localStorage.getItem('userToken')
                 + '?gameToken=' + localStorage.getItem('userToken'), requestBody);
 
 
@@ -250,7 +249,7 @@ class WaitingRoom extends React.Component {
             console.log(response);
             console.log(response.data);
             localStorage.setItem('gameToken', localStorage.getItem('lobbyToken'));
-            console.log(localStorage.getItem('gameToken'))
+            console.log(localStorage.getItem('gameToken'));
 
             this.props.history.push('/unityGame');
 
@@ -264,7 +263,7 @@ class WaitingRoom extends React.Component {
      */
 
     componentWillMount() {
-        const response = api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'))
+        const response = api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'));
 
 
         const lobby = new Lobby(response.data);
@@ -296,7 +295,7 @@ class WaitingRoom extends React.Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.timerID1)
+        clearInterval(this.timerID1);
         clearInterval(this.timerID2)
     }
 
@@ -339,7 +338,7 @@ class WaitingRoom extends React.Component {
                                             disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
                                             key={user.id}
                                             onClick={() => {
-                                                console.log(user.id)
+                                                console.log(user.id);
                                                 this.kickPlayer(user.token)
                                             }}>
                                             Kick
