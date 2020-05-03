@@ -240,7 +240,7 @@ export class UnityGame extends React.Component {
         this.unityContent.send(
             "MockStats",
             "ReactSetPlayerNames",
-            nameString //TODO: BOTnames
+            nameString
         )
     }
 
@@ -497,18 +497,33 @@ export class UnityGame extends React.Component {
 
         }
         getResultOfGuess(){
+
+            if(!this.state.game.guessGiven){
+                this.sendGuess(null);
+                console.log('send null guess');
+            }
+
         if(this.state.game.guessCorrect){
+            console.log('round won');
             this.unityContent.send(
                 "MockStats",
                 "ReactTellRoundWin",
                 1
             )
-        }else{
+        }else if((this.state.game.guessCorrect == null)){
+            console.log('round skipped');
+            this.unityContent.send(
+                "MockStats",
+                "ReactTellRoundWin",
+                2
+            )}else{
+            console.log('round lost');
             this.unityContent.send(
                 "MockStats",
                 "ReactTellRoundWin",
                 0
-            )}
+            )
+        }
     }
 
     async nextRound(){
@@ -569,6 +584,8 @@ export class UnityGame extends React.Component {
 
             const response = await api.put('/game/guess?gameToken=' + localStorage.getItem('gameToken') +
                 '&guess=' + guess);
+            console.log('send  guess;');
+            console.log(guess);
 
         }catch(error){
             alert(`guessCorrect error: \\n${handleError(error)}`);

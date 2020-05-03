@@ -80,11 +80,8 @@ class EditProfile extends React.Component {
                 username: this.state.username,
             });
 
-            await api.put('/user' + localStorage.getItem('userToken'), requestBody);
-            this.props.history.push({
-                pathname: '/dashboard',
-                id: this.state.id
-            })
+            await api.put('/user?token=' + localStorage.getItem('userToken'), requestBody);
+            this.props.history.push('/dashboard');
 
 
         } catch (error) {
