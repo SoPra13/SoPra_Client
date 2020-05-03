@@ -1052,7 +1052,8 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("ClueText").name = "ClueText" + i;
                     GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
-                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    //GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = "Player Clues";
                 }
                 else if (count == 1)
                 {
@@ -1062,7 +1063,8 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("ClueText").name = "ClueText" + i;
                     GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
-                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    //GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = "Player Clues";
                 }
                 else if (count == 2)
                 {
@@ -1072,7 +1074,8 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("ClueText").name = "ClueText" + i;
                     GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
-                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    //GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = "Player Clues";
                 }
                 else if (count == 3)
                 {
@@ -1082,7 +1085,8 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("ClueText").name = "ClueText" + i;
                     GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
-                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    //GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = "Player Clues";
                 }
                 else if (count == 4)
                 {
@@ -1092,7 +1096,8 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("ClueText").name = "ClueText" + i;
                     GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
-                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    //GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = "Player Clues";
                 }
                 else if (count == 5)
                 {
@@ -1102,16 +1107,17 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("ClueText").name = "ClueText" + i;
                     GameObject.Find("ClueText" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetClueList()[j];
                     GameObject.Find("ClueTitle").name = "ClueTitle" + i;
-                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    //GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = mockStats.GetName(i);
+                    GameObject.Find("ClueTitle" + i).GetComponent<TextMeshProUGUI>().text = "Player Clues";
                 }
                 else
                 {
 
                 }
-                j += 1;
-                count += 1;
-                yield return new WaitForSeconds(0.25f);
-            }                
+            }
+            j += 1;
+            count += 1;
+            yield return new WaitForSeconds(0.25f);
         }
         yield return new WaitForSeconds(0.1f);
     }
