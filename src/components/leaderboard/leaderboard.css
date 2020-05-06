@@ -53,6 +53,7 @@
 float: left;
 margin-left: 10px;
 margin-right: 10px;
+font-weight: bolder;
 }
 
 .username {
@@ -73,3 +74,33 @@ h1 {
     margin: 0px;
     margin-bottom: 10px;
 }
+
+.scoreSelect {
+    border-radius: 4px;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+    margin-bottom: 10px;
+    background-color: gray;
+    outline: none;
+    cursor: pointer;
+
+}
+
+.select-wrapper {
+    margin-right: auto;
+    
+}
+
+.select-wrapper::before {
+    font-family: fontello;
+    content: "\f107";
+    font-size: 20px;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #fff;
+    pointer-events: none;
+
+  }
