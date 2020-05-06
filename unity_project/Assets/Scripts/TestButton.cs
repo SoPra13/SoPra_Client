@@ -64,7 +64,7 @@ public class TestButton : MonoBehaviour
 
     public void EvaluateRound()
     {
-        mockStats.ReactTellRoundWin(0);
+        mockStats.ReactTellRoundWin(1);
     }
 
     public void AtivePlayerGuessed()
@@ -79,21 +79,21 @@ public class TestButton : MonoBehaviour
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("4444");
-            round.SetRound(2);
+            round.SetRound(1);
 
         }
         else if (roundTesting == 1)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("1444");
-            round.SetRound(4);
+            round.SetRound(2);
 
         }
         if (roundTesting == 2)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("2444");
-            round.SetRound(6);
+            round.SetRound(3);
         }
         else if (roundTesting == 3)
         {
@@ -114,6 +114,25 @@ public class TestButton : MonoBehaviour
         mockStats.ReactSetActivePlayerMadeGuess(0);
         mockStats.ReactStartNextRound();
         roundTesting += 1;
+    }
+
+    public void KillTextBox()
+    {
+        GameObject.Find("Canvas").GetComponent<GameBoard>().StopTextBox();
+    }
+
+
+    public void ShowTimes()
+    {
+        Debug.Log("Votetime: " + mockStats.GetTime(0));
+        Debug.Log("ClueTime: " + mockStats.GetTime(1));
+        Debug.Log("GuessTime: " + mockStats.GetTime(2));
+    }
+
+
+    public void SetScoreString()
+    {
+        mockStats.ReactSendScoreString("0;10;120;200;300;400;1000");
     }
 }
 

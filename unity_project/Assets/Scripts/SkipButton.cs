@@ -46,6 +46,9 @@ public class SkipButton : MonoBehaviour
 
     IEnumerator SetMisteryWordBoxInactive()
     {
+        GameObject.Find("Rounds").GetComponent<Rounds>().SetSkippingTurn();
+        yield return new WaitForSeconds(0.1f);
+        GameObject.Find("TimerScript").GetComponent<Timer>().DeactivateTimer();
         yield return new WaitForSeconds(2f);
         GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", false);
         GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", false);

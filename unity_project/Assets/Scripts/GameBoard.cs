@@ -35,6 +35,7 @@ public class GameBoard : MonoBehaviour
     public GameObject skipButtonObject;
     public GameObject skipTextObject;
     public GameObject cluesBG;
+    public GameObject ScoreMultiplierBox;
 
     public Positions positions;
 
@@ -75,6 +76,7 @@ public class GameBoard : MonoBehaviour
     private GameObject scoreBoard;
     private GameObject skipButton;
     private GameObject skipText;
+    private GameObject scoreMultiplier;
 
     private bool advanceToState3 = false;
     private bool waitForServerTopicResponse = false;
@@ -85,9 +87,10 @@ public class GameBoard : MonoBehaviour
     private bool Phase5HasLoaded = false;
     private bool Phase16HasLoaded = false;
     private bool skipOutcomeText = false;
-    //private bool phase6TransitionOngoing = false;
+    private bool waitForSetUp = false;
+    private bool deactivatePlayerInfoBox = false;
 
-
+    private Coroutine textBox;
 
     void Start()
     {
@@ -188,7 +191,8 @@ public class GameBoard : MonoBehaviour
 
     public void TriggerMiniCard(bool success)
     {
-        GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = mockStats.GetScore().ToString();
+        //GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = mockStats.GetScore().ToString();
+        //GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = round.GetRound().ToString();
         if (round.GetRound() == 12)
         {
             GameObject.Find("MiniCard" + (round.GetRound() + 1).ToString()).GetComponent<Animator>().SetBool("success", success);
@@ -231,6 +235,15 @@ public class GameBoard : MonoBehaviour
                 }
             }
         }
+        mockStats.CalculateMultiplier();
+        if(mockStats.GetMultiplier() <= 0.0)
+        {
+
+        }
+        else
+        {
+            GameObject.Find("MultiplierText").GetComponent<TextMeshProUGUI>().text = mockStats.GetMultiplier().ToString("#.0");
+        }    
         StartCoroutine(ResetScoreBoardAni());
     }
 
@@ -278,13 +291,30 @@ public class GameBoard : MonoBehaviour
         skipOutcomeText = true;
     }
 
+
+    public bool CheckIfVotePhase()
+    {
+        return deactivatePlayerInfoBox;
+    }
+
+    public void DeactivatePlayerBoxBlocke()
+    {
+        deactivatePlayerInfoBox = false;
+    }
+
     public void DeativateskipOutcome()
     {
         skipOutcomeText = false;
     }
 
+    public bool GetStatusOnWakeUp()
+    {
+        return waitForSetUp;
+    }
+
     public void DisplayMisteryInputBox()
     {
+        deactivatePlayerInfoBox = true;
         rulesBox = Instantiate(ruleBoxContainer, new Vector3(0, -220f, 0), Quaternion.identity) as GameObject;
         rulesBox.name = "Rules";
         rulesBox.transform.SetParent(GameObject.Find("Interaction").transform, false);
@@ -298,6 +328,7 @@ public class GameBoard : MonoBehaviour
 
     public void DisplayMisteryInputBoxActivePlayer()
     {
+        waitForSetUp = false;
         misteryWordContainer = Instantiate(misteryWordInputContainer, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         misteryWordContainer.name = "MisteryWordInput";
         misteryWordContainer.transform.SetParent(GameObject.Find("Interaction").transform, false);
@@ -390,6 +421,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator ShowThisRoundsTopic()
     {
+        waitForSetUp = false;
         GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
         blackScreen.name = "BlackScreen";
         blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
@@ -398,17 +430,20 @@ public class GameBoard : MonoBehaviour
         topicBar.name = "TopicBar";
         topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
         barAppearsSFX.Play();
+        GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
         GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = mockStats.GetCurrentTopic();
         yield return new WaitForSeconds(1.0f);
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
         round.SetRoundPhase(13);
+        waitForSetUp = true;
         Destroy(GameObject.Find("TopicBar"));
         Destroy(GameObject.Find("BlackScreen"));
     }
 
     public IEnumerator NotifyPlayerThatTopicHasBeenChosen()
     {
+        waitForSetUp = false;
         GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
         blackScreen.name = "BlackScreen";
         blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
@@ -417,11 +452,13 @@ public class GameBoard : MonoBehaviour
         topicBar.name = "TopicBar";
         topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
         barAppearsSFX.Play();
+        GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
         GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your Team has chosen...";
         GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...a Topic for this Round!";
         yield return new WaitForSeconds(1.0f);
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
+        waitForSetUp = true;
         Destroy(GameObject.Find("TopicBar"));
         Destroy(GameObject.Find("BlackScreen"));
     }
@@ -429,6 +466,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator NotifyPlayerhaveSubmittedTheirClue()
     {
+        waitForSetUp = false;
         GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
         blackScreen.name = "BlackScreen";
         blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
@@ -437,11 +475,13 @@ public class GameBoard : MonoBehaviour
         topicBar.name = "TopicBar";
         topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
         barAppearsSFX.Play();
+        GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
         GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your Team has submitted...";
         GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...their clues!";
         yield return new WaitForSeconds(1.0f);
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
+        waitForSetUp = true;
         Destroy(GameObject.Find("TopicBar"));
         Destroy(GameObject.Find("BlackScreen"));
     }
@@ -449,6 +489,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator NotifySuccessOrFail(bool success)
     {
+        waitForSetUp = false;
         GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
         blackScreen.name = "BlackScreen";
         blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
@@ -461,15 +502,17 @@ public class GameBoard : MonoBehaviour
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
+                GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
                 GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your guess was...";
                 GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...correct!";
             }
             else
             {
+                GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
                 GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has guessed...";
                 GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...correctly! Well done";
             }
-
+            
         }
         else if (!success)
         {
@@ -477,11 +520,13 @@ public class GameBoard : MonoBehaviour
             {
                 if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
                 {
+                    GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", false);
                     GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your guess was...";
                     GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...incorrect!";
                 }
                 else
                 {
+                    GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", false);
                     GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has guessed...";
                     GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...wrong! Better luck next time...";
                 }
@@ -490,11 +535,13 @@ public class GameBoard : MonoBehaviour
             {
                 if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
                 {
+                    GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", false);
                     GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "You decided to...";
                     GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...skip this turn!";
                 }
                 else
                 {
+                    GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", false);
                     GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has decided...";
                     GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...to skip this turn...";
                 }
@@ -503,6 +550,16 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
+        if (success)
+        {
+            TriggerMiniCard(true);
+        }
+        else
+        {
+            TriggerMiniCard(false);
+        }
+
+        waitForSetUp = true;
         DeativateskipOutcome();
         Destroy(GameObject.Find("TopicBar"));
         Destroy(GameObject.Find("BlackScreen"));
@@ -512,6 +569,7 @@ public class GameBoard : MonoBehaviour
     IEnumerator GameStarts()
     {
         yield return new WaitForSeconds(4f);
+        waitForSetUp = true;
         round.StartRound();
     }
 
@@ -575,11 +633,12 @@ public class GameBoard : MonoBehaviour
         GameObject topicCard = Instantiate(cardFlat, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         topicCard.name = "TopicCard";
         topicCard.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        deactivatePlayerInfoBox = true;
         yield return new WaitForSeconds(2.5f);
         //TODO here I have to add the correct topics
         float y = 164.6f;
         //StartCoroutine(DisplayInfoText("You have <color=#001AF6>30</color> Seconds to pick a Topic for this Round!",true,0));
-        StartCoroutine(DisplayInfoText("Please vote for a Topic. The active player will have to guess the topic afterwards!", true, 2));
+        StartCoroutine(StartTextBox("Please vote for a Topic. The active player will have to guess the topic afterwards!", true, 0));
         for (int j = 0; j < 5; j++)
         {
             GameObject topicButton = Instantiate(topicButtonObject, new Vector3(-7.6f, y, 0), Quaternion.identity) as GameObject;
@@ -631,6 +690,7 @@ public class GameBoard : MonoBehaviour
     public IEnumerator RemoveTopicCard()
     {
         yield return new WaitForSeconds(2f);
+        deactivatePlayerInfoBox = false;
         GameObject.Find("TopicCard").GetComponent<Animator>().SetBool("disappear", true);
         for (int j = 0; j < 5; j++)
         {
@@ -760,8 +820,8 @@ public class GameBoard : MonoBehaviour
                 GameObject.Find("ThinkingBubble" + i).GetComponent<Animator>().SetBool("thinking", true);
             }
         }
-        yield return new WaitForSeconds(1.5f);
-        StartCoroutine(DisplayInfoText("As you are the active player, you need to wait for the others to choose a Topic for this round!",true,2));
+        yield return new WaitForSeconds(2f);
+        StartCoroutine(StartTextBox("As you are the active player, you need to wait for the others to choose a Topic for this round!",true,2));
         Phase5HasLoaded = true;
         yield return new WaitForSeconds(0.1f);
     }
@@ -813,8 +873,7 @@ public class GameBoard : MonoBehaviour
         }
         ForceRemoveInfoBox();
         yield return new WaitForSeconds(1.5f);
-        //HardDeleteInfoBox();
-        StartCoroutine(DisplayInfoText("Wait for the rest of your team to submit their clues", true, 2));
+        StartCoroutine((StartTextBox("Wait for the rest of your team to submit their clues", true, 2)));
         Phase5HasLoaded = true;
         yield return new WaitForSeconds(1f);
         Phase16HasLoaded = true;
@@ -826,6 +885,33 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(1f);
         GameObject.Find("FaderLeft").SetActive(false);
         GameObject.Find("FaderRight").SetActive(false);
+    }
+
+
+    public IEnumerator StartTextBox(string text, bool keepIdle, int mode)
+    {
+    if (GameObject.Find("Infoboard") != null || GameObject.Find("InfoText") != null || GameObject.Find("infoTag") != null ||
+    GameObject.Find("loadingTag") != null)
+        {
+            StopTextBox();          
+        }
+        yield return new WaitForSeconds(0.2f);
+        textBox = StartCoroutine(DisplayInfoText(text, keepIdle, mode));
+    }
+
+    public void StopTextBox()
+    {
+        StopCoroutine(textBox);
+        Destroy(GameObject.Find("Infoboard"));
+        Destroy(GameObject.Find("InfoText"));
+        if(GameObject.Find("infoTag") != null)
+        {
+            Destroy(GameObject.Find("infoTag"));
+        }
+        if (GameObject.Find("loadingTag") != null)
+        {
+            Destroy(GameObject.Find("loadingTag"));
+        }
     }
 
     //Mode Documentation: 0 = nothing; 1 = info; 2 = loading
@@ -843,10 +929,11 @@ public class GameBoard : MonoBehaviour
         infoTextAnimator = infoText.GetComponent<Animator>();
         tmproInfoText = infoText.GetComponent<TextMeshProUGUI>();
 
-        if(mode == 0)
+        if (mode == 0)
         {
 
-        }else if (mode == 1)
+        }
+        else if (mode == 1)
         {
             GameObject infoTag = Instantiate(infoTagObject, new Vector3(396, 0, 0), Quaternion.identity) as GameObject;
             infoTag.name = "infoTag";
@@ -904,6 +991,7 @@ public class GameBoard : MonoBehaviour
         {
             Destroy(GameObject.Find("loadingTag"));
         }
+
     }
 
 
@@ -946,8 +1034,7 @@ public class GameBoard : MonoBehaviour
         ForceRemoveInfoBox();
         StartCoroutine(NotifyPlayerThatTopicHasBeenChosen());
         yield return new WaitForSeconds(5f);
-        //HardDeleteInfoBox();
-        StartCoroutine(DisplayInfoText("The players have chosen their Topic for this Round. They will now give you clues. Hold on...", true, 2));
+        StartCoroutine(StartTextBox("The players have chosen their Topic for this Round. They will now give you clues. Hold on...", true, 2));
         StartCoroutine(ActivePlayerWaitsForClues());
         yield return new WaitForSeconds(2.5f);       
     }
@@ -974,7 +1061,7 @@ public class GameBoard : MonoBehaviour
             StartCoroutine(NotifyPlayerhaveSubmittedTheirClue());
             yield return new WaitForSeconds(5f);
             //HardDeleteInfoBox();
-            StartCoroutine(DisplayInfoText("Now it's your turn to guess the correct Mistery Word...", true, 2));
+            StartCoroutine(StartTextBox("Now it's your turn to guess the correct Mistery Word...", true, 0));
             yield return new WaitForSeconds(2f);
             round.SetRoundPhase(9);
         }
@@ -997,7 +1084,7 @@ public class GameBoard : MonoBehaviour
             StartCoroutine(NotifyPlayerhaveSubmittedTheirClue());
             yield return new WaitForSeconds(5f);
             //HardDeleteInfoBox();
-            StartCoroutine(DisplayInfoText("The active player is now guessing...wait for him to submit his guess", true, 2));
+            StartCoroutine(StartTextBox("The active player is now guessing...wait for him to submit his guess", true, 2));
             GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("wake", true);
             GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("thinking", true);
             yield return new WaitForSeconds(2f);
@@ -1008,9 +1095,12 @@ public class GameBoard : MonoBehaviour
     public IEnumerator PlayersEnterMisteryWord()
     {
         ForceRemoveInfoBox();
-        yield return new WaitForSeconds(1.5f);
-        //HardDeleteInfoBox();
-        StartCoroutine(DisplayInfoText("Please entere a clue that best describes the current topic (Only a single word)", true, 2));
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(StartTextBox("Please entere a clue that best describes the current topic (Only a single word)", true, 0));
+        yield return new WaitForSeconds(1f);
+        GameObject.Find("TimerScript").GetComponent<Timer>().StartTimer(30);
+        yield return new WaitForSeconds(0.1f);
+        round.SetRoundPhase(14);
     }
 
 
@@ -1198,10 +1288,15 @@ public class GameBoard : MonoBehaviour
     IEnumerator SetUpScoreBoard()
     {
         yield return new WaitForSeconds(2f);
+        scoreMultiplier = Instantiate(ScoreMultiplierBox, new Vector3(-565, 148, 0), Quaternion.identity) as GameObject;
+        scoreMultiplier.name = "ScoreMultiplier";
+        scoreMultiplier.transform.SetParent(GameObject.Find("Canvas").transform, false);
+
         scoreBoard = Instantiate(scoreBoardContainer, new Vector3(-6, 280, 0), Quaternion.identity) as GameObject;
         scoreBoard.name = "ScoreBoard";
         scoreBoard.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = mockStats.GetScore().ToString();
+        GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>().text = "Game Overview";
+        GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = round.GetRound().ToString();
 
         int x_mini = -73;
         for (int k = 1; k <= 13; k++)
@@ -1236,6 +1331,7 @@ public class GameBoard : MonoBehaviour
         }
         else
         {
+            waitForSetUp = false;
             GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
             blackScreen.name = "BlackScreen";
             blackScreen.transform.SetParent(GameObject.Find("Canvas").transform, false);
@@ -1244,11 +1340,13 @@ public class GameBoard : MonoBehaviour
             topicBar.name = "TopicBar";
             topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
             barAppearsSFX.Play();
+            GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
             GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "The next round is about to start...";
             GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...prepare yourselfs!";
             yield return new WaitForSeconds(1.0f);
             barCheckSFX.Play();
             yield return new WaitForSeconds(3.2f);
+            waitForSetUp = true;
             Destroy(GameObject.Find("TopicBar"));
             Destroy(GameObject.Find("BlackScreen"));
             round.SetRoundPhase(1);
