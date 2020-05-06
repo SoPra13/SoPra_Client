@@ -14,6 +14,7 @@ public class Timer : MonoBehaviour
     private GameObject timeNumber;
     private bool timerStatus;
 
+    private int timeLeft = 0;
 
     void Start()
     {
@@ -23,6 +24,7 @@ public class Timer : MonoBehaviour
 
     public void StartTimer(int timeInSeconds)
     {
+        interrupt = false;
         timerStatus = true;
         StartCoroutine(TimerRuns(timeInSeconds));
     }
@@ -38,13 +40,21 @@ public class Timer : MonoBehaviour
     }
 
 
+    public int GetTime()
+    {
+        return timeLeft;
+    }
+
+
     IEnumerator TimerRuns(int timeInSeconds)
     {
+        timeLeft = timeInSeconds;
         for(int time = timeInSeconds; time >= 0; time--)
         {
+            timeLeft = time;
             if (time != 0)
             {
-                timeNumber = Instantiate(numbers[time - 1], new Vector3(382.7f, 278.7f, 0), Quaternion.identity) as GameObject;
+                timeNumber = Instantiate(numbers[time - 1], new Vector3(476f, 278.7f, 0), Quaternion.identity) as GameObject;
                 timeNumber.name = "TimerNumber";
                 timeNumber.transform.SetParent(GameObject.Find("Canvas").transform, false);
             }
@@ -74,7 +84,6 @@ public class Timer : MonoBehaviour
             }
             Destroy(timeNumber);
         }
-        interrupt = false;
         timerStatus = false;
     }
 }

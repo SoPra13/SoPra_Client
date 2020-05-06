@@ -21,6 +21,9 @@ public class Positions : MonoBehaviour
     Vector3[] arrowPositions = { new Vector3(437.0f, -198.0f, 0.0f), new Vector3(141.0f, -271.0f, 0.0f), new Vector3(-168.0f, -267.0f, 0.0f),
     new Vector3(-469.0f, -159.0f, 0.0f), new Vector3(-288.0f, 11.0f, 0.0f), new Vector3(-5.0f, 48.0f, 0.0f), new Vector3(298.0f, 10.0f, 0.0f)};
 
+    Vector3[] playerInfoBox = { new Vector3(436.0f, -47.0f, 0.0f), new Vector3(141.0f, -123.0f, 0.0f), new Vector3(-167.0f, -120.0f, 0.0f),
+    new Vector3(-466.0f, -8.0f, 0.0f), new Vector3(-285.0f, -115f, 0.0f), new Vector3(-2, -80f, 0.0f), new Vector3(302.0f, -117.0f, 0.0f)};
+
     Vector3 cardTextPosition;
 
 
@@ -63,6 +66,11 @@ public class Positions : MonoBehaviour
         return cardTextPosition;
     }
 
+
+    public Vector3 GetPlayerInfoPosition(int i)
+    {
+        return playerInfoBox[i];
+    }
 
     public Vector3 DecreaseCardLeftTextPositionLoss()
     {

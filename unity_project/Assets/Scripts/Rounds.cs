@@ -46,6 +46,10 @@ public class Rounds : MonoBehaviour
     private bool waitForSettingUpNextRound = false;
     private bool askingForActivePlayer = false;
     private bool waiter = false;
+    private bool timeDoneCheck = false;
+    private bool waitForCompletionPhase13 = false;
+    private bool lockDown = false;
+    private bool skippingTurn = false;
 
 
     void Start()
@@ -58,11 +62,18 @@ public class Rounds : MonoBehaviour
     {
         if(roundPhase == 1)//Shuffling Animation of Cards AND Set the Round (fetched from Backend)
         {
+            //Just for Testing
+            //GameObject.Find("MultiplierText").GetComponent<TextMeshProUGUI>().text = mockStats.GetMultiplier().ToString("#.0");
             //Reset things at the beginning of each round:
             mockStats.SetStartNextRound();
             waitForSettingUpNextRound = false;
             roundPhase3Wakes = true;
+            lockDown = false;
+            timeDoneCheck = false;
+            skippingTurn = false;
             DeactivateWater();
+            mockStats.ResetTimeValues();
+            GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = GetRound().ToString();
 
             try { FetchRound(); }//This will tell React to get the Round int for this round
             catch (EntryPointNotFoundException e)
@@ -74,14 +85,14 @@ public class Rounds : MonoBehaviour
             gameBoard.DisplayArrow();
             if (round == 0)
             {
-                StartCoroutine(gameBoard.DisplayInfoText(mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has been chosen to be the Active " +
+                StartCoroutine(gameBoard.StartTextBox(mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has been chosen to be the Active " +
                                     "Player this Round! He will draw <color=#001AF6>13</color> random topic cards...", false, 1));
                 StartCoroutine(Phase1Shuffle());
                 roundPhase = 2;
             }
             else
             {
-                StartCoroutine(gameBoard.DisplayInfoText(mockStats.GetName(mockStats.GetActivePlayer() - 1) + " is the new active Player for " +
+                StartCoroutine(gameBoard.StartTextBox(mockStats.GetName(mockStats.GetActivePlayer() - 1) + " is the new active Player for " +
                                     "this Round!", false, 1));
                 StartCoroutine(WaitForArrowToDisappear());
                 roundPhase = 2;
@@ -150,7 +161,7 @@ public class Rounds : MonoBehaviour
             }
             else
             {
-                //timer.StartTimer(30);
+                timer.StartTimer(30);
                 roundPhase = 7;
             }
         }
@@ -202,14 +213,14 @@ public class Rounds : MonoBehaviour
                 }
                 //Everyone has set their vote
                 //Check for draws
-                //if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
-                if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1))
+                if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
+                //if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1))
                 {
                     StartCoroutine(CallForTopicList());
                     StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
-                    //timer.DeactivateTimer();
+                    mockStats.SetTime(0, timer.GetTime());
+                    timer.DeactivateTimer();
                     gameBoard.ForceRemoveInfoBox();
-                    //gameBoard.HardDeleteInfoBox();
                     topicCall = false;
                     roundPhase = 8;
                 }
@@ -290,6 +301,7 @@ public class Rounds : MonoBehaviour
                 mockStats.SetBuxFix();
                 StartCoroutine(gameBoard.DisplayCluesFromPlayers());
                 gameBoard.DisplayMisteryInputBoxActivePlayer();
+                timer.StartTimer(30);
                 roundPhase = 13;
             }
             else
@@ -302,26 +314,41 @@ public class Rounds : MonoBehaviour
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
             {
-
+                if (!timer.getTimerStatus() && !timeDoneCheck && !lockDown && !skippingTurn)
+                {
+                    StartCoroutine(GameObject.Find("SubmitButton").GetComponent<SubmitButton>().SetMisteryWordBoxInactive(true));
+                    GameObject.Find("SubmitButton").GetComponent<SubmitButton>().ActivePlayerFailedToSubmit();
+                    timeDoneCheck = true;
+                }
             }
             else
             {
-                gameBoard.DisplayMisteryInputBox();
-                StartCoroutine(gameBoard.PlayersEnterMisteryWord());
-                roundPhase = 14;
+                if (!waitForCompletionPhase13)
+                {
+                    gameBoard.DisplayMisteryInputBox();
+                    StartCoroutine(gameBoard.PlayersEnterMisteryWord());
+                    waitForCompletionPhase13 = true;
+                }
             }
-
         }
 
         //Wait for player to input guess and send it
         if (roundPhase == 14)
         {
-
+            waitForCompletionPhase13 = false;
+            if (!timer.getTimerStatus() && !timeDoneCheck && !lockDown)
+            {
+                StartCoroutine(GameObject.Find("SubmitButton").GetComponent<SubmitButton>().SetMisteryWordBoxInactive(true));
+                GameObject.Find("SubmitButton").GetComponent<SubmitButton>().PlayerFailedToSubmit();
+                timeDoneCheck = true;
+            }
         }
 
         //Player waits for other player to make their guess, this phase is set via SubmitButton.cs script
         if (roundPhase == 15)
         {
+            timeDoneCheck = false;
+            lockDown = false;
             StartCoroutine(gameBoard.PlayersWaitForOthersToSubmitClue());
             roundPhase = 16;
         }
@@ -400,7 +427,7 @@ public class Rounds : MonoBehaviour
             mockStats.UpdateScoreInReact(1);
             StartCoroutine(gameBoard.ShowRoundEvaluation(true));
             mockStats.SetScoreLocally();
-            gameBoard.TriggerMiniCard(true);
+            mockStats.AddToWonRound();
             roundPhase = 22;
         }
 
@@ -418,7 +445,8 @@ public class Rounds : MonoBehaviour
             StartCoroutine(gameBoard.NotifySuccessOrFail(false));
             mockStats.UpdateScoreInReact(0);
             StartCoroutine(gameBoard.ShowRoundEvaluation(false));
-            gameBoard.TriggerMiniCard(false);
+            mockStats.AddToLostRound();
+            mockStats.AddToLostRound();
             roundPhase = 22;
         }
 
@@ -436,7 +464,8 @@ public class Rounds : MonoBehaviour
             StartCoroutine(gameBoard.NotifySuccessOrFail(false));
             mockStats.UpdateScoreInReact(0);
             StartCoroutine(gameBoard.ShowRoundEvaluation(false));
-            gameBoard.TriggerMiniCard(false);
+            //gameBoard.TriggerMiniCard(false);
+            mockStats.AddToLostRound();
             roundPhase = 22;
         }
 
@@ -485,13 +514,7 @@ public class Rounds : MonoBehaviour
             //Wait for the next round to be started and check if game is over
             if (round >= 12)//EndGame
             {
-                //ToDo Tell React that game is finished
-                try { GameHasEnded(mockStats.GetScore()); }//This will tell React to get the Round int for this round
-                catch (EntryPointNotFoundException e)
-                {
-                    Debug.Log("Unity wants to tell React that the game has ended " + e);
-                }
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                StartCoroutine(EndGame());
             }
             //Todo Check if game is over and also check Edge case that if we are in round 12 and fail, round 13 is skipped and the game ends and
             //edge case if we are in round 13 and fail, game ends and 1 successful round is subtracted
@@ -540,11 +563,15 @@ public class Rounds : MonoBehaviour
     }
 
 
-    //This is called via the MockStats Script. The Mock gets this info from React
-    /*public void SetTopics(int[] topicsFromBackend)
+    public void SetLockDown()
     {
-        topics = topicsFromBackend;
-    }*/
+        lockDown = true;
+    }
+
+    public void SetSkippingTurn()
+    {
+        skippingTurn = true;
+    }
 
 
     IEnumerator Phase1Shuffle()
@@ -552,9 +579,9 @@ public class Rounds : MonoBehaviour
         yield return new WaitForSeconds(4f);
         gameBoard.SetupCardStack();
         yield return new WaitForSeconds(4f);
-        StartCoroutine(gameBoard.DisplayInfoText("The Cards have been dealt! Round 1 will start with " + mockStats.GetName(mockStats.GetActivePlayer()-1) + " as" +
+        StartCoroutine(gameBoard.StartTextBox("The Cards have been dealt! Round 1 will start with " + mockStats.GetName(mockStats.GetActivePlayer()-1) + " as" +
             " <color=#001AF6>active player</color>!", false, 1));
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(3.5f);
         gameBoard.RemoveArrow();
         roundPhase = 3;
     }
@@ -696,4 +723,20 @@ public class Rounds : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         askingForActivePlayer = false;
     }
+
+    //Asks React if Active Player already made his choice
+    IEnumerator EndGame()
+    {
+        mockStats.MultiplyScore();
+        yield return new WaitForSeconds(0.2f);
+        //ToDo Tell React that game is finished
+        try { GameHasEnded(mockStats.GetScore()); }//This will tell React to get the Round int for this round
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity wants to tell React that the game has ended " + e);
+        }
+        yield return new WaitForSeconds(0.2f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); 
+    }
+
 }

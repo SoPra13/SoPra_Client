@@ -70,25 +70,124 @@ public class MockStats : MonoBehaviour
         "Stone", "Hero", "Lasergun", "Ladybug", "Spike"};
     private string[] clueList = {"1", "2", "3", "4", "5", "6", "7" };
     private int activePlayerGuess = 0; //0 = player has not made a guess; 1 = player has made a guess
+    private int[] scoreList = { 100, 200, 500, 750, 1000, 3000, 10000 }; //data come from backend
 
     private bool giveReactTime = false;
     private bool hasLostLastRound = false;
     private bool bugFix = false;
     private bool startNextRound = false;
 
+    private float voteTime = 0; //called via GetTime(int mode)
+    private float clueTime = 0;
+    private float guessTime = 0;
+    private int roundsWon = 0;
+    private int roundsLost = 0;
+
+    private float multiplier = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 7;
-        playerPosition = 7; //REACTINPUT, this value needs to come from React
-        playerTotal = 7; // REACTINPUT, this value needs to come from React
-        connectedPlayers = 0; //REACTINPUT, this value needs to come from React
+        activePlayer = 3;
+        playerPosition = 4; //REACTINPUT, this value needs to come from React
+        playerTotal = 4; // REACTINPUT, this value needs to come from React
+        connectedPlayers = 3; //REACTINPUT, this value needs to come from React
+    }
+
+    /*public void Update()
+    {
+        Debug.Log("multiplier: " + multiplier);
+        Debug.Log("VoteTime: " + voteTime);
+        Debug.Log("ClueTime: " + clueTime);
+        Debug.Log("GuessTime: " + guessTime);
+    }*/
+
+
+    public float GetTime(int mode)
+    {
+        if(mode == 0)
+        {
+            return voteTime;
+        }
+        else if (mode == 1)
+        {
+            return clueTime;
+        }
+        else
+        {
+            return guessTime;
+        }
+    }
+
+    public void ResetTimeValues()
+    {
+        voteTime = 0;
+        clueTime = 0;
+        guessTime = 0;
+    }
+
+    public float GetMultiplier()
+    {
+        return multiplier;
+    }
+
+    public void CalculateMultiplier()
+    {
+        multiplier += clueTime + guessTime + voteTime;
+    }
+
+    public int GetNumberOfRoundsWon()
+    {
+        return roundsWon;
+    }
+
+    public void AddToWonRound()
+    {
+        roundsWon += 1;
+    }
+
+    public int GetNumberOfRoundsLost()
+    {
+        return roundsLost;
+    }
+
+    public void AddToLostRound()
+    {
+        roundsLost += 1;
+    }
+
+
+    public void SetTime(int mode, int time)
+    {
+        if (mode == 0)
+        {
+            voteTime += time;
+            voteTime = voteTime / 10;
+        }
+        else if (mode == 1)
+        {
+            clueTime += time;
+            clueTime = clueTime / 10;
+        }
+        else
+        {
+            guessTime += time;
+            guessTime = guessTime / 10;
+        }
     }
 
 
     public void SetScoreLocally()
     {
         score += 1;
+    }
+
+    public void MultiplyScore()
+    {
+        float tempScore = score;
+        tempScore *= GetMultiplier();
+        float rounded = Mathf.Round(tempScore);
+        score = (int)rounded;
     }
 
     public int GetScore()
@@ -262,6 +361,11 @@ public class MockStats : MonoBehaviour
     }
 
 
+    public int getScoreListEntry(int i)
+    {
+        return scoreList[i];
+    }
+
     public int GetActivePlayerSubmittedGuess()
     {
         return activePlayerGuess;
@@ -376,7 +480,6 @@ public class MockStats : MonoBehaviour
     {
         for(int i = 0; i < 5; i++)
         {
-            //Debug.Log((int)Char.GetNumericValue(topicVoteList[i]));
             topicChoices[i] = (int)Char.GetNumericValue(topicVoteList[i]);
         }
     }
@@ -433,8 +536,6 @@ public class MockStats : MonoBehaviour
             clueList[i] = tempList[i];
         }
         bugFix = true;
-        //rounds = GameObject.Find("Rounds").GetComponent<Rounds>();
-        //rounds.SetRoundPhase(12);
     }
 
 
@@ -532,6 +633,16 @@ public class MockStats : MonoBehaviour
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity wants to notify React to tell it the outcome of the game " + e);
+        }
+    }
+
+    public void ReactSendScoreString(string scoreString)
+    {
+        char[] separator = { ';' };
+        string[] tempList = scoreString.Split(separator, StringSplitOptions.None);
+        for (int i = 0; i < playerTotal; i++)
+        {
+            scoreList[i] = int.Parse(tempList[i]);         
         }
     }
 }
