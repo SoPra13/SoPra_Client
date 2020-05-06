@@ -17,6 +17,7 @@ import {LobbyGuard} from "../routeProtectors/LobbyGuard";
 import LoginLobby from "../../lobby/LoginLobby";
 import UnityDummy from "../../game/UnityDummy";
 import Chat from "../../chat/Chat";
+import Leaderboard from "../../leaderboard/Leaderboard";
 
 
 /**
@@ -133,6 +134,8 @@ class AppRouter extends React.Component {
                       <Chat />
                   )}
               />
+
+              <Route path="/leaderboard" exact render={() => <Leaderboard/>}/>
               <Route path="/" exact render={() => <Redirect to={"/login"} />} />
           </div>
         </Switch>

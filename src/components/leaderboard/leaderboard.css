@@ -1,0 +1,75 @@
+.leaderboardoutercontainer {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 12px;
+    width: 340px;
+    height: 440px;
+    background-color: black;
+    align-items: center;
+}
+
+.leaderboardinnercontainer {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    width: 320px;
+    height: 420px;
+    background-color: rgb(58, 58, 58);
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.leaderboardinnercontainer::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 20px;
+}
+
+
+.leaderboardinnercontainer::-webkit-scrollbar-track {
+    background-color: grey; 
+    border-radius: 2px;
+}
+
+.leaderboardinnercontainer::-webkit-scrollbar-thumb {
+    background: white; 
+    border-radius: 2px;
+ }
+
+.playerBox {
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: aliceblue;
+    width: 300px;
+    height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 4px;
+}
+
+.rank {
+float: left;
+margin-left: 10px;
+margin-right: 10px;
+}
+
+.username {
+margin: auto;
+overflow: hidden;
+}
+
+.score {
+float: right;
+margin-left: 10px;
+margin-right: 10px;
+}
+
+
+h1 {
+    color: white;
+    font-size: x-large;
+    margin: 0px;
+    margin-bottom: 10px;
+}
