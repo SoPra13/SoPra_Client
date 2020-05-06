@@ -71,6 +71,9 @@ public class MockStats : MonoBehaviour
     private string[] clueList = {"1", "2", "3", "4", "5", "6", "7" };
     private int activePlayerGuess = 0; //0 = player has not made a guess; 1 = player has made a guess
     private int[] scoreList = { 100, 200, 500, 750, 1000, 3000, 10000 }; //data come from backend
+    private int[] correctGuesses = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendCorrectGuessString(str)
+    private int[] duplicateGuesses = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendDuplicateString(str)
+    private int[] validGuesses = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendValidCluesSting(str)
 
     private bool giveReactTime = false;
     private bool hasLostLastRound = false;
@@ -186,6 +189,9 @@ public class MockStats : MonoBehaviour
     {
         float tempScore = score;
         tempScore *= GetMultiplier();
+        tempScore -= (duplicateGuesses[playerPosition-1]*2);
+        tempScore += (correctGuesses[playerPosition - 1]*10);
+        tempScore -= (validGuesses[playerPosition - 1] * playerTotal);
         float rounded = Mathf.Round(tempScore);
         score = (int)rounded;
     }
@@ -607,6 +613,46 @@ public class MockStats : MonoBehaviour
             rounds.SetRoundPhase(27);
         }
     }
+
+
+    //This function is called by React at the end of the last round and will send a string containing the correct guesses of each player.
+    //ex. "0;0;2;0;7;0;1" with the ; delimiter
+    public void ReactSendCorrectGuessString(string correctGuessString)
+    {
+        char[] separator = { ';' };
+        string[] tempList = correctGuessString.Split(separator, StringSplitOptions.None);
+        for (int i = 0; i < playerTotal; i++)
+        {
+            correctGuesses[i] = int.Parse(tempList[i]);
+        }
+    }
+
+
+    //This function is called by React at the end of the last round and will send a string containing the duplicate clues of each player.
+    //ex. "0;0;2;0;7;0;1" with the ; delimiter
+    public void ReactSendDuplicateString(string duplicateString)
+    {
+        char[] separator = { ';' };
+        string[] tempList = duplicateString.Split(separator, StringSplitOptions.None);
+        for (int i = 0; i < playerTotal; i++)
+        {
+            duplicateGuesses[i] = int.Parse(tempList[i]);
+        }
+    }
+
+
+    //This function is called by React at the end of the last round and will send a string containing the valid clues of each player.
+    //ex. "0;0;2;0;7;0;1" with the ; delimiter
+    public void ReactSendValidCluesSting(string validString)
+    {
+        char[] separator = { ';' };
+        string[] tempList = validString.Split(separator, StringSplitOptions.None);
+        for (int i = 0; i < playerTotal; i++)
+        {
+            validGuesses[i] = int.Parse(tempList[i]);
+        }
+    }
+
 
 
     //This is called by react to tell unity that the infos have been set and the next round can be started

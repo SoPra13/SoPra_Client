@@ -52,5 +52,8 @@
         },
     GameHasEnded: function(score) {
           ReactUnityWebGL.GameHasEnded(score);
+        },
+    FetchScoreStats: function() {
+          ReactUnityWebGL.FetchScoreStats();
         }
 });

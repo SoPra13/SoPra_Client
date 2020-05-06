@@ -23,6 +23,10 @@ public class Rounds : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void GameHasEnded(int score); //tell react that the game has ended
 
+    [DllImport("__Internal")]
+    private static extern void FetchScoreStats(); //this is called at the end of the last round and will tell react to call
+    //these functions in mockstats: ReactSendCorrectGuessString(), ReactSendDuplicateString(), ReactSendValidCluesSting()
+
 
 
     public GameBoard gameBoard;
@@ -504,20 +508,24 @@ public class Rounds : MonoBehaviour
 
             if (mockStats.GetStartNextRound())
             {
-                StartCoroutine(gameBoard.NewRoundStartsAnimation());
-                roundPhase = 26;
+                //Wait for the next round to be started and check if game is over
+                if (round >= 12)//EndGame
+                {
+                    StartCoroutine(EndGame());
+                }
+                //Todo Check if game is over and also check Edge case that if we are in round 12 and fail, round 13 is skipped and the game ends and
+                //edge case if we are in round 13 and fail, game ends and 1 successful round is subtracted
+                else
+                {
+                    StartCoroutine(gameBoard.NewRoundStartsAnimation());
+                    roundPhase = 26;
+                }
             }
         }
 
         if (roundPhase == 26)
         {
-            //Wait for the next round to be started and check if game is over
-            if (round >= 12)//EndGame
-            {
-                StartCoroutine(EndGame());
-            }
-            //Todo Check if game is over and also check Edge case that if we are in round 12 and fail, round 13 is skipped and the game ends and
-            //edge case if we are in round 13 and fail, game ends and 1 successful round is subtracted
+
         }
     }
 
@@ -712,7 +720,6 @@ public class Rounds : MonoBehaviour
         yield return new WaitForSeconds(2f);
         gameBoard.RemoveArrow();
         roundPhase = 3;
-
     }
 
 
@@ -727,6 +734,13 @@ public class Rounds : MonoBehaviour
     //Asks React if Active Player already made his choice
     IEnumerator EndGame()
     {
+        try { FetchScoreStats(); }//This will tell React to get the Round int for this round
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.Log("Unity wants to get data on the score stats of a player but failed " + e);
+        }
+        yield return new WaitForSeconds(1.5f);
+
         mockStats.MultiplyScore();
         yield return new WaitForSeconds(0.2f);
         //ToDo Tell React that game is finished
