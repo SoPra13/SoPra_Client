@@ -15,7 +15,6 @@ import WaitingLobby from "../../lobby/WaitingLobby";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import {LobbyGuard} from "../routeProtectors/LobbyGuard";
 import LoginLobby from "../../lobby/LoginLobby";
-import UnityDummy from "../../game/UnityDummy";
 import Chat from "../../chat/Chat";
 
 
@@ -106,15 +105,6 @@ class AppRouter extends React.Component {
                       <Profile/>
                   )}
               />
-
-              <Route
-                  path="/unitydummy"
-                  exact
-                  render={() => (
-                      <UnityDummy/>
-                  )}
-              />
-
 
               <Route
                   path="/unityGame"

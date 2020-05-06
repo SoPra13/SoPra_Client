@@ -68,6 +68,7 @@ class EditProfile extends React.Component {
         this.state = {
             user: null,
             id: null,
+            avatar: null,
             username: null
         };
     }
@@ -78,6 +79,7 @@ class EditProfile extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
+                avatar: this.state.avatar
             });
 
             await api.put('/user?token=' + localStorage.getItem('userToken'), requestBody);
