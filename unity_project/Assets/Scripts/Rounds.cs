@@ -34,9 +34,6 @@ public class Rounds : MonoBehaviour
     public MockStats mockStats;
     public Timer timer;
 
-    //public AudioSource clockTick;
-    //public AudioSource timeOver;
-
     private int round = 0; //keeps track of the round number, starts with 0, ends after 12
     private int roundPhase;
     private bool roundPhase3Wakes = true;
@@ -69,6 +66,11 @@ public class Rounds : MonoBehaviour
             //Just for Testing
             //GameObject.Find("MultiplierText").GetComponent<TextMeshProUGUI>().text = mockStats.GetMultiplier().ToString("#.0");
             //Reset things at the beginning of each round:
+            try { FetchRound(); }//This will tell React to get the Round int for this round
+            catch (EntryPointNotFoundException e)
+            {
+                Debug.Log("Unity wants to set the current round but failed " + e);
+            }
             mockStats.SetStartNextRound();
             waitForSettingUpNextRound = false;
             roundPhase3Wakes = true;
@@ -77,14 +79,7 @@ public class Rounds : MonoBehaviour
             skippingTurn = false;
             DeactivateWater();
             mockStats.ResetTimeValues();
-            GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = GetRound().ToString();
-
-            try { FetchRound(); }//This will tell React to get the Round int for this round
-            catch (EntryPointNotFoundException e)
-            {
-                Debug.Log("Unity wants to set the current round but failed " + e);
-            }
-
+            StartCoroutine(SetRoundAfterReactToldIt());
 
             gameBoard.DisplayArrow();
             if (round == 0)
@@ -218,8 +213,11 @@ public class Rounds : MonoBehaviour
                 //Everyone has set their vote
                 //Check for draws
                 if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1) || !timer.getTimerStatus())
-                //if (sum >= (mockStats.GetTotalNumberOfPlayers() - 1))
                 {
+                    if (!mockStats.GetLockInputTopicState())
+                    {
+                        mockStats.SetPlayerTopicInput(5);
+                    }
                     StartCoroutine(CallForTopicList());
                     StartCoroutine(gameBoard.RemoveTopicCard()); //remove the topic card and then continue
                     mockStats.SetTime(0, timer.GetTime());
@@ -624,6 +622,7 @@ public class Rounds : MonoBehaviour
     //This will tell React to get the Topic Array from the Backend and send it to unity, triggers every 0.5 seconds
     IEnumerator CallForTopicList()
     {
+        yield return new WaitForSeconds(0.25f);
         try { FetchTopicList(); }
         catch (EntryPointNotFoundException e)
         {
@@ -751,6 +750,13 @@ public class Rounds : MonoBehaviour
         }
         yield return new WaitForSeconds(0.2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); 
+    }
+
+
+    IEnumerator SetRoundAfterReactToldIt()
+    {
+        yield return new WaitForSeconds(0.25f);
+        GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = GetRound().ToString();
     }
 
 }
