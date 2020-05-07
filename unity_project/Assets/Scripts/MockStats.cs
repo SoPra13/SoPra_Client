@@ -288,6 +288,15 @@ public class MockStats : MonoBehaviour
     }
 
 
+    public void ResetTopicChoices()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            topicChoices[i] = 0;
+        }
+    }
+
+
     //just for Testing Buttons
     public void PlayerHasChosenTopic(int playerPos)
     {

@@ -80,6 +80,7 @@ public class Rounds : MonoBehaviour
             DeactivateWater();
             mockStats.ResetTimeValues();
             StartCoroutine(SetRoundAfterReactToldIt());
+            mockStats.ResetTopicChoices();
 
             gameBoard.DisplayArrow();
             if (round == 0)
