@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 36702196}
   - component: {fileID: 36702195}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Game Evaluation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,7 +155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 189, y: 0}
+  m_AnchoredPosition: {x: 189, y: 331}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &36702195
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Finished
+  m_text: Game Evaluation
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e315bd8ab93413c4a9ce1645ae6099ad, type: 2}
   m_sharedMaterial: {fileID: 361926752401206779, guid: e315bd8ab93413c4a9ce1645ae6099ad,
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_margin: {x: -409.09564, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 36702195}
-    characterCount: 13
+    characterCount: 15
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -645,6 +645,7 @@ GameObject:
   - component: {fileID: 364220135}
   - component: {fileID: 364220134}
   - component: {fileID: 364220133}
+  - component: {fileID: 364220136}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -700,7 +701,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: af3b8ca19273ea64b9e3503680541464, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5667bd6ca79ca904db75bc38a72d32d0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -718,6 +719,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 364220131}
   m_CullTransparentMesh: 0
+--- !u!95 &364220136
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364220131}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 25d0a6871f7c977408b59d28ddb5b358, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &419532211
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,7 +766,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 70c1ebc76b6fc224d99152173178c344, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

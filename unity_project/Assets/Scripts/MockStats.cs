@@ -310,14 +310,13 @@ public class MockStats : MonoBehaviour
 
         }
         else
-        {
-            
+        {        
             try { PlayerVoted(i); }
             catch (EntryPointNotFoundException e)
             {
                 Debug.Log("Unity could not send any Topic Output to React" + e);
             }
-            topicChoices[i]++; //JUST FOR TESTING
+            //topicChoices[i]++; //JUST FOR TESTING
             inputLocked = true;
         }
     }

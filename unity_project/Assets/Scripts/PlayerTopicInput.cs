@@ -27,8 +27,9 @@ public class PlayerTopicInput : MonoBehaviour
         else
         {
             GameObject.Find("ButtonSFX").GetComponent<AudioSource>().Play();
+            mockStats.SetPlayerTopicInput((int)Char.GetNumericValue(this.name[11]) - 1);
         }
-        mockStats.SetPlayerTopicInput((int)Char.GetNumericValue(this.name[11])-1);
+        
     }
 
     IEnumerator AlreadyChosen()
