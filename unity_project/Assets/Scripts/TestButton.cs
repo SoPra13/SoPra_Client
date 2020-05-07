@@ -79,7 +79,7 @@ public class TestButton : MonoBehaviour
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("4444");
-            round.SetRound(1);
+            round.SetRound(12);
 
         }
         else if (roundTesting == 1)

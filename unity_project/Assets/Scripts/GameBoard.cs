@@ -1226,7 +1226,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(2f);
-        for (int i = 0; i < mockStats.GetTotalNumberOfPlayers()-1; i++)
+        for (int i = 0; i <= mockStats.GetTotalNumberOfPlayers()-1; i++)
         {
             if (i == mockStats.GetActivePlayer()-1)
             {
