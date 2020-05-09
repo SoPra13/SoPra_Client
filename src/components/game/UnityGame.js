@@ -24,6 +24,7 @@ export class UnityGame extends React.Component {
             gameToken: localStorage.getItem('gameToken'),
             round:0,
             game: null,
+            playerListLength: null,
         };
 
         //unityContent is our unity code accessor
@@ -58,6 +59,7 @@ export class UnityGame extends React.Component {
             this.setPlayerNames(this.state.game);
             this.setPlayerAvatars(this.state.game);
             this.setTopics(this.state.game);
+            this.setScores();
         });
 
 
@@ -102,12 +104,6 @@ export class UnityGame extends React.Component {
             this.sendRoundsTopic();
         });
 
-        //todo: CHRIS check which of the two not needed anymore
-        this.unityContent.on("CallsForClueReady", () =>{
-            this.sendClueReadyString(this.state.game);
-
-        });
-
         this.unityContent.on("FetchCluesString", () =>{
             console.log("Unity asks for the list of clues");
             this.sendClueList();
@@ -128,15 +124,23 @@ export class UnityGame extends React.Component {
             this.nextRound()
         });
 
-        //todo: CHRIS still needed with new system?
+        //todo: possibly obsolete
         this.unityContent.on("UpdateScore", (score) =>{
             //score is int 1= win 0=lose
             //backendScore
         });
+
         this.unityContent.on("GameHasEnded", (score) =>{
             console.log("Unity tells game has ended");
             this.endGame(score);
         });
+
+        this.unityContent.on("FetchScoreStats", () =>{
+            console.log("Unity tells game has ended");
+            this.sendScoreStats(this.state.game)
+        });
+
+
     }
 
     /*
@@ -171,13 +175,15 @@ export class UnityGame extends React.Component {
 
         await api.put('/game/ready?userToken=' + localStorage.getItem('userToken') + '&gameToken=' + localStorage.getItem('gameToken'));
         this.state.round = this.state.game.currentRound;
+        this.state.playerListLength = this.state.game.playerList.length;
+
 
         var playerIndex = this.getIndex(game, localStorage.getItem('userToken'));
         var activePlayer = game.guesser+1;
         var totalPlayer = game.playerList.length + game.botList.length;
         var ready = game.botList.length;
 
-        for (var i = 0; i<game.playerList.length; i++) {
+        for (var i = 0; i<this.state.playerListLength; i++) {
             if (game.playerList[i].unityReady == true) {
                 ready += 1;
             }
@@ -224,12 +230,13 @@ export class UnityGame extends React.Component {
 
         var avatarString = '';
 
-        for (var user in this.state.game.playerList) {
-                avatarString += user.avatar.toString()
-
+        for(var i = 0; i<this.state.playerListLength; i++){
+            avatarString += this.state.game.playerList[i].avatar.toString()
         }
-        for (var bot in this.state.game.botList) {
-            avatarString += bot.avatar.toString()
+
+
+        for(var i = 0; i<this.state.game.botList.length; i++){
+            avatarString += this.state.game.botList[i].avatar.toString()
         }
 
         this.unityContent.send(
@@ -253,10 +260,14 @@ export class UnityGame extends React.Component {
     }
 
 
-    setScores(game){
+    setScores(){
         var scoreArray = [];
-        for(var user in game.playerList ){
-            scoreArray.push(user.totalScore);
+        for(var i = 0; i<this.state.playerListLength; i++){
+            scoreArray.push(this.state.game.playerList[i].totalScore.toString());
+        }
+
+        for(var i = 0; i<this.state.game.botList.length; i++){
+            scoreArray.push(0);
         }
 
        var scoreString = this.arrayToString(scoreArray);
@@ -339,6 +350,14 @@ export class UnityGame extends React.Component {
                 votedString += '0'
             }
         }
+
+        /*if(this.state.game.playerList<this.state.playerListLength){
+            for (var i = 0; i<(this.state.playerListLength-this.state.game.playerList); i++) {
+                    votedString += '1'
+                console.log("CHRISISDAHORNYGOAT")
+                }
+        }*/
+
         for (var i = 0; i < game.botList.length; i++) {
             if(this.state.game.botsVoted) {
                 votedString += '1'
@@ -374,23 +393,6 @@ export class UnityGame extends React.Component {
         }
     }
 
-    //todo: CHRIS needed?
-    /*
-    Structure and design:
-            guesser: I voteForMysteryWord() by onClick (similar to voteForTopic()) and send to the backend an integer(0-4?)
-            player&bot: we send strings to the backend updated a clueList (&timestampList) by PUT request
-            Unity: from backend comes either a string with separator or a string of 0 and 1
-            todo edge case: null clue or time runs out and also results to null clue -> how to solve null in strings?
-            example((float)timestampList 23.13;3.32;21.02;4.12;7.65)
-            individualScore(correctResponse[i], timeStamp[i])
-            guesser: I passRound() or guessMysteryWord(guess)
-            passRound() discard mystery word and go to nextRound()
-            correct guess: update teamScore += 1 && nextRound()
-            wrong guess: discard actual card and also the card of the top of the deck && nextRound()
-            if deck == 0 then showScoreboard() then stay() or leave() with countdown for tje decision (default: stay())
-            */
-
-
 
     async sendClue(clue){
         try{
@@ -413,6 +415,11 @@ export class UnityGame extends React.Component {
                 clueGivenString += '1'
             }else {
                 clueGivenString += '0'
+            }
+        }
+        if(this.state.game.playerList<this.state.playerListLength){
+            for (var i = 0; i<(this.state.playerListLength-this.state.game.playerList); i++) {
+                clueGivenString += '1'
             }
         }
 
@@ -534,6 +541,7 @@ export class UnityGame extends React.Component {
     }
 
 
+    //todo: handle new score
     async endGame(score){
     try{
         clearInterval(this.timerID);
@@ -557,6 +565,71 @@ export class UnityGame extends React.Component {
             alert(`Something fizzled while sending the guess to Backend: \\n${handleError(error)}`);
         }
         console.log("Sent Guess or Skip to Backend");
+    }
+
+    async sendScoreStats(game){
+
+        var guessArray = [];
+        for(var i = 0; i<this.state.game.playerList.length; i++){
+            guessArray.push(this.state.game.playerList[i].guessesCorrect.toString());
+        }
+
+
+        var duplicateArray = [];
+        for(var i = 0; i<this.state.game.playerList.length; i++){
+            duplicateArray.push(this.state.game.playerList[i].duplicateClues.toString());
+        }
+
+
+        var validArray = [];
+        for(var i = 0; i<this.state.game.playerList.length; i++){
+            validArray.push((this.state.game.playerList[i].totalClues-this.state.game.playerList[i].duplicateClues-this.state.game.playerList[i].invalidClues).toString());
+        }
+
+
+        if(this.state.game.playerList<this.state.playerListLength){
+            for (var i = 0; i<(this.state.playerListLength-this.state.game.playerList); i++) {
+                guessArray.push(0);
+                duplicateArray.push(0);
+                validArray.push(0);
+            }
+        }
+
+        for(var i = 0; i<this.state.game.botList.length; i++){
+            guessArray.push(0);
+        }
+        for(var i = 0; i<this.state.game.botList.length; i++){
+            duplicateArray.push(0);
+        }
+        for(var i = 0; i<this.state.game.botList.length; i++){
+            validArray.push(0);
+        }
+
+        var duplicateString = this.arrayToString(duplicateArray);
+        var guessString = this.arrayToString(guessArray);
+        var validString = this.arrayToString(validArray);
+
+
+        this.unityContent.send(
+            "MockStats",
+            "ReactSendCorrectGuessString",
+            guessString
+        );
+        this.unityContent.send(
+            "MockStats",
+            "ReactSendDuplicateString",
+            duplicateString
+        );
+        this.unityContent.send(
+            "MockStats",
+            "ReactSendValidCluesSting",
+            validString
+        );
+        console.log("Sent Stats to Backend:");
+        console.log("String of correct guesses: " + guessString);
+        console.log("String of duplicate clues: " + duplicateString);
+        console.log("String of valid clues: " + validString);
+
     }
 
 
