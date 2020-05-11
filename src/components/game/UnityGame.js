@@ -124,12 +124,6 @@ export class UnityGame extends React.Component {
             this.nextRound()
         });
 
-        //todo: possibly obsolete
-        this.unityContent.on("UpdateScore", (score) =>{
-            //score is int 1= win 0=lose
-            //backendScore
-        });
-
         this.unityContent.on("GameHasEnded", (score) =>{
             console.log("Unity tells game has ended");
             this.endGame(score);
@@ -455,9 +449,8 @@ export class UnityGame extends React.Component {
             clearInterval(this.timerID);
             await new Promise(resolve => setTimeout(resolve, 1000));
             await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
-            localStorage.removeItem('lobbyToken');
             localStorage.removeItem('gameToken');
-            this.props.history.push('/dashboard')
+            this.props.history.push('/dashboard/waitingLobby')
         }catch(error) {
             alert(`Something fizzled while sending leave request to Backend: \\n${handleError(error)}`);
         }
@@ -483,10 +476,10 @@ export class UnityGame extends React.Component {
             }
         }
 
-    getResultOfGuess(){
+    async getResultOfGuess(){
 
         if(!this.state.game.guessGiven){
-            this.sendGuess(null);
+            await this.sendGuess(null);
             console.log('Told Backend round was skipped');
         }
 
@@ -541,15 +534,13 @@ export class UnityGame extends React.Component {
     }
 
 
-    //todo: handle new score
+
     async endGame(score){
     try{
         clearInterval(this.timerID);
         await new Promise(resolve => setTimeout(resolve, 1000));
-        await api.put('/game/end?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken')+'&score='+ score);
-        localStorage.removeItem('gameToken');
-        this.props.history.push('/dashboard/waitingLobby');
-
+        var scoreString = score.toString();
+        await api.put('/game/end?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken')+'&score='+ scoreString);
     }catch(error){
         alert(`Something fizzled while sending request to end the game: \\n${handleError(error)}`);
     }

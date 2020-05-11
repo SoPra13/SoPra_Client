@@ -119,6 +119,7 @@ class Dashboard extends React.Component {
         try{
             const response = await api.get('/lobbies');
             this.setState({ lobbies: response.data });
+            console.log(response);
         }catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }

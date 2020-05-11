@@ -76,7 +76,8 @@ class WaitingRoom extends React.Component {
             adminToken: null,
             joinToken: null,
             isToggleReady: false,
-            lobbyname: null
+            lobbyname: null,
+            lobbyInGame:null
         };
     }
 
@@ -166,17 +167,16 @@ class WaitingRoom extends React.Component {
 
     leaveLobby(){
         try {
-            const response = api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
-                + '?userToken=' + localStorage.getItem('userToken'));
+            api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
+                + '&userToken=' + localStorage.getItem('userToken'));
 
             localStorage.removeItem('lobbyToken');
-
             this.props.history.push('/dashboard');
 
-        }catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
-        }
 
+        }catch (error) {
+            alert(`Something went wrong while leaving the lobby: \n${handleError(error)}`);
+        }
     }
 
     /**
@@ -210,6 +210,26 @@ class WaitingRoom extends React.Component {
         } catch (error) {
             alert(`Something went wrong while fetching the lobby: \n${handleError(error)}`);
             this.props.history.push('/dashboard');
+        }
+    }
+
+    async checkForGame(){
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await api.get('/game?token=' + localStorage.getItem('lobbyToken'));
+
+
+
+            this.setState({
+                game: true,
+            });
+
+            console.log(this.state.game);
+
+        } catch (error) {
+            this.setState({
+                game: false,
+            });
         }
     }
 
@@ -262,13 +282,24 @@ class WaitingRoom extends React.Component {
      * componentWillMount() sets the states of playerList and botList before the first rendering
      */
 
-    componentWillMount() {
-        const response = api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'));
+    async componentWillMount() {
+        const response = await api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'));
 
 
-        const lobby = new Lobby(response.data);
+        const lobby = response.data;
+        console.log(lobby);
 
-
+        if(lobby.lobbyState ==='INGAME'){
+            console.log("INGAME")
+            this.setState({
+                lobbyInGame: true
+            })
+        }else{
+            console.log("OUTGAMe")
+            this.setState({
+                lobbyInGame: false
+            })
+        }
         this.setState({
             playerList: lobby.playerList,
             botList: lobby.botList
@@ -448,6 +479,8 @@ class WaitingRoom extends React.Component {
 
                         <MultipleListsContainer>
                         <Button1
+                            disabled = {(this.state.adminToken == localStorage.getItem('userToken')&&this.state.playerList.length > 1)}
+
                             onClick={() => {
                                 this.leaveLobby();
 
@@ -458,7 +491,7 @@ class WaitingRoom extends React.Component {
 
 
                     <Button1
-                        //disabled = {this.state.playerList === null || (this.state.playerList.length < 3 && this.state.playerList.length !== null)}
+                        disabled = { this.state.lobbyInGame || (this.state.playerList != null && this.state.playerList.length < 1)}
                         onClick={() => {
                             this.enterGame();
                         }}
