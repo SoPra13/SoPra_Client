@@ -78,22 +78,23 @@ public class TestButton : MonoBehaviour
         if(roundTesting == 0)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
-            mockStats.ReactSetPlayerStats("4444");
-            round.SetRound(12);
+            mockStats.ReactSetPlayerStats("7777");
+            round.SetRound(11);
+            //round.SetRound(2);
 
         }
         else if (roundTesting == 1)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
-            mockStats.ReactSetPlayerStats("1444");
-            round.SetRound(2);
+            mockStats.ReactSetPlayerStats("1777");
+            round.SetRound(12);
 
         }
         if (roundTesting == 2)
         {
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("2444");
-            round.SetRound(3);
+            round.SetRound(6);
         }
         else if (roundTesting == 3)
         {
@@ -106,6 +107,12 @@ public class TestButton : MonoBehaviour
             round = GameObject.Find("Rounds").GetComponent<Rounds>();
             mockStats.ReactSetPlayerStats("4444");
             round.SetRound(10);
+        }
+        else if (roundTesting == 5)
+        {
+            round = GameObject.Find("Rounds").GetComponent<Rounds>();
+            mockStats.ReactSetPlayerStats("1444");
+            round.SetRound(12);
         }
 
         mockStats.ReactSetPlayerHasSubmittedClue("0000000");

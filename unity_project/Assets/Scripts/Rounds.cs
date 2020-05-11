@@ -6,6 +6,12 @@ using TMPro;
 using System;
 using UnityEngine.SceneManagement;
 
+
+//Todo
+//Player 5 background is buggy, does not display
+//GameHasEnded has to be called in gameover screen
+//Score is calculated buggily, have to check
+
 public class Rounds : MonoBehaviour
 {
     [DllImport("__Internal")]
@@ -64,8 +70,12 @@ public class Rounds : MonoBehaviour
         if(roundPhase == 1)//Shuffling Animation of Cards AND Set the Round (fetched from Backend)
         {
             //Just for Testing
+            Debug.Log("Score: " + mockStats.GetScore());
+            Debug.Log("Multiplier: " + mockStats.GetMultiplier());
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             //GameObject.Find("MultiplierText").GetComponent<TextMeshProUGUI>().text = mockStats.GetMultiplier().ToString("#.0");
             //Reset things at the beginning of each round:
+
             try { FetchRound(); }//This will tell React to get the Round int for this round
             catch (EntryPointNotFoundException e)
             {
@@ -734,6 +744,7 @@ public class Rounds : MonoBehaviour
     //Asks React if Active Player already made his choice
     IEnumerator EndGame()
     {
+        StartCoroutine(gameBoard.FadeScreenCompletely());
         try { FetchScoreStats(); }//This will tell React to get the Round int for this round
         catch (EntryPointNotFoundException e)
         {
@@ -742,13 +753,17 @@ public class Rounds : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         mockStats.MultiplyScore();
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
+        int score = mockStats.GetScore();
+        yield return new WaitForSeconds(0.1f);
         //ToDo Tell React that game is finished
-        try { GameHasEnded(mockStats.GetScore()); }//This will tell React to get the Round int for this round
+        //TODO This GameHasEnded function has to be called in the gameover screen once a player clicks on leave game, not here!
+        try { GameHasEnded(score); }//This will tell React to get the Round int for this round
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity wants to tell React that the game has ended " + e);
         }
+        //Debug.Log(mockStats.GetScore());
         yield return new WaitForSeconds(0.2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); 
     }
