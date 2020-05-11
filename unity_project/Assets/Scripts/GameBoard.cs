@@ -94,7 +94,6 @@ public class GameBoard : MonoBehaviour
 
     void Start()
     {
-
         gameMusic.volume = 0.5f;
         SetUpInitialBoard();
         StartCoroutine(FadeInScreen());
@@ -614,8 +613,15 @@ public class GameBoard : MonoBehaviour
 
             GameObject.Find("Card" + (12 - roundNr).ToString()).GetComponent<Animator>().SetBool("drawCard", true);
             drawCard.Play();
-            GameObject.Find("CardsLeftText").GetComponent<TextMeshProUGUI>().text = "< " + (12 - roundNr).ToString() + " Left >";
-            GameObject.Find("CardsLeftText").transform.localPosition = positions.DecreaseCardLeftTextPositionLoss();
+            if(roundNr >= 12)
+            {
+                Destroy(GameObject.Find("CardsLeftText"));
+            }
+            else
+            {
+                GameObject.Find("CardsLeftText").GetComponent<TextMeshProUGUI>().text = "< " + (12 - roundNr).ToString() + " Left >";
+                GameObject.Find("CardsLeftText").transform.localPosition = positions.DecreaseCardLeftTextPositionLoss();
+            }
             yield return new WaitForSeconds(0.5f);
             Destroy(GameObject.Find("Card" + (12 - roundNr).ToString()));
             Destroy(GameObject.Find("Card" + (12 - roundNr + 1).ToString()));
@@ -1360,5 +1366,13 @@ public class GameBoard : MonoBehaviour
         round.ActivateWaiter();
     }
 
+    public IEnumerator FadeScreenCompletely()
+    {
+        GameObject blackScreen = Instantiate(blackScreenObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
+        blackScreen.name = "BlackScreen2";
+        blackScreen.transform.SetParent(GameObject.Find("Interaction").transform, false);
+        GameObject.Find("BlackScreen2").GetComponent<Animator>().SetBool("completeBlack", true);
+        yield return new WaitForSeconds(1.0f);
+    }
 }
 
