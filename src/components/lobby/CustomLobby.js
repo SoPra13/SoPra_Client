@@ -2,15 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
+import Lobby from "../shared/models/Lobby";
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import Header from "../../views/Header";
-
-const Central = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -20,6 +15,7 @@ const FormContainer = styled.div`
   min-height: 300px;
   justify-content: center;
 `;
+
 
 const Form = styled.div`
   display: flex;
@@ -32,7 +28,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background-color: rgba(48,208,255,0.4);
+  background: rgba(150, 0, 255, 0.5);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -56,49 +52,62 @@ const Label = styled.label`
   text-transform: uppercase;
 `;
 
-
 const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   margin-top: 20px;
 `;
+
 
 /**
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
-class LoginLobby extends React.Component {
+class CustomLobby extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             lobbyname: null,
-            userToken: localStorage.getItem(`userToken`),
-            lobbyToken: null,
-            joinToken: null
+            adminToken: localStorage.getItem('userToken'),
+            lobbyType: "PUBLIC"
         };
     }
 
-    async login() {
+    async create() {
         try {
-            const response = await api.put('/lobby?joinToken='+ this.state.joinToken +
-                `&userToken=` + localStorage.getItem('userToken'));
-
-            // Get the returned user and update a new object.
-            console.log(response.data);
-
+            const requestBody = JSON.stringify({
+                lobbyname: this.state.lobbyname,
+                adminToken: this.state.adminToken,
+                lobbyType: this.state.lobbyType
+            });
+            const response = await api.post('/lobby', requestBody);
             await new Promise(resolve => setTimeout(resolve, 1000));
+            // Get the returned user and update a new object.
+            const lobby = new Lobby(response.data);
 
-            // Store the token into the local storage.
-            localStorage.setItem('lobbyToken', response.data.lobbyToken);
+            localStorage.setItem('lobbyToken', lobby.lobbyToken);
+            console.log(lobby);
+            console.log(lobby.lobbyToken);
 
-            this.props.history.push('/dashboard/waitingLobby');
+
+
+            this.props.history.push(`/dashboard/waitingLobby`);
         } catch (error) {
-            alert(`Something went wrong during the lobbyJoin: \n${handleError(error)}`);
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
     }
 
+    changeLobbyType(){
+        if(this.state.lobbyType==="PUBLIC"){
+            this.setState({
+                lobbyType: "PRIVATE"
+            })}else{
+            this.setState({
+                lobbyType: "PUBLIC"
+            })
+        }
+    }
 
     /**
      *  Every time the user enters something in the input field, the state gets updated.
@@ -111,6 +120,7 @@ class LoginLobby extends React.Component {
         this.setState({ [key]: value });
     }
 
+
     componentDidMount() {}
 
     render() {
@@ -119,41 +129,46 @@ class LoginLobby extends React.Component {
                 <BaseContainer>
                     <FormContainer>
                         <Form>
-
-
-
-                            <Label>Password</Label>
+                            <Label>Lobby name</Label>
                             <InputField
-                                type="password"
-                                placeholder="Enter here your lobby token"
+                                placeholder="Enter here.."
                                 onChange={e => {
-                                    this.handleInputChange('joinToken', e.target.value);
+                                    this.handleInputChange('lobbyname', e.target.value);
                                 }}
                             />
+
+
                             <ButtonContainer>
+                                <Button
+                                    onClick={() => {
+                                        this.changeLobbyType();
+                                    }}
+                                >
+                                    {this.state.lobbyType === "PUBLIC" ? "Set as Public" : "Set as Private"}
+                                </Button>
 
-                                <Central>
-                                    <Button
-                                        disabled={!this.state.joinToken}
-                                        onClick={() => {
-                                            this.login();
-                                        }}
-                                    >
-                                        Enter Lobby
-                                    </Button>
-                                </Central>
-                                <br/>
-                                <Central>
-                                    <Button
-                                        width="35%"
-                                        onClick={() => {
-                                            this.props.history.push('/dashboard');
-                                        }}
-                                    >
-                                        Back
-                                    </Button>
-                                </Central>
+                            </ButtonContainer>
 
+                            <ButtonContainer>
+                                <Button
+                                    width="30%"
+                                    onClick={() => {
+                                        this.create();
+                                    }}
+                                >
+                                    Create
+                                </Button>
+                            </ButtonContainer>
+
+                            <ButtonContainer>
+                                <Button
+                                    width="30%"
+                                    onClick={() => {
+                                        this.props.history.push('/dashboard');
+                                    }}
+                                >
+                                    Back
+                                </Button>
                             </ButtonContainer>
                         </Form>
                     </FormContainer>
@@ -163,8 +178,5 @@ class LoginLobby extends React.Component {
     }
 }
 
-/**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
- */
-export default withRouter(LoginLobby);
+
+export default withRouter(CustomLobby);

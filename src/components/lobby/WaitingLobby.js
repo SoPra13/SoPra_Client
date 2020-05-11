@@ -2,14 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import Player from '../../views/Player';
 import { Spinner } from '../../views/design/Spinner';
 import { withRouter } from 'react-router-dom';
 import Lobby from "../shared/models/Lobby";
 import BotPlayer from "../../views/BotPlayer";
 import Chat from '../chat/Chat';
-import Header from "../../views/Header";
 import ProfileInfo from "../../views/ProfileInfo";
+import Header2 from "../../views/Header2";
 
 
 const Container = styled(BaseContainer)`
@@ -308,7 +307,7 @@ class WaitingRoom extends React.Component {
     render() {
         return (
             <div>
-                <Header height={"80"} />
+                <Header2 height={"80"} />
                 <BaseContainer>
                     <Container>
 

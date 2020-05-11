@@ -36,12 +36,13 @@ const Container = styled.div`
   border-radius: 6px;
   display: flex;
   flex-direction: column;
-  background: rgba(163,30,255, 0.4);
+  background: rgba(163,30,255, 0.7);
   border: 1px solid #ffffff26;
   
 `;
 
 const UserName = styled.div`
+  color: #FFA700;
   font-weight: lighter;
   margin-left: 5px;
 `;
