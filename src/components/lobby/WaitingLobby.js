@@ -433,76 +433,6 @@ class WaitingRoom extends React.Component {
                             )}
 
 
-
-
-
-                            <PlayerContainer>
-
-                                <MultipleListsContainer>
-                                    <Button1
-                                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                                        width="20%"
-                                        onClick={() => {
-                                            this.getLobbyToken();
-                                        }}
-                                    >
-                                        Get the lobby token
-                                    </Button1>
-
-                                    <Button1
-                                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                                        width="20%"
-                                        onClick={() => {
-                                            this.addBot('FRIEND');
-                                        }}
-                                    >
-                                        ADD FRIENDLY BOT
-                                    </Button1>
-
-
-                                    <Button1
-                                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                                        width="20%"
-                                        onClick={() => {
-                                            this.addBot('DARKSOULS');
-                                        }}
-                                    >
-                                        ADD BADASS BOT
-                                    </Button1>
-                                </MultipleListsContainer>
-
-
-
-                                <MultipleListsContainer>
-                                    <Button1
-                                        onClick={() => {
-                                            this.leaveLobby();
-
-                                        }}
-                                    >
-                                        Leave
-                                    </Button1>
-
-
-                                    <Button1
-                                        disabled = {this.state.playerList === null || (this.state.playerList.length < 3 && this.state.playerList.length !== null)}
-                                        onClick={() => {
-                                            this.enterGame();
-                                        }}
-                                    >
-                                        Join into Game
-                                    </Button1>
-                                </MultipleListsContainer>
-
-                            </PlayerContainer>
-                        </div>
-<<<<<<< HEAD
-                    )}
-
-
-
-
-
                     <PlayerContainer>
 
                         <MultipleListsContainer>
@@ -574,14 +504,11 @@ class WaitingRoom extends React.Component {
 
                     </PlayerContainer>
                     </div>
-            </Container>
-            </BaseContainer>
-    </div>
-=======
+
                     </Container>
                 </BaseContainer>
             </div>
->>>>>>> bdf87eff550f7b75b628b46fff460f63d749a85a
+
         );
     }
 }
