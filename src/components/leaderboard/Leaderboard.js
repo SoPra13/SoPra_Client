@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PlayerBox from './PlayerBox'
 import './leaderboard.css'
-import LeaderboardSelector from './LeaderboardSelector'
+import LeaderboardSelector from './leaderboardselector'
 import { api } from '../../helpers/api'
 
 
