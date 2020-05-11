@@ -1,5 +1,3 @@
-# SoPra FS20 - Client Template
-
 ## Getting started with React
 
 Read and go through those Tutorials, It will make your life easier!
@@ -23,7 +21,7 @@ Once you have downloaded and installed it, you can add the following WebStorm pl
 * [prettier](https://plugins.jetbrains.com/plugin/10456-prettier) (a smart code formatter)
 * [Material Theme UI](https://plugins.jetbrains.com/plugin/8006-material-theme-ui) (Material Theme for Jetbrains IDEs, allowing a total customization of the IDE including Themes, Color Schemes, Icons and many other features.)
 
-Feel free to use other IDEs (e.g. [VisualStudio](https://code.visualstudio.com/)) if you want.  -->
+Feel fre e to use other IDEs (e.g. [VisualStudio](https://code.visualstudio.com/)) if you want.  -->
 
 ## Prerequisites and Installation
 

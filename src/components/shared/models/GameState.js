@@ -1,9 +1,22 @@
 class GameState {
     constructor(data = {}) {
         this.id = null;
-        this.lobbyId = null;
-        this.gameToken = null;
-        this.wordList = null;
+        this.version = null;
+        this.token = null;
+        this.currentRound = null;
+        this.guesser = null;
+        this.topic = null;
+        this.guessCorrect =null;
+        this.clueList = null;
+        this.mysteryWords = null;
+        this.voteList = null;
+        this.playerList = null;
+        this.botList = null;
+        this.guessGiven = null;
+        this.botsClueGiven = null;
+        this.botsVoted = null;
+
+/*        this.wordList = null;
         this.status = null;
         this.adminToken = null;
         this.playerList = null; //array of users
@@ -11,7 +24,7 @@ class GameState {
         this.numberOfPlayer = null; // number of Player (3-7)
         this.lobbyState = null; // OPEN, INGAME, OFFLINE(if offline, then delete)
         this.lobbyType = null; // PUBLIC; PRIVATE
-        this.playerList = null; // list of tokens of joined players
+        this.playerList = null; // list of tokens of joined players*/
         Object.assign(this, data);
     }
 }

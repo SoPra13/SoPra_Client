@@ -76,7 +76,8 @@ class Register extends React.Component {
         super();
         this.state = {
             username: null,
-            password: null
+            password: null,
+            avatar: 1
         };
     }
     /**
@@ -88,9 +89,10 @@ class Register extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
-                password: this.state.password
+                password: this.state.password,
+                avatar: this.state.avatar
             });
-            const response = await api.post('/register', requestBody);
+            await api.post('/register', requestBody);
 
 /*            // Get the returned user and update a new object.
             const user = new User(response.data);

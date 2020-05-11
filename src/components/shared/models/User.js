@@ -6,17 +6,24 @@ class User {
     this.id = null;
     this.username = null;
     this.password = null;
-    this.color = null;
+    this.avatar = null;
     this.userToken = null;
     this.lobbyToken = null;
     this.gameToken = null;
     this.status = null;
-    this.score = null;
-    this.ready = null; // READY, PREPARING
-    this.currentPosition = null; // (int 1-7)
-    this.memberIs = null; // ADMIN or PLAYER in the lobby
-    this.gamePos = null;  // current position in the game for the rotation
+    this.voted = null;
+    this.gaveClue = null;
+    this.unityReady = null;
+    this.ready = null;
     this.word = null;
+    this.gamesPlayed = null;
+    this.guessesMade = null;
+    this.guessesCorrect = null;
+    this.invalidClues = null;
+    this.totalClues = null;
+    this.duplicateClues = null;
+    this.totalScore = null;
+
     Object.assign(this, data);
   }
 }

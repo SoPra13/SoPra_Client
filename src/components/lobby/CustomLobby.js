@@ -5,6 +5,7 @@ import { api, handleError } from '../../helpers/api';
 import Lobby from "../shared/models/Lobby";
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import Header from "../../views/Header";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -32,7 +33,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
+  background:  #ed782f;
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -62,15 +63,6 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-function ready(){
-    const requestBody = JSON.stringify({
-        lobbyname: this.state.lobbyname,
-        userToken: this.state.userToken,
-        lobbyType: this.state.lobbyType
-    });
-    const response = api.post(`/lobby/ready` + `?userToken={userToken}` + localStorage.getItem(`userToken`)
-    + `&gameToken={gameToken}` + localStorage.getItem(`gameToken`), requestBody)
-}
 
 /**
  * https://reactjs.org/docs/react-component.html
@@ -82,7 +74,6 @@ class CustomLobby extends React.Component {
         super(props);
         this.state = {
             lobbyname: null,
-/*            password: null,*/
             adminToken: localStorage.getItem('userToken'),
             lobbyType: "PUBLIC"
         };
@@ -92,17 +83,20 @@ class CustomLobby extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 lobbyname: this.state.lobbyname,
-/*                password: this.state.password,*/
                 adminToken: this.state.adminToken,
                 lobbyType: this.state.lobbyType
             });
             const response = await api.post('/lobby', requestBody);
-
+            await new Promise(resolve => setTimeout(resolve, 1000));
             // Get the returned user and update a new object.
             const lobby = new Lobby(response.data);
 
+            localStorage.setItem('lobbyToken', lobby.lobbyToken);
+            console.log(lobby);
+            console.log(lobby.lobbyToken);
+
             // Store the token into the local storage.
-            localStorage.setItem('token', lobby.lobbyToken);
+
 
 
             this.props.history.push(`/dashboard/waitingLobby`);
@@ -135,6 +129,7 @@ class CustomLobby extends React.Component {
 
     render() {
         return (
+            <div>        <Header height={"80"} />
             <BaseContainer>
                 <FormContainer>
                     <Form>
@@ -165,15 +160,7 @@ class CustomLobby extends React.Component {
                                 Public
                             </Button>
                             </Active>
-{/*                            <Button
-                                onClick={() => {
-                                    this.setState({
-                                        lobbyType: "PRIVATE"
-                                });
-                                }}
-                            >
-                                Private
-                            </Button>*/}
+
                         </ButtonContainer>
 
                         <ButtonContainer>
@@ -188,9 +175,21 @@ class CustomLobby extends React.Component {
                                 Create
                             </Button>
                         </ButtonContainer>
+
+                        <ButtonContainer>
+                            <Button
+                                width="30%"
+                                onClick={() => {
+                                    this.props.history.push('/dashboard');
+                                }}
+                            >
+                                Back
+                            </Button>
+                        </ButtonContainer>
                     </Form>
                 </FormContainer>
             </BaseContainer>
+            </div>
         );
     }
 }
