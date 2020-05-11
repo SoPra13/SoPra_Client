@@ -2,10 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import Lobby from "../shared/models/Lobby";
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import Header from "../../views/Header";
+
+const Central = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -16,24 +21,18 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-const Active = styled.div`
-.active, .btn:hover {
-  background-color: #666;
-  color: #c92222;
- `;
-
 const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  width: 30%;
   height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background:  #ed782f;
+  background-color: rgba(48,208,255,0.4);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -47,7 +46,7 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
   color: white;
 `;
 
@@ -57,53 +56,49 @@ const Label = styled.label`
   text-transform: uppercase;
 `;
 
+
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin-top: 20px;
 `;
-
 
 /**
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
-class CustomLobby extends React.Component {
+class LoginLobby extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             lobbyname: null,
-            adminToken: localStorage.getItem('userToken'),
-            lobbyType: "PUBLIC"
+            userToken: localStorage.getItem(`userToken`),
+            lobbyToken: null,
+            joinToken: null
         };
     }
 
-    async create() {
+    async login() {
         try {
-            const requestBody = JSON.stringify({
-                lobbyname: this.state.lobbyname,
-                adminToken: this.state.adminToken,
-                lobbyType: this.state.lobbyType
-            });
-            const response = await api.post('/lobby', requestBody);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            // Get the returned user and update a new object.
-            const lobby = new Lobby(response.data);
+            const response = await api.put('/lobby?joinToken='+ this.state.joinToken +
+                `&userToken=` + localStorage.getItem('userToken'));
 
-            localStorage.setItem('lobbyToken', lobby.lobbyToken);
-            console.log(lobby);
-            console.log(lobby.lobbyToken);
+            // Get the returned user and update a new object.
+            console.log(response.data);
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Store the token into the local storage.
+            localStorage.setItem('lobbyToken', response.data.lobbyToken);
 
-
-
-            this.props.history.push(`/dashboard/waitingLobby`);
+            this.props.history.push('/dashboard/waitingLobby');
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong during the lobbyJoin: \n${handleError(error)}`);
         }
     }
+
 
     /**
      *  Every time the user enters something in the input field, the state gets updated.
@@ -116,83 +111,60 @@ class CustomLobby extends React.Component {
         this.setState({ [key]: value });
     }
 
-
-    /**
-     * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
-     * Initialization that requires DOM nodes should go here.
-     * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-     * You may call setState() immediately in componentDidMount().
-     * It will trigger an extra rendering, but it will happen before the browser updates the screen.
-     */
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     render() {
         return (
             <div>        <Header height={"80"} />
-            <BaseContainer>
-                <FormContainer>
-                    <Form>
-                        <Label>Lobby name</Label>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('lobbyname', e.target.value);
-                            }}
-                        />
-{/*                        <Label>Password</Label>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('password', e.target.value);
-                            }}
-                        />*/}
+                <BaseContainer>
+                    <FormContainer>
+                        <Form>
 
-                        <ButtonContainer>
-                            <Active>
-                            <Button
-                                onClick={() => {
-                                    this.setState({
-                                        lobbyType: "PUBLIC"
-                                });
+
+
+                            <Label>Password</Label>
+                            <InputField
+                                type="password"
+                                placeholder="Enter here your lobby token"
+                                onChange={e => {
+                                    this.handleInputChange('joinToken', e.target.value);
                                 }}
-                            >
-                                Public
-                            </Button>
-                            </Active>
+                            />
+                            <ButtonContainer>
 
-                        </ButtonContainer>
+                                <Central>
+                                    <Button
+                                        disabled={!this.state.joinToken}
+                                        onClick={() => {
+                                            this.login();
+                                        }}
+                                    >
+                                        Enter Lobby
+                                    </Button>
+                                </Central>
+                                <br/>
+                                <Central>
+                                    <Button
+                                        width="35%"
+                                        onClick={() => {
+                                            this.props.history.push('/dashboard');
+                                        }}
+                                    >
+                                        Back
+                                    </Button>
+                                </Central>
 
-                        <ButtonContainer>
-                            <Button
-                                disabled={/*this.state.lobbyType == null || (this.state.lobbyType === "PRIVATE" && this.state.password == null)
-                                || */this.state.lobbyname == null}
-                                width="30%"
-                                onClick={() => {
-                                    this.create();
-                                }}
-                            >
-                                Create
-                            </Button>
-                        </ButtonContainer>
-
-                        <ButtonContainer>
-                            <Button
-                                width="30%"
-                                onClick={() => {
-                                    this.props.history.push('/dashboard');
-                                }}
-                            >
-                                Back
-                            </Button>
-                        </ButtonContainer>
-                    </Form>
-                </FormContainer>
-            </BaseContainer>
+                            </ButtonContainer>
+                        </Form>
+                    </FormContainer>
+                </BaseContainer>
             </div>
         );
     }
 }
 
-
-export default withRouter(CustomLobby);
+/**
+ * You can get access to the history object's properties via the withRouter.
+ * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
+ */
+export default withRouter(LoginLobby);
