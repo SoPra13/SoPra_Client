@@ -67,30 +67,30 @@ class Profile extends React.Component {
 
         return (
             <div>        <Header height={"80"} />
-            <Container>
-                <h2>Profile</h2>
-                {!this.state.user ? (
-                    <Spinner />
-                ) : (
-                    <div>
-                        <Users>
-                            <PlayerContainer key={this.state.user.id}>
-                                <ProfileInfo user={this.state.user}/>
-                            </PlayerContainer>
-                        </Users>
+                <Container>
+                    <h2>Profile</h2>
+                    {!this.state.user ? (
+                        <Spinner />
+                    ) : (
+                        <div>
+                            <Users>
+                                <PlayerContainer key={this.state.user.id}>
+                                    <ProfileInfo user={this.state.user}/>
+                                </PlayerContainer>
+                            </Users>
 
-                    </div>
-                )}
+                        </div>
+                    )}
 
-                <ButtonContainer>
-                    <Button
-                        width="30%"
-                        onClick={() => {this.props.history.push(`/dashboard`);}}
-                    >
-                        Back
-                    </Button>
-                </ButtonContainer>
-            </Container>
+                    <ButtonContainer>
+                        <Button
+                            width="30%"
+                            onClick={() => {this.props.history.push(`/dashboard`);}}
+                        >
+                            Back
+                        </Button>
+                    </ButtonContainer>
+                </Container>
             </div>
         );
     }

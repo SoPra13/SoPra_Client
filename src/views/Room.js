@@ -8,11 +8,12 @@ const Container = styled.div`
   border-radius: 6px;
   display: flex;
   align-items: center;
-  background:  #ed782f;
+  background:  rgba(0,38,176, 0.7);
   border: 1px solid #ffffff26;
 `;
 
 const UserName = styled.div`
+  color: #FFA700;
   font-weight: lighter;
   margin-left: 5px;
 `;
@@ -27,7 +28,6 @@ const Room = ({ lobby }) => {
     return (
         <Container>
             <UserName>{lobby.lobbyname}</UserName>
-            <Id>Id: {lobby.id}</Id>
         </Container>
     );
 };

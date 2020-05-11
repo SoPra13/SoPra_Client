@@ -28,7 +28,6 @@ const Player = ({ user }) => {
   return (
     <Container>
         <UserName>{user.username}</UserName>
-      <Id>Id: {user.id}</Id>
     </Container>
   );
 };
