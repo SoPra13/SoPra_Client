@@ -28,7 +28,6 @@ const BotPlayer = ({ bot }) => {
     return (
         <Container>
             <UserName>{bot.botname}</UserName>
-            <Id>Id: {bot.id}</Id>
         </Container>
     );
 };
