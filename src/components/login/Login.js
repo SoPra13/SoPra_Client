@@ -4,7 +4,24 @@ import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import { Button2} from "../../views/design/RegisterButton";
 import Header from "../../views/Header";
+import Logo from "./Logo.png";
+
+
+import classes from '../login/login.css';
+import BackgroundLogin from "../../views/style/BackgroundLogin";
+
+
+const Background = styled.div`
+    background-image: url('/LoginImage.png');
+    width: 100%;
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+`;
 
 
 const FormContainer = styled.div`
@@ -20,15 +37,16 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  width: 30%;
   height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background-color: #ffca65;
+  background: rgba(150, 0, 255, 0.5);
   transition: opacity 0.5s ease, transform 0.5s ease;
+
 `;
 
 const InputField = styled.input`
@@ -89,7 +107,6 @@ class Login extends React.Component {
     };
   }
 
-
   /**
    * HTTP POST request is sent to the backend.
    * If the request is successful, a new user is returned to the front-end
@@ -116,9 +133,9 @@ class Login extends React.Component {
 
   //dummy test for unity
 
-/*  unityTesting(){
-    this.props.history.push(`/unitydummy`);
-  }*/
+  /*  unityTesting(){
+      this.props.history.push(`/unitydummy`);
+    }*/
 
   /**
    *  Every time the user enters something in the input field, the state gets updated.
@@ -143,63 +160,65 @@ class Login extends React.Component {
   render() {
     return (
         <div>
-          <Header height={"80"} />
-      <BaseContainer>
-        <FormContainer>
-          <Form>
-            <Label>Username</Label>
-            <InputField
-              placeholder="Enter here your username"
-              onChange={e => {
-                this.handleInputChange('username', e.target.value);
-              }}
-            />
-            <Label>Password</Label>
-            <InputField
-              placeholder="Enter here your password"
-              onChange={e => {
-                this.handleInputChange('password', e.target.value);
-              }}
-            />
-            <ButtonContainer>
 
-              <Central>
-              <Button
-                disabled={!this.state.username || !this.state.password}
-                width="30%"
-                onClick={() => {
-                  this.login();
-                }}
-              >
-                Login
-              </Button>
-              </Central>
+          <body>
+          <div>
 
-            <Central>
-              <Button
-                  width="30%"
-                  onClick={() => {
-                    this.props.history.push('/register');
-                  }}
-              >
-                Sign Up
-              </Button>
-            </Central>
 
-{/*              <Button
-                  onClick={() => {
-                    this.unityTesting();
-                  }}
-              >
-                Unity Testing
-              </Button>*/}
+            <h1><img src={Logo} width='60px' height='60px'/> Welcome in the Town!! <img src={Logo} width='60px' height='60px'/></h1>
 
-            </ButtonContainer>
+            <FormContainer>
 
-          </Form>
-        </FormContainer>
-      </BaseContainer>
+
+              <Form>
+
+
+                <Label>Username</Label>
+
+                <InputField
+                    placeholder="Enter here your username"
+                    onChange={e => {
+                      this.handleInputChange('username', e.target.value);
+                    }}
+                />
+                <Label>Password</Label>
+                <InputField type="password"
+                            placeholder="Enter here your password"
+                            onChange={e => {
+                              this.handleInputChange('password', e.target.value);
+                            }}
+                />
+                <ButtonContainer>
+
+                  <Central>
+                    <Button
+                        disabled={!this.state.username || !this.state.password}
+                        width="30%"
+                        onClick={() => {
+                          this.login();
+                        }}
+                    >
+                      Login
+                    </Button>
+                  </Central>
+                  <br/>
+                  <Central>
+                    <Button2
+                        onClick={() => {
+                          this.props.history.push('/register');
+                        }}
+                    >
+                      Hey Buddy! New in the city? Wanna kill Time? Come and sign up here.
+                    </Button2>
+                  </Central>
+                </ButtonContainer>
+              </Form>
+            </FormContainer>
+
+          </div>
+          </body>
         </div>
+
     );
   }
 }
