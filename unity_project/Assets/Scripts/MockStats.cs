@@ -71,9 +71,9 @@ public class MockStats : MonoBehaviour
     private string[] clueList = {"1", "2", "3", "4", "5", "6", "7" };
     private int activePlayerGuess = 0; //0 = player has not made a guess; 1 = player has made a guess
     private int[] scoreList = { 100, 200, 500, 750, 1000, 3000, 10000 }; //data come from backend
-    private int[] correctGuesses = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendCorrectGuessString(str)
-    private int[] duplicateGuesses = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendDuplicateString(str)
-    private int[] validGuesses = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendValidCluesSting(str)
+    private int[] correctGuesses = { 3, 0, 0, 0, 0, 0, 0 }; //ReactSendCorrectGuessString(str)
+    private int[] duplicatedClues = { 6, 0, 0, 0, 0, 0, 0 }; //ReactSendDuplicateString(str)
+    private int[] validClues = { 10, 0, 0, 0, 0, 0, 0 }; //ReactSendValidCluesSting(str)
 
     private bool giveReactTime = false;
     private bool hasLostLastRound = false;
@@ -91,10 +91,10 @@ public class MockStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activePlayer = 3;
-        playerPosition = 4; //REACTINPUT, this value needs to come from React
-        playerTotal = 4; // REACTINPUT, this value needs to come from React
-        connectedPlayers = 3; //REACTINPUT, this value needs to come from React
+        activePlayer = 6;
+        playerPosition = 7; //REACTINPUT, this value needs to come from React
+        playerTotal = 7; // REACTINPUT, this value needs to come from React
+        connectedPlayers = 6; //REACTINPUT, this value needs to come from React
     }
 
     /*public void Update()
@@ -120,6 +120,21 @@ public class MockStats : MonoBehaviour
         {
             return guessTime;
         }
+    }
+
+    public int GetCorrectGuessesList(int i)
+    {
+        return correctGuesses[i];
+    }
+
+    public int GetDuplicatedCluesList(int i)
+    {
+        return duplicatedClues[i];
+    }
+
+    public int GetCorrectCluesList(int i)
+    {
+        return validClues[i];
     }
 
     public void ResetTimeValues()
@@ -187,11 +202,22 @@ public class MockStats : MonoBehaviour
 
     public void MultiplyScore()
     {
+        //Just for Testing//
+        //multiplier = 3.5f;
+        score = 7;
+        for (int i = 0; i < 7; i++)
+        {
+            duplicatedClues[i] = 2;
+            correctGuesses[i] = 7;
+            validClues[i] = 8;
+        }
+        //Testing End Here
+
         float tempScore = score;
         tempScore *= GetMultiplier();
-        tempScore -= (duplicateGuesses[playerPosition-1]*2);
+        tempScore -= (duplicatedClues[playerPosition-1]*2);
         tempScore += (correctGuesses[playerPosition - 1]*10);
-        tempScore -= (validGuesses[playerPosition - 1] * playerTotal);
+        tempScore += (validClues[playerPosition - 1] * playerTotal);
         float rounded = Mathf.Round(tempScore);
         score = (int)rounded;
     }
@@ -336,7 +362,7 @@ public class MockStats : MonoBehaviour
         topicChoices[0] = 0;
         topicChoices[1] = 2;
         topicChoices[2] = 1;
-        topicChoices[3] = 2;
+        topicChoices[3] = 3;
         topicChoices[4] = 0;
     }
 
@@ -644,7 +670,7 @@ public class MockStats : MonoBehaviour
         string[] tempList = duplicateString.Split(separator, StringSplitOptions.None);
         for (int i = 0; i < playerTotal; i++)
         {
-            duplicateGuesses[i] = int.Parse(tempList[i]);
+            duplicatedClues[i] = int.Parse(tempList[i]);
         }
     }
 
@@ -657,7 +683,7 @@ public class MockStats : MonoBehaviour
         string[] tempList = validString.Split(separator, StringSplitOptions.None);
         for (int i = 0; i < playerTotal; i++)
         {
-            validGuesses[i] = int.Parse(tempList[i]);
+            validClues[i] = int.Parse(tempList[i]);
         }
     }
 

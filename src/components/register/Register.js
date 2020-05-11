@@ -18,16 +18,23 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  width: 30%;
   height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background-color: #ffca65;
+  background: rgba(150, 0, 255, 0.3);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
+
+const Central = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+
 
 const InputField = styled.input`
   &::placeholder {
@@ -76,8 +83,7 @@ class Register extends React.Component {
         super();
         this.state = {
             username: null,
-            password: null,
-            avatar: 1
+            password: null
         };
     }
     /**
@@ -89,16 +95,15 @@ class Register extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
-                password: this.state.password,
-                avatar: this.state.avatar
+                password: this.state.password
             });
             await api.post('/register', requestBody);
 
-/*            // Get the returned user and update a new object.
-            const user = new User(response.data);
+            /*            // Get the returned user and update a new object.
+                        const user = new User(response.data);
 
-            // Store the token into the local storage.
-            localStorage.setItem('userToken', user.userToken);*/
+                        // Store the token into the local storage.
+                        localStorage.setItem('userToken', user.userToken);*/
 
             this.props.history.push(`/login`);
         } catch (error) {
@@ -128,24 +133,24 @@ class Register extends React.Component {
 
     render() {
         return (
-            <BaseContainer>
-                <FormContainer>
-                    <Form>
-                        <Label>Username</Label>
-                        <InputField
-                            placeholder="Enter here your username"
-                            onChange={e => {
-                                this.handleInputChange('username', e.target.value);
-                            }}
-                        />
-                        <Label>Password</Label>
-                        <InputField
-                            placeholder="Enter here your password"
-                            onChange={e => {
-                                this.handleInputChange('password', e.target.value);
-                            }}
-                        />
-                        <ButtonContainer>
+            <FormContainer>
+                <Form>
+                    <Label>Username</Label>
+                    <InputField
+                        placeholder="Enter here your username"
+                        onChange={e => {
+                            this.handleInputChange('username', e.target.value);
+                        }}
+                    />
+                    <Label>Password</Label>
+                    <InputField type="password"
+                                placeholder="Enter here your password"
+                                onChange={e => {
+                                    this.handleInputChange('password', e.target.value);
+                                }}
+                    />
+                    <ButtonContainer>
+                        <Central>
                             <Button
                                 disabled={!this.state.username || !this.state.password}
                                 width="30%"
@@ -164,10 +169,10 @@ class Register extends React.Component {
                             >
                                 Back
                             </Button>
-                        </ButtonContainer>
-                    </Form>
-                </FormContainer>
-            </BaseContainer>
+                        </Central>
+                    </ButtonContainer>
+                </Form>
+            </FormContainer>
         );
     }
 }

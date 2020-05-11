@@ -16,24 +16,19 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-const Active = styled.div`
-.active, .btn:hover {
-  background-color: #666;
-  color: #c92222;
- `;
 
 const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  width: 30%;
   height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background:  #ed782f;
+  background: rgba(150, 0, 255, 0.5);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -47,7 +42,7 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
   color: white;
 `;
 
@@ -95,13 +90,22 @@ class CustomLobby extends React.Component {
             console.log(lobby);
             console.log(lobby.lobbyToken);
 
-            // Store the token into the local storage.
-
 
 
             this.props.history.push(`/dashboard/waitingLobby`);
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+    }
+
+    changeLobbyType(){
+        if(this.state.lobbyType==="PUBLIC"){
+            this.setState({
+                lobbyType: "PRIVATE"
+            })}else{
+            this.setState({
+                lobbyType: "PUBLIC"
+            })
         }
     }
 
@@ -117,78 +121,58 @@ class CustomLobby extends React.Component {
     }
 
 
-    /**
-     * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
-     * Initialization that requires DOM nodes should go here.
-     * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-     * You may call setState() immediately in componentDidMount().
-     * It will trigger an extra rendering, but it will happen before the browser updates the screen.
-     */
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     render() {
         return (
             <div>        <Header height={"80"} />
-            <BaseContainer>
-                <FormContainer>
-                    <Form>
-                        <Label>Lobby name</Label>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('lobbyname', e.target.value);
-                            }}
-                        />
-{/*                        <Label>Password</Label>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('password', e.target.value);
-                            }}
-                        />*/}
-
-                        <ButtonContainer>
-                            <Active>
-                            <Button
-                                onClick={() => {
-                                    this.setState({
-                                        lobbyType: "PUBLIC"
-                                });
+                <BaseContainer>
+                    <FormContainer>
+                        <Form>
+                            <Label>Lobby name</Label>
+                            <InputField
+                                placeholder="Enter here.."
+                                onChange={e => {
+                                    this.handleInputChange('lobbyname', e.target.value);
                                 }}
-                            >
-                                Public
-                            </Button>
-                            </Active>
+                            />
 
-                        </ButtonContainer>
 
-                        <ButtonContainer>
-                            <Button
-                                disabled={/*this.state.lobbyType == null || (this.state.lobbyType === "PRIVATE" && this.state.password == null)
-                                || */this.state.lobbyname == null}
-                                width="30%"
-                                onClick={() => {
-                                    this.create();
-                                }}
-                            >
-                                Create
-                            </Button>
-                        </ButtonContainer>
+                            <ButtonContainer>
+                                <Button
+                                    onClick={() => {
+                                        this.changeLobbyType();
+                                    }}
+                                >
+                                    {this.state.lobbyType === "PUBLIC" ? "Set as Public" : "Set as Private"}
+                                </Button>
 
-                        <ButtonContainer>
-                            <Button
-                                width="30%"
-                                onClick={() => {
-                                    this.props.history.push('/dashboard');
-                                }}
-                            >
-                                Back
-                            </Button>
-                        </ButtonContainer>
-                    </Form>
-                </FormContainer>
-            </BaseContainer>
+                            </ButtonContainer>
+
+                            <ButtonContainer>
+                                <Button
+                                    width="30%"
+                                    onClick={() => {
+                                        this.create();
+                                    }}
+                                >
+                                    Create
+                                </Button>
+                            </ButtonContainer>
+
+                            <ButtonContainer>
+                                <Button
+                                    width="30%"
+                                    onClick={() => {
+                                        this.props.history.push('/dashboard');
+                                    }}
+                                >
+                                    Back
+                                </Button>
+                            </ButtonContainer>
+                        </Form>
+                    </FormContainer>
+                </BaseContainer>
             </div>
         );
     }
