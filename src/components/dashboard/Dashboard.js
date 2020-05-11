@@ -11,13 +11,50 @@ import Player from "../../views/Player";
 import Room from "../../views/Room";
 import ProfileInfo from "../../views/ProfileInfo";
 import Gamedescription from "../../views/Gamedescription";
-import Header from "../../views/Header";
+import Header2 from "../../views/Header2";
+
+import Avenger from '../../image/avatar/Avenger.png';
+import Lion from '../../image/avatar/Lion.png';
+import Magneto from '../../image/avatar/Magneto.png';
+import Meow from '../../image/avatar/Meow.png';
+import MsWednesday from '../../image/avatar/MsWednesday.png';
+import Robot from '../../image/avatar/Robot.png';
+import Urgot from '../../image/avatar/Urgot.png';
+
+import Bronze from '../../image/rank/Bronze.png'
+import Silver from '../../image/rank/Silver.png'
+import Gold from '../../image/rank/Gold.png'
+import Diamond from '../../image/rank/Diamond.png'
+import GrandMaster from '../../image/rank/GrandMaster.png'
 
 const Container = styled(BaseContainer)`
+  height: 420px;
   color: white;
   text-align: center;
+  overflow: hidden;
 `;
 
+const Container2 = styled(BaseContainer)`
+  height: 460px;
+  color: white;
+  text-align: center;
+  display: flex;
+`;
+
+const MiniContainer =styled.div`
+    display: flex;
+    justify-content: right;
+`;
+
+const TabText = styled.div`
+ color: #FFC100;
+ text-shadow: -1px 0 blue, 0 1px blue, 1px 0 blue, 0 -1px blue;
+`;
+
+const TabContentTitle = styled.div`
+ color: #FFC100;
+ text-shadow: -1px 0 blue, 0 1px red, 1px 0 red, 0 -1px red;
+`;
 
 const Label = styled.label`
   color: white;
@@ -52,6 +89,7 @@ const User1 = styled.ul`
 `;
 
 
+
 class Dashboard extends React.Component {
 
     constructor() {
@@ -66,22 +104,7 @@ class Dashboard extends React.Component {
         };
     }
 
-    async logout() {
-        const key = localStorage.getItem(('userToken'));
 
-        console.log(key);
-
-        try {
-            const response = await api.put('/logout?token=' + key);
-
-            console.log(response);
-        } catch (error) {
-            alert(`Something went wrong while logging out: \n${handleError(error)}`);
-        }
-        localStorage.removeItem('userToken');
-        this.props.history.push('/login');
-
-    }
 
     showProfile(id){
         this.props.history.push({
@@ -98,7 +121,16 @@ class Dashboard extends React.Component {
         })
     }
 
-    enterLoginLobby(id){
+    enterPublicLobby(id, lobbyToken){
+        localStorage.setItem('lobbyToken', lobbyToken);
+        this.props.history.push({
+            pathname: '/dashboard/waitingLobby',
+            id: id
+        })
+    }
+
+
+    enterPrivateLobby(id){
         this.props.history.push({
             pathname: '/dashboard/loginLobby',
             id: id
@@ -122,8 +154,11 @@ class Dashboard extends React.Component {
         }catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
-
     }
+
+    /*
+    0-99: bronze, 100-199: silver, 200-299: gold, 300-399: diamond, 400<= grandmaster
+     */
 
 
     async componentWillMount(){
@@ -147,53 +182,55 @@ class Dashboard extends React.Component {
 
     }
 
+    async loggedOut(){
+        if(localStorage.getItem('userToken') === null){
+            this.props.history.push('/login');
+        }
+    }
+
+
     async componentDidMount() {
 
-       this.timerID1 = setInterval(
+        this.timerID1 = setInterval(
             () => this.getUsers(),
             1000
         );
-          this.timerID2 = setInterval(
-                    () => this.getLobbies(),
-                    1000
+        this.timerID2 = setInterval(
+            () => this.getLobbies(),
+            1000
+        );
+
+        this.timerID3 = setInterval(
+            () => this.loggedOut(),
+            500
         );
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID1);
         clearInterval(this.timerID2);
+        clearInterval(this.timerID3);
     }
 
 
     render() {
+
+
 
         const localToken = localStorage.getItem("userToken");
 
         const tabComp =(
             <Tabs defaultIndex={0} onSelect={index => console.log(index)}>
                 <TabList>
-                    <Tab>My Profile</Tab>
-                    <Tab>Users</Tab>
-                    <Tab>Lobby</Tab>
-                    <Tab>Game description and rules</Tab>
+                    <Tab><TabText>My Profile</TabText></Tab>
+                    <Tab><TabText>Users</TabText></Tab>
+                    <Tab><TabText>Lobbies</TabText></Tab>
+                    <Tab><TabText>Game Description and Rules</TabText></Tab>
                 </TabList>
 
                 <TabPanel>
-
-                    <Button
-                        position = "absolute"
-                        top = "0"
-                        right = "0"
-                        onClick={() => {
-                            this.logout();
-                        }}
-                    >
-                        Logout
-                    </Button>
-
-
                     <Container>
-                        <h2>Profile</h2>
+                        <h2><TabContentTitle>My Profile</TabContentTitle></h2>
                         {!this.state.user ? (
                             <Spinner />
                         ) : (
@@ -204,12 +241,12 @@ class Dashboard extends React.Component {
                                     </PlayerContainer>
                                 </User1>
 
-                                {(this.state.user.token != localToken) ? (
+                                {(this.state.user.token !== localToken) ? (
                                     <Label> </Label>
                                 ) : (
                                     <ButtonContainer>
                                         <Button
-                                            width="30%"
+                                            width="10%"
                                             onClick={() => {
                                                 this.editProfile(this.state.user.id)
                                             }}
@@ -228,16 +265,8 @@ class Dashboard extends React.Component {
 
                 <TabPanel>
 
-                    <Button
-                        onClick={() => {
-                            this.logout();
-                        }}
-                    >
-                        Logout
-                    </Button>
-
                     <Container>
-                        <h2>Registered User! </h2>
+                        <h2><TabContentTitle>Registered User!</TabContentTitle></h2>
                         {!this.state.users ? (
                             <Spinner />
                         ) : (
@@ -251,7 +280,7 @@ class Dashboard extends React.Component {
                                                     console.log(user.id);
                                                     this.showProfile(user.id);
                                                 }}>
-                                                <Player user={user}/>
+                                                <ProfileInfo user={user}/>
                                             </PlayerContainer>
                                         );
                                     })}
@@ -265,62 +294,50 @@ class Dashboard extends React.Component {
 
 
                 <TabPanel>
+                    <Container2>
+                        <Container>
+                            <h2><TabContentTitle>Lobbies</TabContentTitle></h2>
+                            {!this.state.lobbies ? (
+                                <Spinner />
+                            ) : (
+                                <div>
+                                    <Users>
+                                        {this.state.lobbies.map(lobby => {
+                                            return (
+                                                <PlayerContainer
+                                                    key={lobby.id}
+                                                    onClick={() => {
+                                                        {lobby.lobbyType ==="PUBLIC" ? this.enterPublicLobby(lobby.id, lobby.lobbyToken) :
+                                                            this.enterPrivateLobby(lobby.id)}
+                                                    }}>
+                                                    <Room lobby={lobby}/>
+                                                </PlayerContainer>
+                                            );
+                                        })}
+                                    </Users>
+                                </div>
+                            )}
+                        </Container>
 
-                    <Button
-                        onClick={() => {
-                            this.logout();
-                        }}
-                    >
-                        Logout
-                    </Button>
+                        <MiniContainer>
 
-                    <Container>
-                        <h2>All lobbies</h2>
-                        {!this.state.lobbies ? (
-                            <Spinner />
-                        ) : (
-                            <div>
-                                <Users>
-                                    {this.state.lobbies.map(lobby => {
-                                        return (
-                                            <PlayerContainer
-                                                key={lobby.id}
-                                                onClick={() => {
-                                                    console.log(lobby.id);
-                                                    this.enterLoginLobby(lobby.id);
-                                                }}>
-                                                <Room lobby={lobby}/>
-                                            </PlayerContainer>
-                                        );
-                                    })}
-                                </Users>
-                            </div>
-                        )}
-                    </Container>
+                            <Button
+                                position = "absolute"
+                                onClick={() => {
+                                    this.props.history.push('/dashboard/customLobby');
+                                }}
+                            >
+                                Create Lobby
+                            </Button>
+                        </MiniContainer>
 
-
-                    <Button
-                        position = "absolute"
-                        onClick={() => {
-                            this.props.history.push('/dashboard/customLobby');
-                        }}
-                    >
-                        Create Lobby
-                    </Button>
+                    </Container2>
 
 
                 </TabPanel>
 
                 <TabPanel>
 
-                    <Button
-                        position = "absolute"
-                        onClick={() => {
-                            this.logout();
-                        }}
-                    >
-                        Logout
-                    </Button>
                     <Gamedescription/>
                 </TabPanel>
             </Tabs>
@@ -328,12 +345,16 @@ class Dashboard extends React.Component {
 
         return (
             <div>
-                <Header height={"80"} />
-                {tabComp}
+                <Header2 height={"80"} >
+                </Header2>
+                <div className="background2">
+                    {tabComp}
+                </div>
             </div>
 
         );
     }
-}
 
+
+}
 export default withRouter(Dashboard);
