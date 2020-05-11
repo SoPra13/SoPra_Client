@@ -27,7 +27,6 @@ const Room = ({ lobby }) => {
     return (
         <Container>
             <UserName>{lobby.lobbyname}</UserName>
-            <Id>Id: {lobby.id}</Id>
         </Container>
     );
 };

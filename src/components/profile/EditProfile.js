@@ -6,7 +6,6 @@ import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
 import Header from "../../views/Header";
-import DropdownAvatar from './dropdownAvatar.css';
 
 import Avenger from '../../image/avatar/Avenger.png';
 import Lion from '../../image/avatar/Lion.png';

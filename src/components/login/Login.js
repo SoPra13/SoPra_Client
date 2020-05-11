@@ -10,7 +10,6 @@ import Logo from "./Logo.png";
 
 
 import classes from '../login/login.css';
-import BackgroundLogin from "../../views/style/BackgroundLogin";
 
 
 const Background = styled.div`
@@ -21,6 +20,14 @@ const Background = styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
+`;
+
+const Central1 = styled.div`
+  color: #FFC100;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
 `;
 
 
@@ -131,11 +138,6 @@ class Login extends React.Component {
     }
   }
 
-  //dummy test for unity
-
-  /*  unityTesting(){
-      this.props.history.push(`/unitydummy`);
-    }*/
 
   /**
    *  Every time the user enters something in the input field, the state gets updated.
@@ -164,9 +166,9 @@ class Login extends React.Component {
           <body>
           <div>
 
-
+          <Central1>
             <h1><img src={Logo} width='60px' height='60px'/> Welcome in the Town!! <img src={Logo} width='60px' height='60px'/></h1>
-
+          </Central1>
             <FormContainer>
 
 
