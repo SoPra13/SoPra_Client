@@ -103,6 +103,7 @@ class EditProfile extends React.Component {
                 username: this.state.username,
                 avatar: this.state.avatar
             });
+            console.log(requestBody);
 
             await api.put('/user?token=' + localStorage.getItem('userToken'), requestBody);
             this.props.history.push('/dashboard');
@@ -174,58 +175,44 @@ class EditProfile extends React.Component {
                                         <div className="dropdown-content">
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setState({
-                                                            avatar: 1
-                                                        })
+                                                        this.setAvatar(1)
                                                     }}>
-                                                <img src={Avenger} width='40px' height='40px'/>
+                                                <img src={Magneto} width='40px' height='40px'/>
                                             </button>
 
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setState({
-                                                            avatar: 2
-                                                        })
+                                                        this.setAvatar(2)
                                                     }}>
-                                                <img src={Lion} width='40px' height='40px'/>
+                                                <img src={Avenger} width='40px' height='40px'/>
                                             </button>
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setState({
-                                                            avatar: 3
-                                                        })
-                                                    }}>
-                                                <img src={Magneto} width='40px' height='40px'/>
-                                            </button>
-                                            <button className="transparent"
-                                                    onClick={() => {
-                                                        this.setState({
-                                                            avatar: 4
-                                                        })
-                                                    }}>
-                                                <img src={Meow} width='40px' height='40px'/>
-                                            </button>
-                                            <button className="transparent"
-                                                    onClick={() => {
-                                                        this.setState({
-                                                            avatar: 5
-                                                        })
-                                                    }}>
-                                                <img src={MsWednesday} width='40px' height='40px'/>
-                                            </button>
-                                            <button className="transparent"
-                                                    onClick={() => {
-                                                        this.setState({
-                                                            avatar: 6
-                                                        })
+                                                        this.setAvatar(3)
                                                     }}>
                                                 <img src={Robot} width='40px' height='40px'/>
                                             </button>
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setState({
-                                                            avatar: 7
-                                                        })
+                                                        this.setAvatar(4)
+                                                    }}>
+                                                <img src={MsWednesday} width='40px' height='40px'/>
+                                            </button>
+                                            <button className="transparent"
+                                                    onClick={() => {
+                                                        this.setAvatar(5)
+                                                    }}>
+                                                <img src={Lion} width='40px' height='40px'/>
+                                            </button>
+                                            <button className="transparent"
+                                                    onClick={() => {
+                                                        this.setAvatar(6)
+                                                    }}>
+                                                <img src={Meow} width='40px' height='40px'/>
+                                            </button>
+                                            <button className="transparent"
+                                                    onClick={() => {
+                                                        this.setAvatar(7)
                                                     }}>
                                                 <img src={Urgot} width='40px' height='40px'/>
                                             </button>
