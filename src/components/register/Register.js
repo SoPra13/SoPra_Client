@@ -25,7 +25,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: rgba(150, 0, 255, 0.3);
+ background: rgba(9, 5, 88, 0.75);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -38,7 +38,7 @@ const Central = styled.div`
 
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+    color: rgba(248, 248, 148);
   }
   height: 35px;
   padding-left: 15px;
@@ -46,12 +46,12 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(120, 26, 89, 0.8);
+  color: rgba(248, 248, 148);
 `;
 
 const Label = styled.label`
-  color: white;
+  color: rgba(248, 248, 148);
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
@@ -136,6 +136,7 @@ class Register extends React.Component {
         return (
             <FormContainer>
                 <Form>
+                    <Label>Welcome!</Label>
                     <Label>Username</Label>
                     <InputField
                         placeholder="Enter here your username"

@@ -134,6 +134,12 @@ export class UnityGame extends React.Component {
             this.sendScoreStats(this.state.game)
         });
 
+        //todo: CHRIS remove
+        this.unityContent.on("UpdateScore", (score) =>{
+            //score is int 1= win 0=lose
+            //backendScore
+        });
+
 
     }
 
@@ -519,6 +525,9 @@ export class UnityGame extends React.Component {
             while(this.state.round == this.state.game.currentRound){
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
+
+            this.sendRoundNumber(this.state.game);
+
             this.unityContent.send(
                 "MockStats",
                 "ReactStartNextRound"
