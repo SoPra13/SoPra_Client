@@ -454,7 +454,7 @@ export class UnityGame extends React.Component {
         try {
             clearInterval(this.timerID);
             await new Promise(resolve => setTimeout(resolve, 1000));
-            await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
+            await api.put('/game/leave?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
             localStorage.removeItem('gameToken');
             this.props.history.push('/dashboard/waitingLobby')
         }catch(error) {
@@ -549,7 +549,8 @@ export class UnityGame extends React.Component {
         clearInterval(this.timerID);
         await new Promise(resolve => setTimeout(resolve, 1000));
         var scoreString = score.toString();
-        await api.put('/game/end?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken')+'&score='+ scoreString);
+        await api.put('/user/score?userToken='+ localStorage.getItem('userToken')+'&score='+score);
+
     }catch(error){
         alert(`Something fizzled while sending request to end the game: \\n${handleError(error)}`);
     }

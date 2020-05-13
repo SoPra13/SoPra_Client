@@ -8,14 +8,15 @@ const Container = styled.div`
   border-radius: 6px;
   display: flex;
   align-items: center;
-  background:  rgba(0,38,176, 0.7);
+  text-align: center;
+  background: rgba(0,38,176, 0.7);
   border: 1px solid #ffffff26;
 `;
 
 const UserName = styled.div`
   color: #FFA700;
   font-weight: lighter;
-  margin-left: 5px;
+
 `;
 
 const Id = styled.div`
@@ -27,7 +28,7 @@ const Id = styled.div`
 const Room = ({ lobby }) => {
     return (
         <Container>
-            <UserName>{lobby.lobbyname}</UserName>
+            <UserName>{lobby.lobbyName}</UserName>
         </Container>
     );
 };

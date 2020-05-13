@@ -75,6 +75,12 @@ const PlayerContainer = styled.li`
   justify-content: center;
 `;
 
+const LobbyContainer = styled.li`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
 
 const Users = styled.ul`
   list-style: none;
@@ -318,15 +324,15 @@ class Dashboard extends React.Component {
                                     <Users>
                                         {this.state.lobbies.map(lobby => {
                                             return (
-                                                <PlayerContainer
-                                                    key={lobby.lobbyname}
+                                                <LobbyContainer
+                                                    key={lobby.id}
                                                     onClick={() => {
                                                         this.state.joinToken=lobby.joinToken;
                                                         {lobby.lobbyType ==="PUBLIC" ? this.enterPublicLobby(lobby.id, lobby.lobbyToken) :
                                                             this.enterPrivateLobby(lobby.id)}
                                                     }}>
                                                     <Room lobby={lobby}/>
-                                                </PlayerContainer>
+                                                </LobbyContainer>
                                             );
                                         })}
                                     </Users>
