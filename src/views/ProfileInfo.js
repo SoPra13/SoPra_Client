@@ -113,12 +113,12 @@ const ProfileInfo = ({ user }) => {
     return (
         <Container>
             <Form2>
-                <img src={getAvatar(2)} width="60" height="60"/>
+                <img src={getAvatar(user.avatar)} width="60" height="60"/>
                 <Form>
                     <UserName>{user.username}</UserName>
                     <OnlineStatus>{user.status}</OnlineStatus>
                 </Form>
-                <img src={getRank(ranking(200))} width="60" height="60"/>
+                <img src={getRank(ranking(user.totalScore))} width="60" height="60"/>
             </Form2>
         </Container>
     );

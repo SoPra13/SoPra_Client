@@ -95,7 +95,8 @@ class Register extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
-                password: this.state.password
+                password: this.state.password,
+                avatar: 1
             });
             await api.post('/register', requestBody);
 
