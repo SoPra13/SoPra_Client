@@ -6,7 +6,7 @@ import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
 import Header from "../../views/Header";
-import Header2 from "../../views/Header2";
+import DropdownAvatar from './dropdownAvatar.css';
 
 import Avenger from '../../image/avatar/Avenger.png';
 import Lion from '../../image/avatar/Lion.png';
@@ -89,6 +89,7 @@ class EditProfile extends React.Component {
         super();
         this.state = {
             user: null,
+            id: null,
             username: null,
             avatar: null
         };
@@ -102,8 +103,6 @@ class EditProfile extends React.Component {
                 username: this.state.username,
                 avatar: this.state.avatar
             });
-
-            console.log()
 
             await api.put('/user?token=' + localStorage.getItem('userToken'), requestBody);
             this.props.history.push('/dashboard');
@@ -145,7 +144,7 @@ class EditProfile extends React.Component {
 
     render() {
         return (
-            <div>        <Header2 height={"80"} />
+            <div>        <Header height={"80"} />
 
                 <h2>EditProfile</h2>
 
@@ -175,44 +174,58 @@ class EditProfile extends React.Component {
                                         <div className="dropdown-content">
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setAvatar(1);
+                                                        this.setState({
+                                                            avatar: 1
+                                                        })
                                                     }}>
                                                 <img src={Avenger} width='40px' height='40px'/>
                                             </button>
 
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setAvatar(2);
+                                                        this.setState({
+                                                            avatar: 2
+                                                        })
                                                     }}>
                                                 <img src={Lion} width='40px' height='40px'/>
                                             </button>
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setAvatar(3);
+                                                        this.setState({
+                                                            avatar: 3
+                                                        })
                                                     }}>
                                                 <img src={Magneto} width='40px' height='40px'/>
                                             </button>
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setAvatar(4);
+                                                        this.setState({
+                                                            avatar: 4
+                                                        })
                                                     }}>
                                                 <img src={Meow} width='40px' height='40px'/>
                                             </button>
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setAvatar(5);
+                                                        this.setState({
+                                                            avatar: 5
+                                                        })
                                                     }}>
                                                 <img src={MsWednesday} width='40px' height='40px'/>
                                             </button>
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setAvatar(6);
+                                                        this.setState({
+                                                            avatar: 6
+                                                        })
                                                     }}>
                                                 <img src={Robot} width='40px' height='40px'/>
                                             </button>
                                             <button className="transparent"
                                                     onClick={() => {
-                                                        this.setAvatar(7);
+                                                        this.setState({
+                                                            avatar: 7
+                                                        })
                                                     }}>
                                                 <img src={Urgot} width='40px' height='40px'/>
                                             </button>
