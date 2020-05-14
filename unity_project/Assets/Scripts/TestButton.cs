@@ -43,7 +43,7 @@ public class TestButton : MonoBehaviour
     public void SetTopicText()
     {
         mockStats.SetCurrentTopic(mockStats.GetCurrentTopic());
-        mockStats.ReactSetThisRoundsTopic();
+        mockStats.ReactSetThisRoundsTopic("test");
     }
 
     public void TriggerClueP1P2()
@@ -140,6 +140,7 @@ public class TestButton : MonoBehaviour
     public void SetScoreString()
     {
         mockStats.ReactSendScoreString("0;10;120;200;300;400;1000");
+        StartCoroutine(GameObject.Find("Rounds").GetComponent<Rounds>().EndGame(true));
     }
 }
 
