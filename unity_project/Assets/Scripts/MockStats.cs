@@ -74,6 +74,7 @@ public class MockStats : MonoBehaviour
     private int[] correctGuesses = { 3, 0, 0, 0, 0, 0, 0 }; //ReactSendCorrectGuessString(str)
     private int[] duplicatedClues = { 6, 0, 0, 0, 0, 0, 0 }; //ReactSendDuplicateString(str)
     private int[] validClues = { 10, 0, 0, 0, 0, 0, 0 }; //ReactSendValidCluesSting(str)
+    private string finalGuess;
 
     private bool giveReactTime = false;
     private bool hasLostLastRound = false;
@@ -204,13 +205,13 @@ public class MockStats : MonoBehaviour
     {
         //Just for Testing//
         //multiplier = 3.5f;
-        score = 7;
+        /*score = 7;
         for (int i = 0; i < 7; i++)
         {
             duplicatedClues[i] = 2;
             correctGuesses[i] = 7;
             validClues[i] = 8;
-        }
+        }*/
         //Testing End Here
 
         float tempScore = score;
@@ -701,11 +702,22 @@ public class MockStats : MonoBehaviour
         return startNextRound;
     }
 
+
     public void SetStartNextRound()
     {
         startNextRound = false;
     }
 
+
+    public void ReactSendGuessToUnity(string guess)
+    {
+        finalGuess = guess;
+    }
+
+    public string GetFinalGuess()
+    {
+        return finalGuess;
+    }
     IEnumerator GiveReactSomeTime()
     {
         yield return new WaitForSeconds(1f);
