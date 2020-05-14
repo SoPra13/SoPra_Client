@@ -90,6 +90,7 @@ export class UnityGame extends React.Component {
         this.unityContent.on("SendGuessToReact", (message) =>{
             console.log("Unity tells player has guessed: " + message);
             this.sendGuess(message);
+            this.sendRoundsTopic(this.state.game.topic);
         });
 
         this.unityContent.on("SendClueToReact", (message) =>{
@@ -100,7 +101,7 @@ export class UnityGame extends React.Component {
         this.unityContent.on("SendTopicToReact", (message) =>{
             console.log("Unity tells the topic for this round is: " + message);
             this.setTopic(message);
-            this.sendRoundsTopic();
+            this.sendRoundsTopic(message);
         });
 
         this.unityContent.on("FetchCluesString", () =>{
@@ -124,7 +125,7 @@ export class UnityGame extends React.Component {
         });
 
         this.unityContent.on("GameHasEnded", (score) =>{
-            console.log("Unity tells game has ended");
+            console.log("Unity tells game has ended, score:"+score);
             this.endGame(score);
         });
 
@@ -133,12 +134,13 @@ export class UnityGame extends React.Component {
             this.sendScoreStats(this.state.game)
         });
 
-        //todo: CHRIS remove
         this.unityContent.on("UpdateScore", (score) =>{
-            //score is int 1= win 0=lose
-            //backendScore
+            //do not remove
         });
 
+        this.unityContent.on("FetchScores", () =>{
+            this.setScores();
+        });
 
     }
 
@@ -305,18 +307,19 @@ export class UnityGame extends React.Component {
     }
 
 
-    async sendRoundsTopic(){
+     sendRoundsTopic(topic){
            this.unityContent.send(
                "MockStats",
-               "ReactSetThisRoundsTopic"
+               "ReactSetThisRoundsTopic",
+               topic
            )
-       console.log("Topic set sent to Unity");
+       console.log("Topic set sent to Unity:"+ topic);
      }
 
 
     async setTopic(topic){
         try{
-            await api.put('/game/topic?gameToken=' + this.state.gameToken +'&topic=' + topic);
+            this.state.game = await api.put('/game/topic?gameToken=' + this.state.gameToken +'&topic=' + topic);
 
         } catch (error) {
             alert(`Something fizzled while sending topic to Backend: \n${handleError(error)}`);
@@ -569,15 +572,15 @@ export class UnityGame extends React.Component {
 
     async endGame(score){
     try{
-        clearInterval(this.timerID);
         await new Promise(resolve => setTimeout(resolve, 1000));
         var scoreString = score.toString();
         await api.put('/user/score?userToken='+ localStorage.getItem('userToken')+'&score='+score);
+        console.log("Sent to Backend that game ended, sent score:"+score);
 
     }catch(error){
         alert(`Something fizzled while sending request to end the game: \\n${handleError(error)}`);
     }
-        console.log("Sent to Backend that game ended");
+
     }
 
 
@@ -649,7 +652,7 @@ export class UnityGame extends React.Component {
             "ReactSendValidCluesSting",
             validString
         );
-        console.log("Sent Stats to Backend:");
+        console.log("Sent Stats to Unity:");
         console.log("String of correct guesses: " + guessString);
         console.log("String of duplicate clues: " + duplicateString);
         console.log("String of valid clues: " + validString);
