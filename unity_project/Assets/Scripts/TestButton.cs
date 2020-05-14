@@ -43,7 +43,7 @@ public class TestButton : MonoBehaviour
     public void SetTopicText()
     {
         mockStats.SetCurrentTopic(mockStats.GetCurrentTopic());
-        mockStats.ReactSetThisRoundsTopic();
+        mockStats.ReactSetThisRoundsTopic("test");
     }
 
     public void TriggerClueP1P2()
