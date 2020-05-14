@@ -199,6 +199,7 @@ MonoBehaviour:
   skipTextObject: {fileID: 0}
   cluesBG: {fileID: 0}
   ScoreMultiplierBox: {fileID: 0}
+  MisteryWordDisplayObject: {fileID: 0}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
   drawCard: {fileID: 1207197612}
@@ -4551,6 +4552,8 @@ MonoBehaviour:
     type: 3}
   cluesBG: {fileID: 8305364509126771671, guid: cf625e79f26872d40ad7a095eceec438, type: 3}
   ScoreMultiplierBox: {fileID: 8337557929497845465, guid: 525386d2bf3322446bb21e6c7d0db674,
+    type: 3}
+  MisteryWordDisplayObject: {fileID: 2681051410960036833, guid: 5af3e623c59f5bc4eace0a62cd93102a,
     type: 3}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}

@@ -15,7 +15,7 @@ export default class Chat extends Component {
         return (
                 <div className={"form " + (localStorage.theme === "dark"?"dark":"light")}>
                     <div className="chatbox" ref={(el) => {this.chat = el;}}>
-                        {this.state.messages.map(msg =>(<Message messageType={msg.messageType} username={msg.username} message={msg.message}/>))}
+                        {this.state.messages.map(msg => (<Message messageType={msg.messageType} username={msg.username} message={msg.message}/>))}
                         {!this.state.active?<p style={{color:"red"}}>Chat closed!</p>:<div style={{ float:"left", clear: "both" }}/>}
                     </div>
                     <div className="submitbox">

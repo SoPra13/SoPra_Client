@@ -7,10 +7,18 @@ import Unity, { UnityContent } from "react-unity-webgl";
 import { api, handleError } from '../../helpers/api';
 
 
-const UnityBody = styled.body`
-  height: 768px;
-  background: #404040;
+const CentralRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 `;
+
+const CentralColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
 
 export class UnityGame extends React.Component {
     async;
@@ -24,7 +32,7 @@ export class UnityGame extends React.Component {
             gameToken: localStorage.getItem('gameToken'),
             round:0,
             game: null,
-            playerListLength: null,
+            playerNumber: 0,
         };
 
         //unityContent is our unity code accessor
@@ -90,7 +98,6 @@ export class UnityGame extends React.Component {
         this.unityContent.on("SendGuessToReact", (message) =>{
             console.log("Unity tells player has guessed: " + message);
             this.sendGuess(message);
-
         });
 
         this.unityContent.on("SendClueToReact", (message) =>{
@@ -124,12 +131,6 @@ export class UnityGame extends React.Component {
             this.nextRound()
         });
 
-        //todo: possibly obsolete
-        this.unityContent.on("UpdateScore", (score) =>{
-            //score is int 1= win 0=lose
-            //backendScore
-        });
-
         this.unityContent.on("GameHasEnded", (score) =>{
             console.log("Unity tells game has ended");
             this.endGame(score);
@@ -138,6 +139,12 @@ export class UnityGame extends React.Component {
         this.unityContent.on("FetchScoreStats", () =>{
             console.log("Unity tells game has ended");
             this.sendScoreStats(this.state.game)
+        });
+
+        //todo: CHRIS remove
+        this.unityContent.on("UpdateScore", (score) =>{
+            //score is int 1= win 0=lose
+            //backendScore
         });
 
 
@@ -243,7 +250,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetPlayerAvatars",
             avatarString
-        )
+        );
         console.log("AvatarString sent to Unity: " + avatarString);
     }
 
@@ -255,7 +262,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetTopicArray",
             topicString
-        )
+        );
         console.log("MysteryWord sent to Unity");
     }
 
@@ -276,7 +283,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSendScoreString",
             scoreString
-        )
+        );
         console.log("ScoreString sent to Unity: " + scoreString);
     }
 
@@ -292,7 +299,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetTopicVoteList",
             topicListString
-        )
+        );
         console.log("VotedString sent to Unity: " + topicListString);
     }
 
@@ -310,7 +317,7 @@ export class UnityGame extends React.Component {
            this.unityContent.send(
                "MockStats",
                "ReactSetThisRoundsTopic"
-           )
+           );
        console.log("Topic set sent to Unity");
      }
 
@@ -332,7 +339,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetRound",
             round
-        )
+        );
         console.log("RoundNumber sent to Unity: " + round);
     }
 
@@ -370,7 +377,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetPlayerHasChosenTopic",
             votedString
-        )
+        );
         console.log("String of votes sent to Unity: " + votedString);
     }
 
@@ -382,8 +389,13 @@ export class UnityGame extends React.Component {
 
             var game = response.data;
 
+            if(this.state.playerNumber>game.playerList.length){
+                this.abortGame();
+            }
+
             this.setState({
                 game: game,
+                playerNumber: game.playerList.length
             });
 
             console.log(this.state.game);
@@ -435,7 +447,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetPlayerHasSubmittedClue",
             clueGivenString
-        )
+        );
         console.log("String of who gave clue sent to Unity: " + clueGivenString);
     }
 
@@ -446,7 +458,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetClueString",
             cluesString
-        )
+        );
         console.log("String of clues sent to Unity: " + cluesString);
     }
 
@@ -454,10 +466,9 @@ export class UnityGame extends React.Component {
         try {
             clearInterval(this.timerID);
             await new Promise(resolve => setTimeout(resolve, 1000));
-            await api.delete('/game?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
-            localStorage.removeItem('lobbyToken');
+            await api.put('/game/leave?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken'));
             localStorage.removeItem('gameToken');
-            this.props.history.push('/dashboard')
+            this.props.history.push('/dashboard/waitingLobby')
         }catch(error) {
             alert(`Something fizzled while sending leave request to Backend: \\n${handleError(error)}`);
         }
@@ -471,22 +482,39 @@ export class UnityGame extends React.Component {
                     "MockStats",
                     "ReactSetActivePlayerMadeGuess",
                     1
-                )
+                );
+                this.unityContent.send(
+                    "MockStats",
+                    "ReactSendGuessToUnity",
+                    this.state.game.guess
+                );
+                console.log("Sent Unity guess:"+ this.state.game.guess);
                 console.log("Sent to Unity that guess was given");
             }else{
                 this.unityContent.send(
                     "MockStats",
                     "ReactSetActivePlayerMadeGuess",
                     0
-                )
+                );
                 console.log("Sent to Unity that guess was not given");
             }
+
+
         }
 
-    getResultOfGuess(){
+        abortGame(){
+            console.log("Sent to Unity that abort was triggered");
+            this.unityContent.send(
+                "Rounds",
+                "ReactAbortGame",
+
+            )
+        }
+
+    async getResultOfGuess(){
 
         if(!this.state.game.guessGiven){
-            this.sendGuess(null);
+            await this.sendGuess(null);
             console.log('Told Backend round was skipped');
         }
 
@@ -495,22 +523,24 @@ export class UnityGame extends React.Component {
                 "MockStats",
                 "ReactTellRoundWin",
                 1
-            )
+            );
+
+            console.log("Sent Unity guess:"+ this.state.game.guess);
             console.log("Sent Unity that round was won");
-        }else if((this.state.game.guessCorrect == null)){;
+        }else if((this.state.game.guessCorrect == null)){
             this.unityContent.send(
                 "MockStats",
                 "ReactTellRoundWin",
                 2
             )
-            console.log("Sent Unity that round was skipped");
+
         }else{
 
             this.unityContent.send(
                 "MockStats",
                 "ReactTellRoundWin",
                 0
-            )
+            );
             console.log("Sent Unity that round was lost");
         }
     }
@@ -518,14 +548,17 @@ export class UnityGame extends React.Component {
 
     async nextRound(){
         try{
-            if(this.state.game.playerList[this.state.game.guesser].token==localStorage.getItem('userToken') && this.state.round == this.state.game.currentRound) {
+            if(this.state.game.playerList[this.state.game.guesser].token===localStorage.getItem('userToken') && this.state.round === this.state.game.currentRound) {
                 const response = await api.put('/game/round?gameToken=' + localStorage.getItem('gameToken'));
                 this.state.game = response.data;
                 console.log("Sent to Backend that next round should start");
             }
-            while(this.state.round == this.state.game.currentRound){
+            while(this.state.round === this.state.game.currentRound){
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
+
+            this.sendRoundNumber(this.state.game);
+
             this.unityContent.send(
                 "MockStats",
                 "ReactStartNextRound"
@@ -541,14 +574,13 @@ export class UnityGame extends React.Component {
     }
 
 
-    //todo: handle new score
+
     async endGame(score){
     try{
         clearInterval(this.timerID);
         await new Promise(resolve => setTimeout(resolve, 1000));
-        await api.put('/game/end?gameToken=' + localStorage.getItem('gameToken')+'&userToken='+ localStorage.getItem('userToken')+'&score='+ score);
-        localStorage.removeItem('gameToken');
-        this.props.history.push('/dashboard/waitingLobby');
+        var scoreString = score.toString();
+        await api.put('/user/score?userToken='+ localStorage.getItem('userToken')+'&score='+score);
 
     }catch(error){
         alert(`Something fizzled while sending request to end the game: \\n${handleError(error)}`);
@@ -656,21 +688,24 @@ export class UnityGame extends React.Component {
     render() {
         var height = window.innerHeight;
         return (
-            /*<UnityBody>*/
+
             <BaseContainer>
+                <CentralColumn>
+                    <CentralRow>
                 <div
                     style={{
-                        position: "center",
+/*                        position: "center",
                         top: (height+540)/2,
-                        left: 0,
+                        left: 0,*/
                         width: "1080px",
                         height: "600px"
                     }}
                 >
                     <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
                 </div>
+                    </CentralRow>
+                </CentralColumn>
             </BaseContainer>
-                /*</UnityBody>*/
         );
     }
 }

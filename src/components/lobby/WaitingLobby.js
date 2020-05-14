@@ -4,11 +4,9 @@ import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import { Spinner } from '../../views/design/Spinner';
 import { withRouter } from 'react-router-dom';
-import Lobby from "../shared/models/Lobby";
 import BotPlayer from "../../views/BotPlayer";
 import Chat from '../chat/Chat';
 import ProfileInfo from "../../views/ProfileInfo";
-import Header2 from "../../views/Header2";
 
 
 const Container = styled(BaseContainer)`
@@ -51,7 +49,7 @@ const Button1 = styled.button`
   &:hover {
     transform: translateY(-2px);
   }
-  margin: 10px;
+  margin: 20px;
   padding: 6px;
   font-weight: 700;
   font-size: 13px;
@@ -78,10 +76,12 @@ class WaitingRoom extends React.Component {
             difficulty: "FRIEND",
             numberOfPlayers: 7,
             numberOfBots: 0,
+            lobbyType: null,
             adminToken: null,
             joinToken: null,
             isToggleReady: false,
-            lobbyname: null
+            lobbyname: null,
+            lobbyInGame:null
         };
     }
 
@@ -171,17 +171,16 @@ class WaitingRoom extends React.Component {
 
     leaveLobby(){
         try {
-            const response = api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
-                + '?userToken=' + localStorage.getItem('userToken'));
+            api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
+                + '&userToken=' + localStorage.getItem('userToken'));
 
             localStorage.removeItem('lobbyToken');
-
             this.props.history.push('/dashboard');
 
-        }catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
-        }
 
+        }catch (error) {
+            alert(`Something went wrong while leaving the lobby: \n${handleError(error)}`);
+        }
     }
 
     /**
@@ -207,7 +206,8 @@ class WaitingRoom extends React.Component {
                 botList: response.data.botList,
                 adminToken: response.data.adminToken,
                 joinToken: response.data.joinToken,
-                lobbyname: response.data.name
+                lobbyname: response.data.lobbyName,
+                lobbyType: response.data.lobbyType
             });
 
             // See here to get more data.
@@ -215,6 +215,26 @@ class WaitingRoom extends React.Component {
         } catch (error) {
             alert(`Something went wrong while fetching the lobby: \n${handleError(error)}`);
             this.props.history.push('/dashboard');
+        }
+    }
+
+    async checkForGame(){
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await api.get('/game?token=' + localStorage.getItem('lobbyToken'));
+
+
+
+            this.setState({
+                game: true,
+            });
+
+            console.log(this.state.game);
+
+        } catch (error) {
+            this.setState({
+                game: false,
+            });
         }
     }
 
@@ -267,17 +287,30 @@ class WaitingRoom extends React.Component {
      * componentWillMount() sets the states of playerList and botList before the first rendering
      */
 
-    componentWillMount() {
-        const response = api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'));
+    async componentWillMount() {
+        const response = await api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'));
 
 
-        const lobby = new Lobby(response.data);
+        const lobby = response.data;
+        console.log(lobby);
 
-
+        if(lobby.lobbyState ==='INGAME'){
+            console.log("INGAME")
+            this.setState({
+                lobbyInGame: true
+            })
+        }else{
+            console.log("OUTGAMe")
+            this.setState({
+                lobbyInGame: false
+            })
+        }
         this.setState({
             playerList: lobby.playerList,
-            botList: lobby.botList
-        })
+            botList: lobby.botList,
+            lobbyname: lobby.lobbyName
+        });
+        console.log(lobby);
     }
 
 
@@ -307,12 +340,11 @@ class WaitingRoom extends React.Component {
     render() {
         return (
             <div>
-                <Header2 height={"80"} />
                 <BaseContainer>
                     <Container>
 
                         <h2><TabContentTitle>Players & Bots of Lobby {this.state.lobbyname}</TabContentTitle></h2>
-                        <h2> <TabContentTitle>{this.state.joinToken}</TabContentTitle></h2>
+                        <h2> <TabContentTitle>{this.state.lobbyType === "PUBLIC" ? "" : "Password as private lobby: " + this.state.joinToken}</TabContentTitle></h2>
                         <div>
 
 
@@ -384,6 +416,8 @@ class WaitingRoom extends React.Component {
                                                 return (
                                                     <KickContainer>
                                                         <Button1
+                                                            width="60px"
+                                                            height="60px"
                                                             disabled = {localStorage.getItem('userToken') != this.state.adminToken}
                                                             key={bot.id}
                                                             onClick={() => {
@@ -402,72 +436,72 @@ class WaitingRoom extends React.Component {
                             )}
 
 
+                    <PlayerContainer>
+
+                        <MultipleListsContainer>
+                    <Button1
+                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
+                        width="20%"
+                        onClick={() => {
+                            this.getLobbyToken();
+                        }}
+                    >
+                        Get the lobby token
+                    </Button1>
+
+                        <Button1
+                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
+                            width="25%"
+                            onClick={() => {
+                                this.addBot('FRIEND');
+                            }}
+                        >
+                            ADD FRIENDLY BOT
+                        </Button1>
+
+                        <Button1
+                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
+                            width="20%"
+                            onClick={() => {
+                                this.addBot('HOSTILE');
+                            }}
+                        >
+                            ADD HOSTILE BOT
+                        </Button1>
+                            </MultipleListsContainer>
 
 
 
-                            <PlayerContainer>
+                        <MultipleListsContainer>
+                        <Button1
+                            disabled = {(this.state.adminToken == localStorage.getItem('userToken')&&this.state.playerList.length > 1)}
 
-                                <MultipleListsContainer>
-                                    <Button1
-                                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                                        width="20%"
-                                        onClick={() => {
-                                            this.getLobbyToken();
-                                        }}
-                                    >
-                                        Get the lobby token
-                                    </Button1>
+                            onClick={() => {
+                                this.leaveLobby();
 
-                                    <Button1
-                                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                                        width="20%"
-                                        onClick={() => {
-                                            this.addBot('FRIEND');
-                                        }}
-                                    >
-                                        ADD FRIENDLY BOT
-                                    </Button1>
+                            }}
+                        >
+                            Leave
+                        </Button1>
 
 
-                                    <Button1
-                                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                                        width="20%"
-                                        onClick={() => {
-                                            this.addBot('DARKSOULS');
-                                        }}
-                                    >
-                                        ADD BADASS BOT
-                                    </Button1>
-                                </MultipleListsContainer>
+                    <Button1
+                        disabled = { this.state.lobbyInGame || (this.state.playerList != null && this.state.playerList.length < 1)}
+                        onClick={() => {
+                            this.enterGame();
+                        }}
+                    >
+                        Join into Game
+                    </Button1>
+                            </MultipleListsContainer>
 
+                    </PlayerContainer>
+                    </div>
 
-
-                                <MultipleListsContainer>
-                                    <Button1
-                                        onClick={() => {
-                                            this.leaveLobby();
-
-                                        }}
-                                    >
-                                        Leave
-                                    </Button1>
-
-
-                                    <Button1
-                                        disabled = {this.state.playerList === null || (this.state.playerList.length < 3 && this.state.playerList.length !== null)}
-                                        onClick={() => {
-                                            this.enterGame();
-                                        }}
-                                    >
-                                        Join into Game
-                                    </Button1>
-                                </MultipleListsContainer>
-
-                            </PlayerContainer>
-                        </div>
                     </Container>
                 </BaseContainer>
             </div>
+
         );
     }
 }

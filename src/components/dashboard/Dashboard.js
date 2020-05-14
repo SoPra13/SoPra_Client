@@ -7,25 +7,12 @@ import { Button } from '../../views/design/Button';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { Spinner} from "../../views/design/Spinner";
-import Player from "../../views/Player";
 import Room from "../../views/Room";
 import ProfileInfo from "../../views/ProfileInfo";
 import Gamedescription from "../../views/Gamedescription";
 import Header2 from "../../views/Header2";
 
-import Avenger from '../../image/avatar/Avenger.png';
-import Lion from '../../image/avatar/Lion.png';
-import Magneto from '../../image/avatar/Magneto.png';
-import Meow from '../../image/avatar/Meow.png';
-import MsWednesday from '../../image/avatar/MsWednesday.png';
-import Robot from '../../image/avatar/Robot.png';
-import Urgot from '../../image/avatar/Urgot.png';
-
-import Bronze from '../../image/rank/Bronze.png'
-import Silver from '../../image/rank/Silver.png'
-import Gold from '../../image/rank/Gold.png'
-import Diamond from '../../image/rank/Diamond.png'
-import GrandMaster from '../../image/rank/GrandMaster.png'
+import Leaderboard from "../leaderboard/Leaderboard";
 
 const Container = styled(BaseContainer)`
   height: 420px;
@@ -75,6 +62,15 @@ const PlayerContainer = styled.li`
   justify-content: center;
 `;
 
+const LobbyContainer = styled.li`
+  &:hover {
+    transform: translateY(-2px);
+  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
 
 const Users = styled.ul`
   list-style: none;
@@ -105,15 +101,6 @@ class Dashboard extends React.Component {
     }
 
 
-
-    showProfile(id){
-        this.props.history.push({
-            pathname: `/dashboard/profile`,
-            userId: id
-        })
-    }
-
-
     editProfile(id){
         this.props.history.push({
             pathname: '/dashboard/profile/editProfile',
@@ -121,8 +108,20 @@ class Dashboard extends React.Component {
         })
     }
 
-    enterPublicLobby(id, lobbyToken){
+    async enterPublicLobby(id, lobbyToken){
         localStorage.setItem('lobbyToken', lobbyToken);
+
+        const response = await api.put('/lobby?joinToken='+ this.state.joinToken +
+            `&userToken=` + localStorage.getItem('userToken'));
+
+        // Get the returned user and update a new object.
+        console.log(response.data);
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Store the token into the local storage.
+        localStorage.setItem('lobbyToken', response.data.lobbyToken);
+
         this.props.history.push({
             pathname: '/dashboard/waitingLobby',
             id: id
@@ -130,7 +129,8 @@ class Dashboard extends React.Component {
     }
 
 
-    enterPrivateLobby(id){
+    async enterPrivateLobby(id){
+
         this.props.history.push({
             pathname: '/dashboard/loginLobby',
             id: id
@@ -151,6 +151,7 @@ class Dashboard extends React.Component {
         try{
             const response = await api.get('/lobbies');
             this.setState({ lobbies: response.data });
+            console.log(response);
         }catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
@@ -226,6 +227,7 @@ class Dashboard extends React.Component {
                     <Tab><TabText>Users</TabText></Tab>
                     <Tab><TabText>Lobbies</TabText></Tab>
                     <Tab><TabText>Game Description and Rules</TabText></Tab>
+                    <Tab><TabText>Leaderboard</TabText></Tab>
                 </TabList>
 
                 <TabPanel>
@@ -275,11 +277,11 @@ class Dashboard extends React.Component {
                                     {this.state.users.map(user => {
                                         return (
                                             <PlayerContainer
-                                                key={user.id}
+/*                                                key={user.id}
                                                 onClick={() => {
                                                     console.log(user.id);
                                                     this.showProfile(user.id);
-                                                }}>
+                                                }}*/>
                                                 <ProfileInfo user={user}/>
                                             </PlayerContainer>
                                         );
@@ -304,14 +306,15 @@ class Dashboard extends React.Component {
                                     <Users>
                                         {this.state.lobbies.map(lobby => {
                                             return (
-                                                <PlayerContainer
+                                                <LobbyContainer
                                                     key={lobby.id}
                                                     onClick={() => {
+                                                        this.state.joinToken=lobby.joinToken;
                                                         {lobby.lobbyType ==="PUBLIC" ? this.enterPublicLobby(lobby.id, lobby.lobbyToken) :
                                                             this.enterPrivateLobby(lobby.id)}
                                                     }}>
                                                     <Room lobby={lobby}/>
-                                                </PlayerContainer>
+                                                </LobbyContainer>
                                             );
                                         })}
                                     </Users>
@@ -339,6 +342,11 @@ class Dashboard extends React.Component {
                 <TabPanel>
 
                     <Gamedescription/>
+                </TabPanel>
+
+                <TabPanel>
+
+                    <Leaderboard/>
                 </TabPanel>
             </Tabs>
         );

@@ -4,7 +4,7 @@ import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
-import Header from "../../views/Header";
+import Header3 from "../../views/Header3";
 
 const Central = styled.div`
   display: flex;
@@ -115,7 +115,7 @@ class LoginLobby extends React.Component {
 
     render() {
         return (
-            <div>        <Header height={"80"} />
+            <div>        <Header3 height={"80"} />
                 <BaseContainer>
                     <FormContainer>
                         <Form>

@@ -10,20 +10,13 @@ const Container = styled.div`
   height: ${props => props.height}px;
   background: ${props => props.background};
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 `;
 
 const Container2 = styled.div`
-  height: ${props => props.height}px;
-  background: ${props => props.background};
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-`;
-
-const Spaceleft= styled.div`
-    margin-left: 533px;
+  color: rgba(255, 255, 255, 0);
+  width: 100px;
 `;
 
 
@@ -46,17 +39,19 @@ const Header2 = props => {
 
     return (
         <Container height={props.height}>
+            <Container2>
+                cheap trick
+            </Container2>
 
             <img src={Logo} width="100px"/>
-            <Spaceleft>
                 <Button
+                    width="100px"
                     onClick={() => {
                         logout().then(r => <Redirect to='/login'  />);
                     }}
                 >
                     Logout
                 </Button>
-            </Spaceleft>
         </Container>
     );
 };

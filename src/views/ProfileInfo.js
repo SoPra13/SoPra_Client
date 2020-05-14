@@ -36,13 +36,13 @@ const Container = styled.div`
   border-radius: 6px;
   display: flex;
   flex-direction: column;
-  background: rgba(163,30,255, 0.7);
+  background: rgba(120, 26, 89, 0.8);
   border: 1px solid #ffffff26;
   
 `;
 
 const UserName = styled.div`
-  color: #FFA700;
+  color: #F8F894;
   font-weight: lighter;
   margin-left: 5px;
 `;
@@ -113,12 +113,12 @@ const ProfileInfo = ({ user }) => {
     return (
         <Container>
             <Form2>
-                <img src={getAvatar(2)} width="60" height="60"/>
+                <img src={getAvatar(user.avatar)} width="60px" height="60px"/>
                 <Form>
                     <UserName>{user.username}</UserName>
                     <OnlineStatus>{user.status}</OnlineStatus>
                 </Form>
-                <img src={getRank(ranking(200))} width="60" height="60"/>
+                <img src={getRank(ranking(user.totalScore))} width="60px" height="60px"/>
             </Form2>
         </Container>
     );

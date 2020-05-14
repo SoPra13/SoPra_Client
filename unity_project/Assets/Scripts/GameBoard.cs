@@ -36,6 +36,7 @@ public class GameBoard : MonoBehaviour
     public GameObject skipTextObject;
     public GameObject cluesBG;
     public GameObject ScoreMultiplierBox;
+    public GameObject MisteryWordDisplayObject;
 
     public Positions positions;
 
@@ -77,6 +78,7 @@ public class GameBoard : MonoBehaviour
     private GameObject skipButton;
     private GameObject skipText;
     private GameObject scoreMultiplier;
+    private GameObject misteryWordDisplay;
 
     private bool advanceToState3 = false;
     private bool waitForServerTopicResponse = false;
@@ -546,9 +548,14 @@ public class GameBoard : MonoBehaviour
                 }
             }                    
         }
+        misteryWordDisplay = Instantiate(MisteryWordDisplayObject, new Vector3(0, 200, 0), Quaternion.identity) as GameObject;
+        misteryWordDisplay.name = "misteryWordDisplay";
+        misteryWordDisplay.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        GameObject.Find("guess").GetComponent<TextMeshProUGUI>().text = mockStats.GetFinalGuess();
         yield return new WaitForSeconds(1.0f);
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
+        Destroy(GameObject.Find("misteryWordDisplay"));
         if (success)
         {
             TriggerMiniCard(true);
@@ -1093,7 +1100,9 @@ public class GameBoard : MonoBehaviour
             StartCoroutine(StartTextBox("The active player is now guessing...wait for him to submit his guess", true, 2));
             GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("wake", true);
             GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("thinking", true);
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1.5f);
+            StartCoroutine(DisplayCluesFromPlayers());// Just for TestingTest
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -1348,7 +1357,7 @@ public class GameBoard : MonoBehaviour
             barAppearsSFX.Play();
             GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
             GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "The next round is about to start...";
-            GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...prepare yourselfs!";
+            GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...prepare yourselves!";
             yield return new WaitForSeconds(1.0f);
             barCheckSFX.Play();
             yield return new WaitForSeconds(3.2f);

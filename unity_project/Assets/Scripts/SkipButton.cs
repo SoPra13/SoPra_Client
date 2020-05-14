@@ -7,6 +7,7 @@ public class SkipButton : MonoBehaviour
     public GameObject skipText;
 
     private bool isOver = false;
+    private bool waitForSkip = false;
     private MockStats mockStats;
 
     public void Start()
@@ -16,14 +17,22 @@ public class SkipButton : MonoBehaviour
 
     public void ClickSkip()
     {
-        GameObject.Find("DenySFX").GetComponent<AudioSource>().Play();
-        GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", true);
-        GameObject.Find("SkipButton").GetComponent<Animator>().SetBool("disappear", true);
-        Destroy(GameObject.Find("SkipText"));
-        GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", true);
-        Destroy(GameObject.Find("Placeholder"));
-        mockStats.NotifyReactToEvaluateTheRound();
-        StartCoroutine(SetMisteryWordBoxInactive());
+        if (waitForSkip)
+        {
+
+        }
+        else
+        {
+            GameObject.Find("DenySFX").GetComponent<AudioSource>().Play();
+            GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", true);
+            GameObject.Find("SkipButton").GetComponent<Animator>().SetBool("disappear", true);
+            Destroy(GameObject.Find("SkipText"));
+            GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", true);
+            Destroy(GameObject.Find("Placeholder"));
+            mockStats.NotifyReactToEvaluateTheRound();
+            StartCoroutine(SetMisteryWordBoxInactive());
+            waitForSkip = true;
+        }
     }
 
     void OnMouseOver()
@@ -56,5 +65,6 @@ public class SkipButton : MonoBehaviour
         Destroy(GameObject.Find("MisteryWordInput"));
         Destroy(GameObject.Find("CluesBGTemp"));
         Destroy(GameObject.Find("SkipButton"));
+        waitForSkip = false;
     }
 }

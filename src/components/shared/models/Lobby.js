@@ -4,7 +4,7 @@
 class Lobby {
     constructor(data = {}) {
         this.id = null;
-        this.lobbyname = null;
+        this.lobbyName = null;
         this.lobbyToken = null;
         this.lobbyState = null; // OPEN, INGAME, OFFLINE(if offline, then delete)
         this.lobbyType = null; // PUBLIC; PRIVATE
