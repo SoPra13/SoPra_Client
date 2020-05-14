@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 
 //Todo
-//Player 5 background is buggy, does not display
+//pressing skip multiple times spasms, should only be pressable once
 //GameHasEnded has to be called in gameover screen
 //Score is calculated buggily, have to check
 
@@ -70,8 +70,8 @@ public class Rounds : MonoBehaviour
         if(roundPhase == 1)//Shuffling Animation of Cards AND Set the Round (fetched from Backend)
         {
             //Just for Testing
-            Debug.Log("Score: " + mockStats.GetScore());
-            Debug.Log("Multiplier: " + mockStats.GetMultiplier());
+            //Debug.Log("Score: " + mockStats.GetScore());
+            //Debug.Log("Multiplier: " + mockStats.GetMultiplier());
             //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             //GameObject.Find("MultiplierText").GetComponent<TextMeshProUGUI>().text = mockStats.GetMultiplier().ToString("#.0");
             //Reset things at the beginning of each round:
@@ -416,6 +416,8 @@ public class Rounds : MonoBehaviour
                 //Todo Start evaluation if players won or not
                 StartCoroutine(gameBoard.ActivePlayerHasSubmittedHisGuess());
                 mockStats.NotifyReactToEvaluateTheRound();
+                StartCoroutine(gameBoard.RemoveClues());//Just for Testing
+                StartCoroutine(RemoveClueFrame()); //justFortesting
                 roundPhase = 19;
             }
         }
@@ -518,7 +520,7 @@ public class Rounds : MonoBehaviour
             if (mockStats.GetStartNextRound())
             {
                 //Wait for the next round to be started and check if game is over
-                if (round >= 12)//EndGame
+                if (round > 12)//EndGame
                 {
                     StartCoroutine(EndGame());
                 }
@@ -744,6 +746,7 @@ public class Rounds : MonoBehaviour
     //Asks React if Active Player already made his choice
     IEnumerator EndGame()
     {
+        mockStats.SetStartNextRound();
         StartCoroutine(gameBoard.FadeScreenCompletely());
         try { FetchScoreStats(); }//This will tell React to get the Round int for this round
         catch (EntryPointNotFoundException e)
@@ -773,6 +776,14 @@ public class Rounds : MonoBehaviour
     {
         yield return new WaitForSeconds(0.25f);
         GameObject.Find("ScoreNumber").GetComponent<TextMeshProUGUI>().text = GetRound().ToString();
+    }
+
+    IEnumerator RemoveClueFrame() //justFortesting
+    {
+        GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", true);
+        yield return new WaitForSeconds(1f);
+        GameObject.Find("CluesBGTemp").GetComponent<Animator>().SetBool("disappear", false);
+        Destroy(GameObject.Find("CluesBGTemp"));
     }
 
 }
