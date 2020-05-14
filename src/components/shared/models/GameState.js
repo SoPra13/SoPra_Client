@@ -6,6 +6,7 @@ class GameState {
         this.currentRound = null;
         this.guesser = null;
         this.topic = null;
+        this.guess = null;
         this.guessCorrect =null;
         this.clueList = null;
         this.mysteryWords = null;

@@ -24,7 +24,7 @@ export class UnityGame extends React.Component {
             gameToken: localStorage.getItem('gameToken'),
             round:0,
             game: null,
-            playerListLength: null,
+            playerNumber: 0,
         };
 
         //unityContent is our unity code accessor
@@ -90,7 +90,6 @@ export class UnityGame extends React.Component {
         this.unityContent.on("SendGuessToReact", (message) =>{
             console.log("Unity tells player has guessed: " + message);
             this.sendGuess(message);
-
         });
 
         this.unityContent.on("SendClueToReact", (message) =>{
@@ -382,8 +381,13 @@ export class UnityGame extends React.Component {
 
             var game = response.data;
 
+            if(this.state.playerNumber>game.playerList.length){
+                this.abortGame();
+            }
+
             this.setState({
                 game: game,
+                playerNumber: game.playerList.length
             });
 
             console.log(this.state.game);
@@ -471,6 +475,12 @@ export class UnityGame extends React.Component {
                     "ReactSetActivePlayerMadeGuess",
                     1
                 )
+                this.unityContent.send(
+                    "MockStats",
+                    "ReactSendGuessToUnity",
+                    this.state.game.guess
+                )
+                console.log("Sent Unity guess:"+ this.state.game.guess);
                 console.log("Sent to Unity that guess was given");
             }else{
                 this.unityContent.send(
@@ -480,6 +490,17 @@ export class UnityGame extends React.Component {
                 )
                 console.log("Sent to Unity that guess was not given");
             }
+
+
+        }
+
+        abortGame(){
+            console.log("Sent to Unity that abort was triggered");
+            this.unityContent.send(
+                "Rounds",
+                "ReactAbortGame",
+
+            )
         }
 
     async getResultOfGuess(){
@@ -495,14 +516,16 @@ export class UnityGame extends React.Component {
                 "ReactTellRoundWin",
                 1
             )
+
+            console.log("Sent Unity guess:"+ this.state.game.guess);
             console.log("Sent Unity that round was won");
-        }else if((this.state.game.guessCorrect == null)){;
+        }else if((this.state.game.guessCorrect == null)){
             this.unityContent.send(
                 "MockStats",
                 "ReactTellRoundWin",
                 2
             )
-            console.log("Sent Unity that round was skipped");
+
         }else{
 
             this.unityContent.send(
