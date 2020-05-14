@@ -37,6 +37,7 @@ public class GameBoard : MonoBehaviour
     public GameObject cluesBG;
     public GameObject ScoreMultiplierBox;
     public GameObject MisteryWordDisplayObject;
+    public GameObject DisconnectObject;
 
     public Positions positions;
 
@@ -79,6 +80,7 @@ public class GameBoard : MonoBehaviour
     private GameObject skipText;
     private GameObject scoreMultiplier;
     private GameObject misteryWordDisplay;
+    private GameObject disconnected;
 
     private bool advanceToState3 = false;
     private bool waitForServerTopicResponse = false;
@@ -499,6 +501,11 @@ public class GameBoard : MonoBehaviour
         topicBar.name = "TopicBar";
         topicBar.transform.SetParent(GameObject.Find("Canvas").transform, false);
         barAppearsSFX.Play();
+
+        misteryWordDisplay = Instantiate(MisteryWordDisplayObject, new Vector3(0, 200, 0), Quaternion.identity) as GameObject;
+        misteryWordDisplay.name = "misteryWordDisplay";
+        misteryWordDisplay.transform.SetParent(GameObject.Find("Canvas").transform, false);
+
         if (success)
         {
             if (mockStats.GetActivePlayer() == mockStats.GetPlayerPosition())
@@ -506,14 +513,17 @@ public class GameBoard : MonoBehaviour
                 GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
                 GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your guess was...";
                 GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...correct!";
+                GameObject.Find("guess").GetComponent<TextMeshProUGUI>().text = mockStats.GetCurrentTopic();
+                GameObject.Find("GuesserText").GetComponent<TextMeshProUGUI>().text = "The Topic was:";
             }
             else
             {
                 GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", true);
                 GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has guessed...";
                 GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...correctly! Well done";
+                GameObject.Find("guess").GetComponent<TextMeshProUGUI>().text = mockStats.GetFinalGuess();
             }
-            
+
         }
         else if (!success)
         {
@@ -524,12 +534,15 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", false);
                     GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "Your guess was...";
                     GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...incorrect!";
+                    GameObject.Find("guess").GetComponent<TextMeshProUGUI>().text = mockStats.GetCurrentTopic();
+                    GameObject.Find("GuesserText").GetComponent<TextMeshProUGUI>().text = "The Topic was:";
                 }
                 else
                 {
                     GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", false);
                     GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has guessed...";
                     GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...wrong! Better luck next time...";
+                    GameObject.Find("guess").GetComponent<TextMeshProUGUI>().text = mockStats.GetFinalGuess();
                 }
             }
             else
@@ -539,19 +552,18 @@ public class GameBoard : MonoBehaviour
                     GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", false);
                     GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = "You decided to...";
                     GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...skip this turn!";
+                    GameObject.Find("guess").GetComponent<TextMeshProUGUI>().text = mockStats.GetCurrentTopic();
+                    GameObject.Find("GuesserText").GetComponent<TextMeshProUGUI>().text = "The Topic was:";
                 }
                 else
                 {
                     GameObject.Find("TopicBar").GetComponent<Animator>().SetBool("positive", false);
                     GameObject.Find("TopicText").GetComponent<TextMeshProUGUI>().text = mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has decided...";
                     GameObject.Find("TopicText2").GetComponent<TextMeshProUGUI>().text = "...to skip this turn...";
+                    GameObject.Find("guess").GetComponent<TextMeshProUGUI>().text = mockStats.GetFinalGuess();
                 }
             }                    
         }
-        misteryWordDisplay = Instantiate(MisteryWordDisplayObject, new Vector3(0, 200, 0), Quaternion.identity) as GameObject;
-        misteryWordDisplay.name = "misteryWordDisplay";
-        misteryWordDisplay.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        GameObject.Find("guess").GetComponent<TextMeshProUGUI>().text = mockStats.GetFinalGuess();
         yield return new WaitForSeconds(1.0f);
         barCheckSFX.Play();
         yield return new WaitForSeconds(3.2f);
@@ -1382,6 +1394,15 @@ public class GameBoard : MonoBehaviour
         blackScreen.transform.SetParent(GameObject.Find("Interaction").transform, false);
         GameObject.Find("BlackScreen2").GetComponent<Animator>().SetBool("completeBlack", true);
         yield return new WaitForSeconds(1.0f);
+    }
+
+
+    public IEnumerator PlayerDisconnected()
+    {
+        disconnected = Instantiate(DisconnectObject, new Vector3(0, 0, -10), Quaternion.identity) as GameObject;
+        disconnected.name = "DiscoScreen";
+        disconnected.transform.SetParent(GameObject.Find("Interaction").transform, false);
+        yield return new WaitForSeconds(2.0f);
     }
 }
 

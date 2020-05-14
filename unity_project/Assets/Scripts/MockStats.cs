@@ -56,6 +56,7 @@ public class MockStats : MonoBehaviour
     private int[] topicChoices = { 0, 0, 0, 0, 0 }; //Displays the amount of votes per Topic
     private bool inputLocked = false;
     private string currentTopic = "justATest";
+    private string finalGuess;
 
     private int[] topicChoiceMade = { 0, 0, 0, 0, 0, 0, 0 }; //this array comes from Backend, 0 = not chosen a topic yet; 1 = chosen a topic yet; index 0 = player pos 1 etc.
     private int[] clueSubmitted = { 0, 0, 0, 0, 0, 0, 0 };  //this array is set from the Backend, 0 = not submitted a cue; 1 = submitted a clue
@@ -74,7 +75,6 @@ public class MockStats : MonoBehaviour
     private int[] correctGuesses = { 3, 0, 0, 0, 0, 0, 0 }; //ReactSendCorrectGuessString(str)
     private int[] duplicatedClues = { 6, 0, 0, 0, 0, 0, 0 }; //ReactSendDuplicateString(str)
     private int[] validClues = { 10, 0, 0, 0, 0, 0, 0 }; //ReactSendValidCluesSting(str)
-    private string finalGuess;
 
     private bool giveReactTime = false;
     private bool hasLostLastRound = false;
