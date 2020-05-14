@@ -470,10 +470,17 @@ public class MockStats : MonoBehaviour
 
 
     //React will send the Topic of this round via this function
-    public void ReactSetThisRoundsTopic()
+    public void ReactSetThisRoundsTopic(string topic)
     {
-        rounds = GameObject.Find("Rounds").GetComponent<Rounds>(); //needs to be called here because else it calls it in the first scene
-        rounds.SetRoundPhase(11);
+        if(playerPosition == activePlayer)
+        {
+            currentTopic = topic;
+        }
+        else
+        {
+            rounds = GameObject.Find("Rounds").GetComponent<Rounds>(); //needs to be called here because else it calls it in the first scene
+            rounds.SetRoundPhase(11);
+        }
     }
 
 
