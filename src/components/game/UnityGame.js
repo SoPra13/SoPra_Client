@@ -7,10 +7,18 @@ import Unity, { UnityContent } from "react-unity-webgl";
 import { api, handleError } from '../../helpers/api';
 
 
-const UnityBody = styled.body`
-  height: 768px;
-  background: #404040;
+const CentralRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 `;
+
+const CentralColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
 
 export class UnityGame extends React.Component {
     async;
@@ -242,7 +250,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetPlayerAvatars",
             avatarString
-        )
+        );
         console.log("AvatarString sent to Unity: " + avatarString);
     }
 
@@ -254,7 +262,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetTopicArray",
             topicString
-        )
+        );
         console.log("MysteryWord sent to Unity");
     }
 
@@ -275,7 +283,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSendScoreString",
             scoreString
-        )
+        );
         console.log("ScoreString sent to Unity: " + scoreString);
     }
 
@@ -291,7 +299,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetTopicVoteList",
             topicListString
-        )
+        );
         console.log("VotedString sent to Unity: " + topicListString);
     }
 
@@ -309,7 +317,7 @@ export class UnityGame extends React.Component {
            this.unityContent.send(
                "MockStats",
                "ReactSetThisRoundsTopic"
-           )
+           );
        console.log("Topic set sent to Unity");
      }
 
@@ -331,7 +339,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetRound",
             round
-        )
+        );
         console.log("RoundNumber sent to Unity: " + round);
     }
 
@@ -369,7 +377,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetPlayerHasChosenTopic",
             votedString
-        )
+        );
         console.log("String of votes sent to Unity: " + votedString);
     }
 
@@ -439,7 +447,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetPlayerHasSubmittedClue",
             clueGivenString
-        )
+        );
         console.log("String of who gave clue sent to Unity: " + clueGivenString);
     }
 
@@ -450,7 +458,7 @@ export class UnityGame extends React.Component {
             "MockStats",
             "ReactSetClueString",
             cluesString
-        )
+        );
         console.log("String of clues sent to Unity: " + cluesString);
     }
 
@@ -474,12 +482,12 @@ export class UnityGame extends React.Component {
                     "MockStats",
                     "ReactSetActivePlayerMadeGuess",
                     1
-                )
+                );
                 this.unityContent.send(
                     "MockStats",
                     "ReactSendGuessToUnity",
                     this.state.game.guess
-                )
+                );
                 console.log("Sent Unity guess:"+ this.state.game.guess);
                 console.log("Sent to Unity that guess was given");
             }else{
@@ -487,7 +495,7 @@ export class UnityGame extends React.Component {
                     "MockStats",
                     "ReactSetActivePlayerMadeGuess",
                     0
-                )
+                );
                 console.log("Sent to Unity that guess was not given");
             }
 
@@ -515,7 +523,7 @@ export class UnityGame extends React.Component {
                 "MockStats",
                 "ReactTellRoundWin",
                 1
-            )
+            );
 
             console.log("Sent Unity guess:"+ this.state.game.guess);
             console.log("Sent Unity that round was won");
@@ -532,7 +540,7 @@ export class UnityGame extends React.Component {
                 "MockStats",
                 "ReactTellRoundWin",
                 0
-            )
+            );
             console.log("Sent Unity that round was lost");
         }
     }
@@ -540,12 +548,12 @@ export class UnityGame extends React.Component {
 
     async nextRound(){
         try{
-            if(this.state.game.playerList[this.state.game.guesser].token==localStorage.getItem('userToken') && this.state.round == this.state.game.currentRound) {
+            if(this.state.game.playerList[this.state.game.guesser].token===localStorage.getItem('userToken') && this.state.round === this.state.game.currentRound) {
                 const response = await api.put('/game/round?gameToken=' + localStorage.getItem('gameToken'));
                 this.state.game = response.data;
                 console.log("Sent to Backend that next round should start");
             }
-            while(this.state.round == this.state.game.currentRound){
+            while(this.state.round === this.state.game.currentRound){
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
 
@@ -680,21 +688,24 @@ export class UnityGame extends React.Component {
     render() {
         var height = window.innerHeight;
         return (
-            /*<UnityBody>*/
+
             <BaseContainer>
+                <CentralColumn>
+                    <CentralRow>
                 <div
                     style={{
-                        position: "center",
+/*                        position: "center",
                         top: (height+540)/2,
-                        left: 0,
+                        left: 0,*/
                         width: "1080px",
                         height: "600px"
                     }}
                 >
                     <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
                 </div>
+                    </CentralRow>
+                </CentralColumn>
             </BaseContainer>
-                /*</UnityBody>*/
         );
     }
 }

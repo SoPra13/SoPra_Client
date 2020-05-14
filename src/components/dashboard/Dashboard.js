@@ -7,25 +7,12 @@ import { Button } from '../../views/design/Button';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { Spinner} from "../../views/design/Spinner";
-import Player from "../../views/Player";
 import Room from "../../views/Room";
 import ProfileInfo from "../../views/ProfileInfo";
 import Gamedescription from "../../views/Gamedescription";
 import Header2 from "../../views/Header2";
 
-import Avenger from '../../image/avatar/Avenger.png';
-import Lion from '../../image/avatar/Lion.png';
-import Magneto from '../../image/avatar/Magneto.png';
-import Meow from '../../image/avatar/Meow.png';
-import MsWednesday from '../../image/avatar/MsWednesday.png';
-import Robot from '../../image/avatar/Robot.png';
-import Urgot from '../../image/avatar/Urgot.png';
-
-import Bronze from '../../image/rank/Bronze.png'
-import Silver from '../../image/rank/Silver.png'
-import Gold from '../../image/rank/Gold.png'
-import Diamond from '../../image/rank/Diamond.png'
-import GrandMaster from '../../image/rank/GrandMaster.png'
+import Leaderboard from "../leaderboard/Leaderboard";
 
 const Container = styled(BaseContainer)`
   height: 420px;
@@ -76,6 +63,9 @@ const PlayerContainer = styled.li`
 `;
 
 const LobbyContainer = styled.li`
+  &:hover {
+    transform: translateY(-2px);
+  }
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -108,15 +98,6 @@ class Dashboard extends React.Component {
             lobbyname: null,
             tabIndex: 0
         };
-    }
-
-
-
-    showProfile(id){
-        this.props.history.push({
-            pathname: `/dashboard/profile`,
-            userId: id
-        })
     }
 
 
@@ -246,6 +227,7 @@ class Dashboard extends React.Component {
                     <Tab><TabText>Users</TabText></Tab>
                     <Tab><TabText>Lobbies</TabText></Tab>
                     <Tab><TabText>Game Description and Rules</TabText></Tab>
+                    <Tab><TabText>Leaderboard</TabText></Tab>
                 </TabList>
 
                 <TabPanel>
@@ -295,11 +277,11 @@ class Dashboard extends React.Component {
                                     {this.state.users.map(user => {
                                         return (
                                             <PlayerContainer
-                                                key={user.id}
+/*                                                key={user.id}
                                                 onClick={() => {
                                                     console.log(user.id);
                                                     this.showProfile(user.id);
-                                                }}>
+                                                }}*/>
                                                 <ProfileInfo user={user}/>
                                             </PlayerContainer>
                                         );
@@ -360,6 +342,11 @@ class Dashboard extends React.Component {
                 <TabPanel>
 
                     <Gamedescription/>
+                </TabPanel>
+
+                <TabPanel>
+
+                    <Leaderboard/>
                 </TabPanel>
             </Tabs>
         );

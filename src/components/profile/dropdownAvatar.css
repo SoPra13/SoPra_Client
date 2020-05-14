@@ -1,12 +1,12 @@
 /* Style The Dropdown Button */
 .dropbtn {
-    background: #0e3d61;
-    color: #e314da;
+    background: rgba(120, 26, 89, 0.8);
+    color: rgba(248, 248, 148, 1);
     padding: 14px;
     font-size: 16px;
     cursor: pointer;
     border: 2px solid;
-    border-color: #e314da;
+    border-color:   rgba(248, 248, 148, 1);
     border-radius: 10px;
 }
 
@@ -28,7 +28,7 @@ img{
 .dropdown-content {
     display: none;
     position: absolute;
-    background: #0e3d61;
+    background: rgba(120, 26, 89, 0.8);
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
@@ -42,7 +42,7 @@ img{
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {  background: #0e3d61;}
+.dropdown-content a:hover {    background: rgba(120, 26, 89, 0.8);}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
@@ -51,5 +51,5 @@ img{
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-    background: #0e3d61;
+    background: rgba(120, 26, 89, 0.8);
 }

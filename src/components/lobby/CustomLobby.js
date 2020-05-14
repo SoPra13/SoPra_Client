@@ -5,7 +5,7 @@ import { api, handleError } from '../../helpers/api';
 import Lobby from "../shared/models/Lobby";
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
-import Header from "../../views/Header";
+import Header3 from "../../views/Header3";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -34,7 +34,7 @@ const Form = styled.div`
 
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+        color: rgba(248, 248, 148, 1);
   }
   height: 35px;
   padding-left: 15px;
@@ -42,12 +42,12 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.3);
+    background: rgba(120, 26, 89, 0.8);
   color: white;
 `;
 
 const Label = styled.label`
-  color: white;
+    color: rgba(248, 248, 148, 1);
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
@@ -125,7 +125,7 @@ class CustomLobby extends React.Component {
 
     render() {
         return (
-            <div>        <Header height={"80"} />
+            <div>        <Header3 height={"80"} />
                 <BaseContainer>
                     <FormContainer>
                         <Form>

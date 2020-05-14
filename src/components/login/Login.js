@@ -5,7 +5,6 @@ import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import { Button2} from "../../views/design/RegisterButton";
-import Header from "../../views/Header";
 import Logo from "./Logo.png";
 
 

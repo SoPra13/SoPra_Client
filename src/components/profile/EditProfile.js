@@ -5,7 +5,7 @@ import { api, handleError } from '../../helpers/api';
 import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
-import Header from "../../views/Header";
+import Header2 from "../../views/Header2";
 import DropdownAvatar from './dropdownAvatar.css';
 
 import Avenger from '../../image/avatar/Avenger.png';
@@ -16,7 +16,14 @@ import MsWednesday from '../../image/avatar/MsWednesday.png';
 import Robot from '../../image/avatar/Robot.png';
 import Urgot from '../../image/avatar/Urgot.png';
 
+const Title = styled.div`
+ color: #FFC100;
+ text-shadow: -1px 0 blue, 0 1px red, 1px 0 red, 0 -1px red;
+`;
 
+const Title2= styled.div`
+    color: rgba(248, 248, 148, 1);
+`;
 
 const Container = styled(BaseContainer)`
   text-align: center;
@@ -59,13 +66,13 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: rgba(255, 147, 13, 0.5);
+  background: rgba(9, 5, 88, 0.75);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+        color: rgba(248, 248, 148, 1);
   }
   height: 35px;
   padding-left: 15px;
@@ -73,7 +80,7 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(120, 26, 89, 0.8);
   color: white;
 `;
 
@@ -145,10 +152,10 @@ class EditProfile extends React.Component {
 
     render() {
         return (
-            <div>        <Header height={"80"} />
-
-                <h2>EditProfile</h2>
-
+            <div>        <Header2 height={"80"} />
+            <Container>
+                <h2><Title>EditProfile</Title></h2>
+                </Container>
 
                 {!this.state.user ? (
                     <Spinner />
@@ -160,7 +167,7 @@ class EditProfile extends React.Component {
                                     <FormContainer2>
 
                                         <FormContainer3>
-                                            <Label>Username</Label>
+                                            <Label><Title2>Username</Title2></Label>
                                             <InputField
                                                 placeholder="Enter here a new username"
                                                 onChange={e => {
