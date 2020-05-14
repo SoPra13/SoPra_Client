@@ -470,10 +470,10 @@ class WaitingRoom extends React.Component {
                             disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
                             width="20%"
                             onClick={() => {
-                                this.addBot('DARKSOULS');
+                                this.addBot('HOSTILE');
                             }}
                         >
-                            ADD BADASS BOT
+                            Add Hostile\n Bot
                         </Button1>
                             </MultipleListsContainer>
 
