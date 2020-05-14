@@ -55,5 +55,8 @@
         },
     FetchScoreStats: function() {
           ReactUnityWebGL.FetchScoreStats();
+        },
+    FetchScores: function() {
+          ReactUnityWebGL.FetchScores();
         }
 });
