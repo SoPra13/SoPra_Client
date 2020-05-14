@@ -7,10 +7,7 @@ using System;
 using UnityEngine.SceneManagement;
 
 
-//Todo
-//pressing skip multiple times spasms, should only be pressable once
-//GameHasEnded has to be called in gameover screen
-//Score is calculated buggily, have to check
+
 
 public class Rounds : MonoBehaviour
 {
@@ -391,6 +388,7 @@ public class Rounds : MonoBehaviour
             if (sum == mockStats.GetTotalNumberOfPlayers() - 1)
             {
                 StartCoroutine(CallForClueStatus());
+                mockStats.GetClueStringFromReact();
                 roundPhase = 17; //ALL PLAYERS HAVE GIVEN THEIR CLUE
             }
         }
@@ -522,7 +520,7 @@ public class Rounds : MonoBehaviour
                 //Wait for the next round to be started and check if game is over
                 if (round > 12)//EndGame
                 {
-                    StartCoroutine(EndGame());
+                    StartCoroutine(EndGame(false));
                 }
                 //Todo Check if game is over and also check Edge case that if we are in round 12 and fail, round 13 is skipped and the game ends and
                 //edge case if we are in round 13 and fail, game ends and 1 successful round is subtracted
@@ -590,6 +588,14 @@ public class Rounds : MonoBehaviour
     public void SetSkippingTurn()
     {
         skippingTurn = true;
+    }
+
+
+    //This is called when a player leaves the game (called by react)
+    //Todo Add player notification that a player left
+    public void ReactAbortGame()
+    {
+        StartCoroutine(EndGame(true));
     }
 
 
@@ -744,16 +750,23 @@ public class Rounds : MonoBehaviour
     }
 
     //Asks React if Active Player already made his choice
-    IEnumerator EndGame()
+    public IEnumerator EndGame(bool disconnect)
     {
         mockStats.SetStartNextRound();
-        StartCoroutine(gameBoard.FadeScreenCompletely());
+        if (disconnect)
+        {
+            StartCoroutine(gameBoard.PlayerDisconnected());
+        }
+        else
+        {
+            StartCoroutine(gameBoard.FadeScreenCompletely());
+        }
         try { FetchScoreStats(); }//This will tell React to get the Round int for this round
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity wants to get data on the score stats of a player but failed " + e);
         }
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2f);
 
         mockStats.MultiplyScore();
         yield return new WaitForSeconds(0.1f);

@@ -200,6 +200,7 @@ MonoBehaviour:
   cluesBG: {fileID: 0}
   ScoreMultiplierBox: {fileID: 0}
   MisteryWordDisplayObject: {fileID: 0}
+  DisconnectObject: {fileID: 0}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
   drawCard: {fileID: 1207197612}
@@ -4554,6 +4555,8 @@ MonoBehaviour:
   ScoreMultiplierBox: {fileID: 8337557929497845465, guid: 525386d2bf3322446bb21e6c7d0db674,
     type: 3}
   MisteryWordDisplayObject: {fileID: 2681051410960036833, guid: 5af3e623c59f5bc4eace0a62cd93102a,
+    type: 3}
+  DisconnectObject: {fileID: 7460597076835041555, guid: 28e971a88bd7c2543960965abb3d2dc2,
     type: 3}
   positions: {fileID: 813416797}
   timer: {fileID: 1992207472}
