@@ -75,6 +75,12 @@ const PlayerContainer = styled.li`
   justify-content: center;
 `;
 
+const LobbyContainer = styled.li`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
 
 const Users = styled.ul`
   list-style: none;
@@ -121,8 +127,20 @@ class Dashboard extends React.Component {
         })
     }
 
-    enterPublicLobby(id, lobbyToken){
+    async enterPublicLobby(id, lobbyToken){
         localStorage.setItem('lobbyToken', lobbyToken);
+
+        const response = await api.put('/lobby?joinToken='+ this.state.joinToken +
+            `&userToken=` + localStorage.getItem('userToken'));
+
+        // Get the returned user and update a new object.
+        console.log(response.data);
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Store the token into the local storage.
+        localStorage.setItem('lobbyToken', response.data.lobbyToken);
+
         this.props.history.push({
             pathname: '/dashboard/waitingLobby',
             id: id
@@ -130,7 +148,8 @@ class Dashboard extends React.Component {
     }
 
 
-    enterPrivateLobby(id){
+    async enterPrivateLobby(id){
+
         this.props.history.push({
             pathname: '/dashboard/loginLobby',
             id: id
@@ -305,14 +324,15 @@ class Dashboard extends React.Component {
                                     <Users>
                                         {this.state.lobbies.map(lobby => {
                                             return (
-                                                <PlayerContainer
+                                                <LobbyContainer
                                                     key={lobby.id}
                                                     onClick={() => {
+                                                        this.state.joinToken=lobby.joinToken;
                                                         {lobby.lobbyType ==="PUBLIC" ? this.enterPublicLobby(lobby.id, lobby.lobbyToken) :
                                                             this.enterPrivateLobby(lobby.id)}
                                                     }}>
                                                     <Room lobby={lobby}/>
-                                                </PlayerContainer>
+                                                </LobbyContainer>
                                             );
                                         })}
                                     </Users>

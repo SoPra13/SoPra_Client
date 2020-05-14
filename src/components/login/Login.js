@@ -51,14 +51,14 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: rgba(150, 0, 255, 0.5);
+  background: rgba(9, 5, 88, 0.75);
   transition: opacity 0.5s ease, transform 0.5s ease;
 
 `;
 
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+    color: rgba(248, 248, 148);
   }
   height: 35px;
   padding-left: 15px;
@@ -66,12 +66,12 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(120, 26, 89, 0.8);
+  color: rgba(248, 248, 148);
 `;
 
 const Label = styled.label`
-  color: white;
+  color: rgba(248, 248, 148);
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
@@ -167,7 +167,7 @@ class Login extends React.Component {
           <div>
 
           <Central1>
-            <h1><img src={Logo} width='60px' height='60px'/> Welcome in the Town!! <img src={Logo} width='60px' height='60px'/></h1>
+            <h1><img src={Logo} width='60px' height='60px'/> Welcome to Town!! <img src={Logo} width='60px' height='60px'/></h1>
           </Central1>
             <FormContainer>
 

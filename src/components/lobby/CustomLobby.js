@@ -77,7 +77,7 @@ class CustomLobby extends React.Component {
     async create() {
         try {
             const requestBody = JSON.stringify({
-                lobbyname: this.state.lobbyname,
+                lobbyName: this.state.lobbyname,
                 adminToken: this.state.adminToken,
                 lobbyType: this.state.lobbyType
             });
