@@ -21,6 +21,12 @@ const Title = styled.div`
  text-shadow: -1px 0 blue, 0 1px red, 1px 0 red, 0 -1px red;
 `;
 
+const Central = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+
 const Title2= styled.div`
     color: rgba(248, 248, 148, 1);
 `;
@@ -133,6 +139,27 @@ class EditProfile extends React.Component {
         console.log(this.state.avatar);
     }
 
+    getAvatar(avatar){
+        var x = avatar;
+
+        switch (x) {
+            case 1:
+                return Magneto;
+            case 2:
+                return Avenger;
+            case 3:
+                return Robot;
+            case 4:
+                return MsWednesday;
+            case 5:
+                return Lion;
+            case 6:
+                return Meow;
+            case 7:
+                return Urgot;
+        }
+    }
+
 
     async componentWillMount() {
         try {
@@ -155,12 +182,16 @@ class EditProfile extends React.Component {
             <div>        <Header2 height={"80"} />
             <Container>
                 <h2><Title>EditProfile</Title></h2>
+
+
                 </Container>
+
 
                 {!this.state.user ? (
                     <Spinner />
                 ) : (
                     <BaseContainer>
+
                         <FormContainer>
                             <Form>
                                 <Container>
@@ -168,6 +199,10 @@ class EditProfile extends React.Component {
 
                                         <FormContainer3>
                                             <Label><Title2>Username</Title2></Label>
+                                            <Central>
+                                            <img src={this.getAvatar(this.state.avatar)} width='60px' height='60px'/>
+                                            </Central>
+                                            <br/>
                                             <InputField
                                                 placeholder="Enter here a new username"
                                                 onChange={e => {

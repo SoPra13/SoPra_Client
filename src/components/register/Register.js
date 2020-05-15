@@ -1,9 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+
+import'../profile/dropdownAvatar.css';
+
+import Avenger from '../../image/avatar/Avenger.png';
+import Lion from '../../image/avatar/Lion.png';
+import Magneto from '../../image/avatar/Magneto.png';
+import Meow from '../../image/avatar/Meow.png';
+import MsWednesday from '../../image/avatar/MsWednesday.png';
+import Robot from '../../image/avatar/Robot.png';
+import Urgot from '../../image/avatar/Urgot.png';
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -19,7 +28,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 30%;
-  height: 375px;
+  height: 500px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -33,6 +42,12 @@ const Central = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+`;
+
+const CentralRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 
@@ -84,7 +99,8 @@ class Register extends React.Component {
         this.state = {
             username: null,
             password: null,
-            confirmation: null
+            confirmation: null,
+            avatar: 1
         };
     }
     /**
@@ -99,7 +115,7 @@ class Register extends React.Component {
                 const requestBody = JSON.stringify({
                     username: this.state.username,
                     password: this.state.password,
-                    avatar: 1
+                    avatar: this.state.avatar
                 });
                 await api.post('/register', requestBody);
 
@@ -132,6 +148,34 @@ class Register extends React.Component {
         this.setState({ [key]: value });
     }
 
+    setAvatar(x){
+        console.log(x);
+        this.setState({
+            avatar: x
+        });
+    }
+
+    getAvatar(avatar){
+        var x = avatar;
+
+        switch (x) {
+            case 1:
+                return Magneto;
+            case 2:
+                return Avenger;
+            case 3:
+                return Robot;
+            case 4:
+                return MsWednesday;
+            case 5:
+                return Lion;
+            case 6:
+                return Meow;
+            case 7:
+                return Urgot;
+        }
+    }
+
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
      * Initialization that requires DOM nodes should go here.
@@ -146,6 +190,64 @@ class Register extends React.Component {
             <FormContainer>
                 <Form>
                     <Label>Welcome!</Label>
+
+
+                    <CentralRow>
+                    <img src={this.getAvatar(this.state.avatar)} width='60px' height='60px'/>
+                    <div className="dropdown">
+                        <button className="dropbtn">Change Avatar</button>
+                        <div className="dropdown-content">
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(1)
+                                    }}>
+                                <img src={Magneto} width='40px' height='40px'/>
+                            </button>
+
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(2)
+                                    }}>
+                                <img src={Avenger} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(3)
+                                    }}>
+                                <img src={Robot} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(4)
+                                    }}>
+                                <img src={MsWednesday} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(5)
+                                    }}>
+                                <img src={Lion} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(6)
+                                    }}>
+                                <img src={Meow} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(7)
+                                    }}>
+                                <img src={Urgot} width='40px' height='40px'/>
+                            </button>
+
+                        </div>
+                    </div>
+                    </CentralRow>
+
+
+
+
                     <Label>Username</Label>
                     <InputField
                         placeholder="Enter here your username"
@@ -167,6 +269,9 @@ class Register extends React.Component {
                                     this.handleInputChange('confirmation', e.target.value);
                                 }}
                     />
+
+
+
                     <ButtonContainer>
                         <Central>
                             <Button
