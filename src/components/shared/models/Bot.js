@@ -1,7 +1,7 @@
 class Bot {
     constructor(data = {}) {
         this.id = null;
-        this.botname = null;
+        this.botName = null;
         this.password = null;
         this.botToken = null;
         this.lobbyToken = null;

@@ -4,12 +4,13 @@ import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import { Spinner } from '../../views/design/Spinner';
 import { withRouter } from 'react-router-dom';
-import Lobby from "../shared/models/Lobby";
 import BotPlayer from "../../views/BotPlayer";
 import Chat from '../chat/Chat';
 import ProfileInfo from "../../views/ProfileInfo";
-import Header2 from "../../views/Header2";
 
+const NonAdmin = styled.div`
+  display: none;
+`;
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -51,14 +52,14 @@ const Button1 = styled.button`
   &:hover {
     transform: translateY(-2px);
   }
-  margin: 10px;
+  margin: 20px;
   padding: 6px;
   font-weight: 700;
   font-size: 13px;
   text-align: center;
   color: #fff;
   width: ${props => props.width || null};
-  height: ${props => props.width || null};
+  height: ${props => props.height || null};
   border: 2px solid;
   border-color: #c5c5c5;
   border-radius: 20px;
@@ -78,6 +79,7 @@ class WaitingRoom extends React.Component {
             difficulty: "FRIEND",
             numberOfPlayers: 7,
             numberOfBots: 0,
+            lobbyType: null,
             adminToken: null,
             joinToken: null,
             isToggleReady: false,
@@ -207,7 +209,8 @@ class WaitingRoom extends React.Component {
                 botList: response.data.botList,
                 adminToken: response.data.adminToken,
                 joinToken: response.data.joinToken,
-                lobbyname: response.data.name
+                lobbyname: response.data.lobbyName,
+                lobbyType: response.data.lobbyType
             });
 
             // See here to get more data.
@@ -307,8 +310,10 @@ class WaitingRoom extends React.Component {
         }
         this.setState({
             playerList: lobby.playerList,
-            botList: lobby.botList
-        })
+            botList: lobby.botList,
+            lobbyname: lobby.lobbyName
+        });
+        console.log(lobby);
     }
 
 
@@ -336,14 +341,16 @@ class WaitingRoom extends React.Component {
     }
 
     render() {
+
+
+
         return (
             <div>
-                <Header2 height={"80"} />
                 <BaseContainer>
                     <Container>
 
                         <h2><TabContentTitle>Players & Bots of Lobby {this.state.lobbyname}</TabContentTitle></h2>
-                        <h2> <TabContentTitle>{this.state.joinToken}</TabContentTitle></h2>
+                        <h2> <TabContentTitle>{this.state.lobbyType === "PUBLIC" ? "" : "Password as private lobby: " + this.state.joinToken}</TabContentTitle></h2>
                         <div>
 
 
@@ -366,11 +373,16 @@ class WaitingRoom extends React.Component {
                                                 );
                                             })}
                                         </Users>
+                                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                                            (<NonAdmin/>)
+                                            :
+                                            (
                                         <Users>
                                             {this.state.playerList.map(user => {
                                                 return (
                                                     <KickContainer>
                                                         <Button1
+                                                            height="35px"
                                                             disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
                                                             key={user.id}
                                                             onClick={() => {
@@ -383,6 +395,7 @@ class WaitingRoom extends React.Component {
                                                 );
                                             })}
                                         </Users>
+                                            )}
                                         <Users>
                                             <Chat/>
                                         </Users>
@@ -410,11 +423,15 @@ class WaitingRoom extends React.Component {
                                                 );
                                             })}
                                         </Users>
+                                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                                            (<NonAdmin/>)
+                                            :(
                                         <Users>
                                             {this.state.botList.map(bot => {
                                                 return (
                                                     <KickContainer>
                                                         <Button1
+                                                            height="35px"
                                                             disabled = {localStorage.getItem('userToken') != this.state.adminToken}
                                                             key={bot.id}
                                                             onClick={() => {
@@ -428,6 +445,7 @@ class WaitingRoom extends React.Component {
                                                 );
                                             })}
                                         </Users>
+                                            )}
                                     </MultipleListsContainer>
                                 </div>
                             )}
@@ -435,47 +453,36 @@ class WaitingRoom extends React.Component {
 
                     <PlayerContainer>
 
-                        <MultipleListsContainer>
-                    <Button1
-                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                        width="20%"
-                        onClick={() => {
-                            this.getLobbyToken();
-                        }}
-                    >
-                        Get the lobby token
-                    </Button1>
+                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                            (<NonAdmin/>)
+                            :
+                            (<div>
+                                    <MultipleListsContainer>
 
-                        <Button1
-                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                            width="20%"
-                            onClick={() => {
-                                this.addBot('FRIEND');
-                            }}
-                        >
-                            ADD FRIENDLY BOT
-                        </Button1>
+                                        <Button1
+                                            disabled={localStorage.getItem('userToken') !== this.state.adminToken}
+                                            width="35%"
+                                            onClick={() => {
+                                                this.addBot('FRIEND');
+                                            }}
+                                        >
+                                            ADD FRIENDLY BOT
+                                        </Button1>
 
-                        <Button1
-                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                            width="20%"
-                            onClick={() => {
-                                this.addBot('NEUTRAL');
-                            }}
-                        >
-                            ADD NEUTRAL BOT
-                        </Button1>
+                                        <Button1
+                                            disabled={localStorage.getItem('userToken') !== this.state.adminToken}
+                                            width="35%"
+                                            onClick={() => {
+                                                this.addBot('HOSTILE');
+                                            }}
+                                        >
+                                            ADD HOSTILE BOT
+                                        </Button1>
+                                    </MultipleListsContainer>
+                                </div>
+                            )
+                        }
 
-                        <Button1
-                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                            width="20%"
-                            onClick={() => {
-                                this.addBot('HOSTILE');
-                            }}
-                        >
-                            Add Hostile\n Bot
-                        </Button1>
-                            </MultipleListsContainer>
 
 
 

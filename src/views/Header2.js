@@ -10,22 +10,14 @@ const Container = styled.div`
   height: ${props => props.height}px;
   background: ${props => props.background};
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 `;
 
 const Container2 = styled.div`
-  height: ${props => props.height}px;
-  background: ${props => props.background};
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  color: rgba(255, 255, 255, 0);
+  width: 100px;
 `;
-
-const Spaceleft= styled.div`
-    margin-left: 533px;
-`;
-
 
 async function logout() {
 
@@ -36,8 +28,6 @@ async function logout() {
         alert(`Something went wrong while logging out: \n${handleError(error)}`);
     }
     localStorage.removeItem('userToken');
-
-
 }
 
 const Header2 = props => {
@@ -46,17 +36,24 @@ const Header2 = props => {
 
     return (
         <Container height={props.height}>
+            <Button
+                width="100px"
+                onClick={() => {
+                    logout().then(r => <Redirect to='/login'  />);
+                }}
+            >
+                Logout
+            </Button>
 
-            <img src={Logo} width="100px"/>
-            <Spaceleft>
-                <Button
-                    onClick={() => {
-                        logout().then(r => <Redirect to='/login'  />);
-                    }}
-                >
-                    Logout
-                </Button>
-            </Spaceleft>
+
+            <Button
+                position = "absolute"
+                onClick={() => {
+                    this.props.history.push('/dashboard/customLobby');
+                }}
+            >
+                Create Lobby
+            </Button>
         </Container>
     );
 };

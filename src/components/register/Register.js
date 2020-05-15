@@ -25,7 +25,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
- background: rgba(9, 5, 88, 0.75);
+  background: rgba(9, 5, 88, 0.75);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -83,7 +83,8 @@ class Register extends React.Component {
         super();
         this.state = {
             username: null,
-            password: null
+            password: null,
+            confirmation: null
         };
     }
     /**
@@ -92,23 +93,31 @@ class Register extends React.Component {
      * and its token is stored in the localStorage.
      */
     async register() {
-        try {
-            const requestBody = JSON.stringify({
-                username: this.state.username,
-                password: this.state.password,
-                avatar: 1
-            });
-            await api.post('/register', requestBody);
+        if(this.state.username.length<9){
+        if(this.state.confirmation === this.state.password) {
+            try {
+                const requestBody = JSON.stringify({
+                    username: this.state.username,
+                    password: this.state.password,
+                    avatar: 1
+                });
+                await api.post('/register', requestBody);
 
-            /*            // Get the returned user and update a new object.
-                        const user = new User(response.data);
+                /*            // Get the returned user and update a new object.
+                            const user = new User(response.data);
 
-                        // Store the token into the local storage.
-                        localStorage.setItem('userToken', user.userToken);*/
+                            // Store the token into the local storage.
+                            localStorage.setItem('userToken', user.userToken);*/
 
-            this.props.history.push(`/login`);
-        } catch (error) {
-            alert(`Something went wrong during the sign up: \n${handleError(error)}`);
+                this.props.history.push(`/login`);
+            } catch (error) {
+                alert(`Something went wrong during the sign up: \n${handleError(error)}`);
+            }
+        }else{
+            alert("Your passwords aren't identical.")
+        }
+        }else{
+            alert("Your username has to be min 1 and max 8 characters")
         }
     }
 
@@ -149,6 +158,13 @@ class Register extends React.Component {
                                 placeholder="Enter here your password"
                                 onChange={e => {
                                     this.handleInputChange('password', e.target.value);
+                                }}
+                    />
+
+                    <InputField type="password"
+                                placeholder="Repeat your password"
+                                onChange={e => {
+                                    this.handleInputChange('confirmation', e.target.value);
                                 }}
                     />
                     <ButtonContainer>

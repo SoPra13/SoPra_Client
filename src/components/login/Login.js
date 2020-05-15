@@ -5,7 +5,6 @@ import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import { Button2} from "../../views/design/RegisterButton";
-import Header from "../../views/Header";
 import Logo from "./Logo.png";
 
 
@@ -119,6 +118,8 @@ class Login extends React.Component {
    * If the request is successful, a new user is returned to the front-end
    * and its token is stored in the localStorage.
    */
+
+
   async login() {
     try {
       const requestBody = JSON.stringify({
@@ -127,16 +128,26 @@ class Login extends React.Component {
       });
       const response = await api.put('/login', requestBody);
 
-      console.log(response);
+/*        try {
+            const respo = await api.get('/user/?token=' + response.data);
+            console.log(respo.data);
+            if(respo.data.status=== "ONLINE"){*/
+                localStorage.setItem('userToken', response.data);
 
-      // Store the token into the local storage.
-      localStorage.setItem('userToken', response.data);
+                this.props.history.push(`/dashboard`);
+/*            }
+            else{
+                alert("User is already logged in.")
+            }*/
 
-      this.props.history.push(`/dashboard`);
+        } catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
-  }
+/*  }*/
 
 
   /**

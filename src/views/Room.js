@@ -7,28 +7,29 @@ const Container = styled.div`
   padding: 10px;
   border-radius: 6px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   text-align: center;
-  background: rgba(0,38,176, 0.7);
+    background: rgba(120, 26, 89, 0.8);
   border: 1px solid #ffffff26;
 `;
 
-const UserName = styled.div`
-  color: #FFA700;
+const LobbyName = styled.div`
+  color: #F8F894;
   font-weight: lighter;
-
 `;
 
-const Id = styled.div`
-  margin-left: auto;
-  margin-right: 10px;
-  font-weight: bold;
+const NumberOfPlayers= styled.div`
+  color: #F8F894;
+  font-weight: lighter;
 `;
+
 
 const Room = ({ lobby }) => {
     return (
         <Container>
-            <UserName>{lobby.lobbyName}</UserName>
+            <LobbyName>Lobbyname: {lobby.lobbyName}</LobbyName>
+            <NumberOfPlayers> Players: {lobby.playerList.length}</NumberOfPlayers>
         </Container>
     );
 };

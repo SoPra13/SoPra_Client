@@ -5,7 +5,22 @@ import { api, handleError } from '../../helpers/api';
 import Lobby from "../shared/models/Lobby";
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
-import Header from "../../views/Header";
+import Header3 from "../../views/Header3";
+
+const Text = styled.div`
+  color:   rgba(248, 248, 148, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Text2 = styled.div`
+  font-weight: bold;
+  color:  #000FDB;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -34,7 +49,7 @@ const Form = styled.div`
 
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+        color: rgba(248, 248, 148, 1);
   }
   height: 35px;
   padding-left: 15px;
@@ -42,12 +57,12 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.3);
+    background: rgba(120, 26, 89, 0.8);
   color: white;
 `;
 
 const Label = styled.label`
-  color: white;
+    color: rgba(248, 248, 148, 1);
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
@@ -55,6 +70,14 @@ const Label = styled.label`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+    margin-top: 10px;
+  margin-bottom: 20px;
+`;
+
+const ButtonContainer2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
   margin-top: 20px;
 `;
 
@@ -81,6 +104,7 @@ class CustomLobby extends React.Component {
                 adminToken: this.state.adminToken,
                 lobbyType: this.state.lobbyType
             });
+            console.log(this.state.lobbyType);
             const response = await api.post('/lobby', requestBody);
             await new Promise(resolve => setTimeout(resolve, 1000));
             // Get the returned user and update a new object.
@@ -125,31 +149,36 @@ class CustomLobby extends React.Component {
 
     render() {
         return (
-            <div>        <Header height={"80"} />
+            <div>        <Header3 height={"80"} />
                 <BaseContainer>
                     <FormContainer>
                         <Form>
                             <Label>Lobby name</Label>
                             <InputField
-                                placeholder="Enter here.."
+                                placeholder="Enter here the lobby name"
                                 onChange={e => {
                                     this.handleInputChange('lobbyname', e.target.value);
                                 }}
                             />
-
+                            <Text>Lobby is
+                            </Text>
+                            <Text2>{this.state.lobbyType === "PUBLIC" ? "PUBLIC" : "PRIVATE"}
+                            </Text2>
 
                             <ButtonContainer>
                                 <Button
+                                    width="30%"
+                                    height="70px"
                                     onClick={() => {
                                         this.changeLobbyType();
                                     }}
                                 >
-                                    {this.state.lobbyType === "PUBLIC" ? "Set as Public" : "Set as Private"}
+                                    Change to {this.state.lobbyType === "PUBLIC" ? "Private" : "Public" }
                                 </Button>
 
                             </ButtonContainer>
 
-                            <ButtonContainer>
+                            <ButtonContainer2>
                                 <Button
                                     width="30%"
                                     onClick={() => {
@@ -158,9 +187,7 @@ class CustomLobby extends React.Component {
                                 >
                                     Create
                                 </Button>
-                            </ButtonContainer>
 
-                            <ButtonContainer>
                                 <Button
                                     width="30%"
                                     onClick={() => {
@@ -169,7 +196,7 @@ class CustomLobby extends React.Component {
                                 >
                                     Back
                                 </Button>
-                            </ButtonContainer>
+                            </ButtonContainer2>
                         </Form>
                     </FormContainer>
                 </BaseContainer>

@@ -8,7 +8,6 @@ import DashboardRouter from "./DashboardRouter";
 import EditProfile from "../../profile/EditProfile";
 import {CustomLobbyGuard} from "../routeProtectors/CustomLobbyGuard";
 import CustomLobby from "../../lobby/CustomLobby";
-import Profile from "../../profile/Profile";
 import {RegisterGuard} from "../routeProtectors/RegisterGuard";
 import Register from "../../register/Register";
 import WaitingLobby from "../../lobby/WaitingLobby";
@@ -99,13 +98,6 @@ class AppRouter extends React.Component {
                   )}
               />
 
-              <Route
-                  path="/dashboard/profile"
-                  exact
-                  render={() => (
-                      <Profile/>
-                  )}
-              />
 
               <Route
                   path="/unityGame"

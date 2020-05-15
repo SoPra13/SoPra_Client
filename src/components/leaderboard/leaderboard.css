@@ -5,7 +5,7 @@
     border-radius: 12px;
     width: 340px;
     height: 440px;
-    background-color: black;
+    background: rgba(120, 26, 89, 0.8);
     align-items: center;
 }
 
@@ -15,7 +15,7 @@
     border-radius: 12px;
     width: 320px;
     height: 420px;
-    background-color: rgb(58, 58, 58);
+    background-color: rgb(0,41,73);
     align-items: center;
     overflow-y: scroll;
 }
@@ -27,7 +27,7 @@
 
 
 .leaderboardinnercontainer::-webkit-scrollbar-track {
-    background-color: grey; 
+    background-color: grey;
     border-radius: 2px;
 }
 
@@ -37,13 +37,15 @@
  }
 
 .playerBox {
+    color:   rgba(248, 248, 148, 1);
     border-radius: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: aliceblue;
+    background: rgba(120, 26, 89, 0.8);
     width: 300px;
     height: 30px;
+    margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 4px;
@@ -69,7 +71,7 @@ margin-right: 10px;
 
 
 h1 {
-    color: white;
+    color:   rgba(248, 248, 148, 1);
     font-size: x-large;
     margin: 0px;
     margin-bottom: 10px;
@@ -77,12 +79,12 @@ h1 {
 
 .scoreSelect {
     border-radius: 4px;
-    color: white;
+    color:   rgba(248, 248, 148, 1);
     padding-left: 10px;
     padding-right: 10px;
     border: none;
     margin-bottom: 10px;
-    background-color: gray;
+    background-color: rgb(0,41,73);
     outline: none;
     cursor: pointer;
 
@@ -100,7 +102,7 @@ h1 {
     position: absolute;
     right: 15px;
     top: 10px;
-    color: #fff;
+    color:   rgba(248, 248, 148, 1);
     pointer-events: none;
 
   }
