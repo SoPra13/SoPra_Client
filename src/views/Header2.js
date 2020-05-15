@@ -19,7 +19,6 @@ const Container2 = styled.div`
   width: 100px;
 `;
 
-
 async function logout() {
 
     const key = localStorage.getItem(('userToken'));
@@ -29,8 +28,6 @@ async function logout() {
         alert(`Something went wrong while logging out: \n${handleError(error)}`);
     }
     localStorage.removeItem('userToken');
-
-
 }
 
 const Header2 = props => {
@@ -39,19 +36,24 @@ const Header2 = props => {
 
     return (
         <Container height={props.height}>
-            <Container2>
-                cheap trick
-            </Container2>
+            <Button
+                width="100px"
+                onClick={() => {
+                    logout().then(r => <Redirect to='/login'  />);
+                }}
+            >
+                Logout
+            </Button>
 
-            <img src={Logo} width="100px"/>
-                <Button
-                    width="100px"
-                    onClick={() => {
-                        logout().then(r => <Redirect to='/login'  />);
-                    }}
-                >
-                    Logout
-                </Button>
+
+            <Button
+                position = "absolute"
+                onClick={() => {
+                    this.props.history.push('/dashboard/customLobby');
+                }}
+            >
+                Create Lobby
+            </Button>
         </Container>
     );
 };

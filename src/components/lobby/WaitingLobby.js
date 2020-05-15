@@ -8,6 +8,9 @@ import BotPlayer from "../../views/BotPlayer";
 import Chat from '../chat/Chat';
 import ProfileInfo from "../../views/ProfileInfo";
 
+const NonAdmin = styled.div`
+  display: none;
+`;
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -56,7 +59,7 @@ const Button1 = styled.button`
   text-align: center;
   color: #fff;
   width: ${props => props.width || null};
-  height: ${props => props.width || null};
+  height: ${props => props.height || null};
   border: 2px solid;
   border-color: #c5c5c5;
   border-radius: 20px;
@@ -338,6 +341,9 @@ class WaitingRoom extends React.Component {
     }
 
     render() {
+
+
+
         return (
             <div>
                 <BaseContainer>
@@ -367,11 +373,16 @@ class WaitingRoom extends React.Component {
                                                 );
                                             })}
                                         </Users>
+                                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                                            (<NonAdmin/>)
+                                            :
+                                            (
                                         <Users>
                                             {this.state.playerList.map(user => {
                                                 return (
                                                     <KickContainer>
                                                         <Button1
+                                                            height="35px"
                                                             disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
                                                             key={user.id}
                                                             onClick={() => {
@@ -384,6 +395,7 @@ class WaitingRoom extends React.Component {
                                                 );
                                             })}
                                         </Users>
+                                            )}
                                         <Users>
                                             <Chat/>
                                         </Users>
@@ -411,13 +423,15 @@ class WaitingRoom extends React.Component {
                                                 );
                                             })}
                                         </Users>
+                                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                                            (<NonAdmin/>)
+                                            :(
                                         <Users>
                                             {this.state.botList.map(bot => {
                                                 return (
                                                     <KickContainer>
                                                         <Button1
-                                                            width="60px"
-                                                            height="60px"
+                                                            height="35px"
                                                             disabled = {localStorage.getItem('userToken') != this.state.adminToken}
                                                             key={bot.id}
                                                             onClick={() => {
@@ -431,6 +445,7 @@ class WaitingRoom extends React.Component {
                                                 );
                                             })}
                                         </Users>
+                                            )}
                                     </MultipleListsContainer>
                                 </div>
                             )}
@@ -438,37 +453,36 @@ class WaitingRoom extends React.Component {
 
                     <PlayerContainer>
 
-                        <MultipleListsContainer>
-                    <Button1
-                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                        width="20%"
-                        onClick={() => {
-                            this.getLobbyToken();
-                        }}
-                    >
-                        Get the lobby token
-                    </Button1>
+                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                            (<NonAdmin/>)
+                            :
+                            (<div>
+                                    <MultipleListsContainer>
 
-                        <Button1
-                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                            width="25%"
-                            onClick={() => {
-                                this.addBot('FRIEND');
-                            }}
-                        >
-                            ADD FRIENDLY BOT
-                        </Button1>
+                                        <Button1
+                                            disabled={localStorage.getItem('userToken') !== this.state.adminToken}
+                                            width="35%"
+                                            onClick={() => {
+                                                this.addBot('FRIEND');
+                                            }}
+                                        >
+                                            ADD FRIENDLY BOT
+                                        </Button1>
 
-                        <Button1
-                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                            width="20%"
-                            onClick={() => {
-                                this.addBot('HOSTILE');
-                            }}
-                        >
-                            ADD HOSTILE BOT
-                        </Button1>
-                            </MultipleListsContainer>
+                                        <Button1
+                                            disabled={localStorage.getItem('userToken') !== this.state.adminToken}
+                                            width="35%"
+                                            onClick={() => {
+                                                this.addBot('HOSTILE');
+                                            }}
+                                        >
+                                            ADD HOSTILE BOT
+                                        </Button1>
+                                    </MultipleListsContainer>
+                                </div>
+                            )
+                        }
+
 
 
 
