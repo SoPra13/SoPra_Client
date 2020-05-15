@@ -10,7 +10,7 @@ export function Message(props) {
             ?
             (<><span className="usernametext">{props.username}:</span> <span className="messagetext">{props.message}</span></>)
             :
-            (<p style={{color: "blue"}}>{props.message}</p>)
+            (<p style={{color: "green"}}>{props.message}</p>)
         }
     </div>
     )

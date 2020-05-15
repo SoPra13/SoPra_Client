@@ -10,7 +10,7 @@ export const Button = styled.button`
   text-align: center;
   color: rgba(248, 248, 148);
   width: ${props => props.width || null};
-  height: 35px;
+  height: ${props => props.height || "35px"}
   border: 2px solid;
   border-color: rgba(248, 248, 148);
   border-radius: 20px;
