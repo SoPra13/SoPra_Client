@@ -694,14 +694,11 @@ export class UnityGame extends React.Component {
                     <CentralRow>
                 <div
                     style={{
-/*                        position: "center",
-                        top: (height+540)/2,
-                        left: 0,*/
                         width: "1080px",
                         height: "600px"
                     }}
                 >
-                    <Unity unityContent={this.unityContent} height="768px" width ="1366px" />
+                    <Unity unityContent={this.unityContent} style={{background: "rgba(255, 255, 255, 0)"}} />
                 </div>
                     </CentralRow>
                 </CentralColumn>

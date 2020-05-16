@@ -243,9 +243,9 @@ class Dashboard extends React.Component {
         const tabComp =(
             <Tabs defaultIndex={0} onSelect={index => console.log(index)}>
                 <TabList>
-                    <Tab><TabText>Users & Leaderboard</TabText></Tab>
-                    <Tab><TabText>Lobbies</TabText></Tab>
-                    <Tab><TabText>Game Description and Rules</TabText></Tab>
+                    <Tab style={{background: "rgba(120, 26, 89, 0)"}}><TabText>Users & Leaderboard</TabText></Tab>
+                    <Tab style={{background: "rgba(120, 26, 89, 0)"}}><TabText>Lobbies</TabText></Tab>
+                    <Tab style={{background: "rgba(120, 26, 89, 0)"}}><TabText>Game Description and Rules</TabText></Tab>
                 </TabList>
 
 

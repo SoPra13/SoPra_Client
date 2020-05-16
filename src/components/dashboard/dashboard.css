@@ -8,6 +8,8 @@ body{
     position: relative;
 }
 
+
+
 .background2{
     background-image: url("./Board.jpg");
     margin-top: 10px;
@@ -21,4 +23,11 @@ body{
 
 .text{
     color:   rgba(248, 248, 148, 1);
+}
+
+.tabBackground--selected{
+    background: rgba(120, 26, 89, 0);
+    border-color: rgba(248, 248, 148, 1);
+    color: rgba(248, 248, 148, 1);
+    border-radius: 5px 5px 0 0;
 }

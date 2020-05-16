@@ -5,17 +5,16 @@ import JustOne1 from "../image/JustOne1.png";
 
 const Container = styled.div`
 
-  color: #FFC100;
+  color: rgba(248, 248, 148, 1);;
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  text-shadow: -1px 0 blue, 0 1px blue, 1px 0 blue, 0 -1px blue;
 `;
 const Container2 = styled.div`
 
-  color: #FFC100;
+  color: rgba(248, 248, 148, 1);;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -47,9 +46,20 @@ const Background = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 650px;
+  min-height: 630px;
   justify-content: center;
-    background: rgba(14,61,97,0.7);
+    background: rgba(120, 26, 89, 0.8);
+`;
+
+const Background2 = styled.div`
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 500px;
+  justify-content: center;
+  padding: 20px;
+    background: rgba(120, 26, 89, 0.8);
 `;
 
 const TextContainer = styled.div`
@@ -94,6 +104,7 @@ function Gamedescription() {
                         <FormContainer2>
                             <img style={{width: "50%"}} src={JustOne1} alt=""/>
                             <FormContainer>
+                                <Background2>
                                 <h1>OBJECT OF THE GAME</h1>
 
 
@@ -108,9 +119,10 @@ function Gamedescription() {
 
                                     </p>
                                 </TextContainer>
-
+                                </Background2>
                             </FormContainer>
                         </FormContainer2>
+
                     </FormContainer>
                 </Container>
 
