@@ -51,7 +51,7 @@ public class LoadingScreen : MonoBehaviour
 
     void Start()
     {
-        bgMusic.volume = 0f;
+        bgMusic.volume = 0.5f;
         //The following is for unity-react communication testing ComTest Works, leave unchanged!
         //ComTest(666);
         confirm.volume = 0.25f;
@@ -129,7 +129,9 @@ public class LoadingScreen : MonoBehaviour
         p1TextAnimator.SetBool("transition", true);
         p2TextAnimator.SetBool("transition", true);
         spinner.SetBool("transition", true);
-        justOneLogo.SetBool("transition", true);
+        //justOneLogo.SetBool("transition", true);
+        GameObject.Find("JLogo").GetComponent<Animator>().SetBool("disappear", true);
+        GameObject.Find("Box").GetComponent<Animator>().SetBool("disappear", true);
         faderLeft.SetActive(true);
         faderRight.SetActive(true);
         StartCoroutine(ParticlesDeactivate());
@@ -146,7 +148,7 @@ public class LoadingScreen : MonoBehaviour
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(0.9f);
         zap.volume = 0.5f;
-        zap.Play();
+        //zap.Play();
     }
 
 
