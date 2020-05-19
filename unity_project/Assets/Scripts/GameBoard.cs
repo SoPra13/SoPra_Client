@@ -1352,7 +1352,7 @@ public class GameBoard : MonoBehaviour
 
     public IEnumerator NewRoundStartsAnimation()
     {
-        if(round.GetRound() >= 12)
+        if(round.GetRound() > 12)
         {
 
         }
