@@ -681,6 +681,16 @@ export class UnityGame extends React.Component {
             1000
         );
         document.body.style.backgroundColor = '#404040';
+
+        window.addEventListener('beforeunload', (event) => {
+            // Cancel the event as stated by the standard.
+            event.preventDefault();
+            // Chrome requires returnValue to be set.
+            event.returnValue = '';
+
+            localStorage.clear();
+            this.leaveGame();
+        });
     }
 
     componentWillUnmount() {

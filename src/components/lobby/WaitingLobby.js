@@ -202,6 +202,7 @@ class WaitingRoom extends React.Component {
         try {
             const response = await api.get('/lobby?lobbyToken='+ localStorage.getItem('lobbyToken'));
             console.log(response.data);
+            await api.put('/user/updateingametab?userToken=' + localStorage.getItem('userToken'));
             // Get the returned users and update the state.
             this.setState({
                 playerList: response.data.playerList,
@@ -332,12 +333,21 @@ class WaitingRoom extends React.Component {
             2000,
 
         )
+        window.addEventListener('beforeunload', (event) => {
+            // Cancel the event as stated by the standard.
+            event.preventDefault();
+            // Chrome requires returnValue to be set.
+            event.returnValue = '';
+
+            localStorage.clear();
+        });
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID1);
-        clearInterval(this.timerID2)
+        clearInterval(this.timerID2);
     }
+
 
     render() {
 
