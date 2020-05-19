@@ -201,8 +201,7 @@ class WaitingRoom extends React.Component {
     async getLobby(){
         try {
             const response = await api.get('/lobby?lobbyToken='+ localStorage.getItem('lobbyToken'));
-
-
+            console.log(response.data);
             // Get the returned users and update the state.
             this.setState({
                 playerList: response.data.playerList,
@@ -460,7 +459,7 @@ class WaitingRoom extends React.Component {
                                     <MultipleListsContainer>
 
                                         <Button1
-                                            disabled={localStorage.getItem('userToken') !== this.state.adminToken}
+                                            disabled={this.state.botList.length>=4}
                                             width="35%"
                                             onClick={() => {
                                                 this.addBot('FRIEND');
@@ -470,7 +469,7 @@ class WaitingRoom extends React.Component {
                                         </Button1>
 
                                         <Button1
-                                            disabled={localStorage.getItem('userToken') !== this.state.adminToken}
+                                            disabled={this.state.botList.length>=4}
                                             width="35%"
                                             onClick={() => {
                                                 this.addBot('HOSTILE');

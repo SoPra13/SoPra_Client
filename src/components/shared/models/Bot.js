@@ -12,6 +12,7 @@ class Bot {
         this.avatar = null;
         this.ready = null; // READY, PREPARING
         this.word = null;
+        this.difficulty = null;
         Object.assign(this, data);
     }
 }

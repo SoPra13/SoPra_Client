@@ -223,7 +223,7 @@ export class UnityGame extends React.Component {
         }
 
          for (var i = 0; i<game.botList.length; i++) {
-             nameString += ';'+game.botList[i].botname;
+             nameString += ';'+game.botList[i].botName;
          }
 
         this.unityContent.send(
@@ -401,6 +401,8 @@ export class UnityGame extends React.Component {
                 playerNumber: game.playerList.length
             });
 
+            await api.put('/user/updateingametab?userToken=' + localStorage.getItem('userToken'));
+
             console.log(this.state.game);
 
         } catch (error) {
@@ -485,6 +487,7 @@ export class UnityGame extends React.Component {
                     "MockStats",
                     "ReactSetActivePlayerMadeGuess",
                     1
+                );
                 this.unityContent.send(
                     "MockStats",
                     "ReactSendGuessToUnity",
@@ -575,13 +578,11 @@ export class UnityGame extends React.Component {
         }
     }
 
-
-
     async endGame(score){
     try{
         await new Promise(resolve => setTimeout(resolve, 1000));
         var scoreString = score.toString();
-        await api.put('/user/score?userToken='+ localStorage.getItem('userToken')+'&score='+score);
+        await api.put('/game/score?userToken='+ localStorage.getItem('userToken')+'&score='+score);
         console.log("Sent to Backend that game ended, sent score:"+score);
 
     }catch(error){

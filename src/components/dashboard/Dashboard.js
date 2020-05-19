@@ -290,6 +290,7 @@ class Dashboard extends React.Component {
                                             return (
                                                 <LobbyContainer
                                                     key={lobby.id}
+                                                    disabled={lobby.playerList+lobby.botList<7}
                                                     onClick={() => {
                                                         this.state.joinToken=lobby.joinToken;
                                                         {lobby.lobbyType ==="PUBLIC" ? this.enterPublicLobby(lobby.id, lobby.lobbyToken) :

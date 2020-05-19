@@ -113,7 +113,7 @@ const BotPlayer = ({ bot }) => {
             <Form2>
                 <img src={getAvatar(3)} width="60px" height="60px"/>
                 <Form>
-                    <UserName>{bot.botName}</UserName>
+                    <UserName>{bot.botName + ": " + bot.difficulty.toLowerCase()}</UserName>
                 </Form>
                 <img src={getRank(ranking(999))} width="60px" height="60px"/>
             </Form2>
