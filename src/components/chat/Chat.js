@@ -60,7 +60,7 @@ export default class Chat extends Component {
             this.updateStatus();
         }, 200);
 
-        this.b();
+        //this.b();
     }
 
     b() {
