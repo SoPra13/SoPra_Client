@@ -41,6 +41,15 @@ const Container = styled.div`
   
 `;
 
+const Red = styled.div`
+  color: #F60000;
+`;
+
+const Green = styled.div`
+  color: #1CD200;
+`;
+
+
 const UserName = styled.div`
   color: #F8F894;
   font-weight: lighter;
@@ -116,7 +125,7 @@ const ProfileInfo = ({ user }) => {
                 <img src={getAvatar(user.avatar)} width="60px" height="60px"/>
                 <Form>
                     <UserName>{user.username}</UserName>
-                    <OnlineStatus>{user.status}</OnlineStatus>
+                    <OnlineStatus>{user.status === "ONLINE" ? <Green>ONLINE</Green> : <Red>OFFLINE</Red>}</OnlineStatus>
                 </Form>
                 <img src={getRank(ranking(user.totalScore))} width="60px" height="60px"/>
             </Form2>
