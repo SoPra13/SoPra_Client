@@ -271,7 +271,7 @@ export class UnityGame extends React.Component {
 
     setScores(){
         var scoreArray = [];
-        for(var i = 0; i<this.state.playerListLength; i++){
+        for(var i = 0; i<this.state.game.playerList.length; i++){
             scoreArray.push(this.state.game.playerList[i].totalScore.toString());
         }
 
