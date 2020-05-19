@@ -1,9 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+
+import'../profile/dropdownAvatar.css';
+
+import Avenger from '../../image/avatar/Avenger.png';
+import Lion from '../../image/avatar/Lion.png';
+import Magneto from '../../image/avatar/Magneto.png';
+import Meow from '../../image/avatar/Meow.png';
+import MsWednesday from '../../image/avatar/MsWednesday.png';
+import Robot from '../../image/avatar/Robot.png';
+import Urgot from '../../image/avatar/Urgot.png';
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -18,20 +27,33 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
-  height: 375px;
+  width: 30%;
+  height: 500px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background-color: #ffca65;
+  background: rgba(9, 5, 88, 0.75);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
+const Central = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+
+const CentralRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+    color: rgba(248, 248, 148);
   }
   height: 35px;
   padding-left: 15px;
@@ -39,12 +61,12 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(120, 26, 89, 0.8);
+  color: rgba(248, 248, 148);
 `;
 
 const Label = styled.label`
-  color: white;
+  color: rgba(248, 248, 148);
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
@@ -76,7 +98,9 @@ class Register extends React.Component {
         super();
         this.state = {
             username: null,
-            password: null
+            password: null,
+            confirmation: null,
+            avatar: 1
         };
     }
     /**
@@ -85,22 +109,31 @@ class Register extends React.Component {
      * and its token is stored in the localStorage.
      */
     async register() {
-        try {
-            const requestBody = JSON.stringify({
-                username: this.state.username,
-                password: this.state.password
-            });
-            const response = await api.post('/register', requestBody);
+        if(this.state.username.length<9){
+        if(this.state.confirmation === this.state.password) {
+            try {
+                const requestBody = JSON.stringify({
+                    username: this.state.username,
+                    password: this.state.password,
+                    avatar: this.state.avatar
+                });
+                await api.post('/register', requestBody);
 
-/*            // Get the returned user and update a new object.
-            const user = new User(response.data);
+                /*            // Get the returned user and update a new object.
+                            const user = new User(response.data);
 
-            // Store the token into the local storage.
-            localStorage.setItem('userToken', user.userToken);*/
+                            // Store the token into the local storage.
+                            localStorage.setItem('userToken', user.userToken);*/
 
-            this.props.history.push(`/login`);
-        } catch (error) {
-            alert(`Something went wrong during the sign up: \n${handleError(error)}`);
+                this.props.history.push(`/login`);
+            } catch (error) {
+                alert(`Something went wrong during the sign up: \n${handleError(error)}`);
+            }
+        }else{
+            alert("Your passwords aren't identical.")
+        }
+        }else{
+            alert("Your username has to be min 1 and max 8 characters")
         }
     }
 
@@ -115,6 +148,34 @@ class Register extends React.Component {
         this.setState({ [key]: value });
     }
 
+    setAvatar(x){
+        console.log(x);
+        this.setState({
+            avatar: x
+        });
+    }
+
+    getAvatar(avatar){
+        var x = avatar;
+
+        switch (x) {
+            case 1:
+                return Magneto;
+            case 2:
+                return Avenger;
+            case 3:
+                return Robot;
+            case 4:
+                return MsWednesday;
+            case 5:
+                return Lion;
+            case 6:
+                return Meow;
+            case 7:
+                return Urgot;
+        }
+    }
+
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
      * Initialization that requires DOM nodes should go here.
@@ -126,24 +187,93 @@ class Register extends React.Component {
 
     render() {
         return (
-            <BaseContainer>
-                <FormContainer>
-                    <Form>
-                        <Label>Username</Label>
-                        <InputField
-                            placeholder="Enter here your username"
-                            onChange={e => {
-                                this.handleInputChange('username', e.target.value);
-                            }}
-                        />
-                        <Label>Password</Label>
-                        <InputField
-                            placeholder="Enter here your password"
-                            onChange={e => {
-                                this.handleInputChange('password', e.target.value);
-                            }}
-                        />
-                        <ButtonContainer>
+            <FormContainer>
+                <Form>
+                    <Label>Welcome!</Label>
+
+
+                    <CentralRow>
+                    <img src={this.getAvatar(this.state.avatar)} width='60px' height='60px'/>
+                    <div className="dropdown">
+                        <button className="dropbtn">Change Avatar</button>
+                        <div className="dropdown-content">
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(1)
+                                    }}>
+                                <img src={Magneto} width='40px' height='40px'/>
+                            </button>
+
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(2)
+                                    }}>
+                                <img src={Avenger} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(3)
+                                    }}>
+                                <img src={Robot} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(4)
+                                    }}>
+                                <img src={MsWednesday} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(5)
+                                    }}>
+                                <img src={Lion} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(6)
+                                    }}>
+                                <img src={Meow} width='40px' height='40px'/>
+                            </button>
+                            <button className="transparent"
+                                    onClick={() => {
+                                        this.setAvatar(7)
+                                    }}>
+                                <img src={Urgot} width='40px' height='40px'/>
+                            </button>
+
+                        </div>
+                    </div>
+                    </CentralRow>
+
+
+
+
+                    <Label>Username</Label>
+                    <InputField
+                        placeholder="Enter here your username"
+                        onChange={e => {
+                            this.handleInputChange('username', e.target.value);
+                        }}
+                    />
+                    <Label>Password</Label>
+                    <InputField type="password"
+                                placeholder="Enter here your password"
+                                onChange={e => {
+                                    this.handleInputChange('password', e.target.value);
+                                }}
+                    />
+
+                    <InputField type="password"
+                                placeholder="Repeat your password"
+                                onChange={e => {
+                                    this.handleInputChange('confirmation', e.target.value);
+                                }}
+                    />
+
+
+
+                    <ButtonContainer>
+                        <Central>
                             <Button
                                 disabled={!this.state.username || !this.state.password}
                                 width="30%"
@@ -162,10 +292,10 @@ class Register extends React.Component {
                             >
                                 Back
                             </Button>
-                        </ButtonContainer>
-                    </Form>
-                </FormContainer>
-            </BaseContainer>
+                        </Central>
+                    </ButtonContainer>
+                </Form>
+            </FormContainer>
         );
     }
 }

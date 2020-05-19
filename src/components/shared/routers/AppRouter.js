@@ -8,15 +8,14 @@ import DashboardRouter from "./DashboardRouter";
 import EditProfile from "../../profile/EditProfile";
 import {CustomLobbyGuard} from "../routeProtectors/CustomLobbyGuard";
 import CustomLobby from "../../lobby/CustomLobby";
-import Profile from "../../profile/Profile";
 import {RegisterGuard} from "../routeProtectors/RegisterGuard";
 import Register from "../../register/Register";
 import WaitingLobby from "../../lobby/WaitingLobby";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import {LobbyGuard} from "../routeProtectors/LobbyGuard";
 import LoginLobby from "../../lobby/LoginLobby";
-import UnityDummy from "../../game/UnityDummy";
 import Chat from "../../chat/Chat";
+import Leaderboard from "../../leaderboard/Leaderboard";
 
 
 /**
@@ -99,22 +98,6 @@ class AppRouter extends React.Component {
                   )}
               />
 
-              <Route
-                  path="/dashboard/profile"
-                  exact
-                  render={() => (
-                      <Profile/>
-                  )}
-              />
-
-              <Route
-                  path="/unitydummy"
-                  exact
-                  render={() => (
-                      <UnityDummy/>
-                  )}
-              />
-
 
               <Route
                   path="/unityGame"
@@ -133,6 +116,8 @@ class AppRouter extends React.Component {
                       <Chat />
                   )}
               />
+
+              <Route path="/leaderboard" exact render={() => <Leaderboard/>}/>
               <Route path="/" exact render={() => <Redirect to={"/login"} />} />
           </div>
         </Switch>

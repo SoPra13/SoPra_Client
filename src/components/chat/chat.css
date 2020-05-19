@@ -8,11 +8,11 @@
 }
 
 .light {
-    --color5: #141204;
-    --color4: #11151C;
-    --color3: #1B2845;
-    --color2: #ACADBC;
-    --color1: #CCDBDC;
+    --color5: rgba(248, 248, 148, 1);
+    --color4: rgba(248, 248, 148, 1);
+    --color3: rgba(120, 26, 89, 0.8);
+    --color2: rgb(0,41,73);
+    --color1: rgba(120, 26, 89, 0.8);
 }
 
 .usermsg {
@@ -51,6 +51,7 @@
     background-color:var(--color2);
     border-radius:5px;
     margin-bottom:10px;
+    word-break: break-all;
     overflow: scroll;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -83,6 +84,6 @@ max-height: 500px;
 font-size: 16px;
 font-weight: 300;
 border-radius: 5px;
-padding: 25px;
+padding: 8px;
 background-color:var(--color1);
 }

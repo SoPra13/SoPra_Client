@@ -4,6 +4,30 @@ import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import { Button2} from "../../views/design/RegisterButton";
+import Logo from "./Logo.png";
+
+
+import classes from '../login/login.css';
+
+
+const Background = styled.div`
+    background-image: url('/LoginImage.png');
+    width: 100%;
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+`;
+
+const Central1 = styled.div`
+  color: #FFC100;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+`;
 
 
 const FormContainer = styled.div`
@@ -19,20 +43,21 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  width: 30%;
   height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background-color: #ffca65;
+  background: rgba(9, 5, 88, 0.75);
   transition: opacity 0.5s ease, transform 0.5s ease;
+
 `;
 
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+    color: rgba(248, 248, 148);
   }
   height: 35px;
   padding-left: 15px;
@@ -40,12 +65,12 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(120, 26, 89, 0.8);
+  color: rgba(248, 248, 148);
 `;
 
 const Label = styled.label`
-  color: white;
+  color: rgba(248, 248, 148);
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
@@ -88,17 +113,13 @@ class Login extends React.Component {
     };
   }
 
-
-  setTheme(str){
-    this.setState({
-      theme: str
-    })
-  }
   /**
    * HTTP POST request is sent to the backend.
    * If the request is successful, a new user is returned to the front-end
    * and its token is stored in the localStorage.
    */
+
+
   async login() {
     try {
       const requestBody = JSON.stringify({
@@ -107,20 +128,27 @@ class Login extends React.Component {
       });
       const response = await api.put('/login', requestBody);
 
-      console.log(response);
+/*        try {
+            const respo = await api.get('/user/?token=' + response.data);
+            console.log(respo.data);
+            if(respo.data.status=== "ONLINE"){*/
+                localStorage.setItem('userToken', response.data);
 
-      // Store the token into the local storage.
-      localStorage.setItem('userToken', response.data);
+                this.props.history.push(`/dashboard`);
+/*            }
+            else{
+                alert("User is already logged in.")
+            }*/
 
-      this.props.history.push(`/dashboard`);
+        } catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
-  }
+/*  }*/
 
-  unityTesting(){
-    this.props.history.push(`/unitydummy`);
-  }
 
   /**
    *  Every time the user enters something in the input field, the state gets updated.
@@ -144,61 +172,66 @@ class Login extends React.Component {
 
   render() {
     return (
-      <BaseContainer>
-        <FormContainer>
-          <Form>
-            <Label>Username</Label>
-            <InputField
-              placeholder="Enter here your username"
-              onChange={e => {
-                this.handleInputChange('username', e.target.value);
-              }}
-            />
-            <Label>Password</Label>
-            <InputField
-              placeholder="Enter here your password"
-              onChange={e => {
-                this.handleInputChange('password', e.target.value);
-              }}
-            />
-            <ButtonContainer>
+        <div>
 
-              <Central>
-              <Button
-                disabled={!this.state.username || !this.state.password}
-                width="30%"
-                onClick={() => {
-                  this.login();
-                }}
-              >
-                Login
-              </Button>
-              </Central>
+          <body>
+          <div>
 
-            <Central>
-              <Button
-                  width="30%"
-                  onClick={() => {
-                    this.props.history.push('/register');
-                  }}
-              >
-                Sign Up
-              </Button>
-            </Central>
+          <Central1>
+            <h1><img src={Logo} width='60px' height='60px'/> Welcome to Town!! <img src={Logo} width='60px' height='60px'/></h1>
+          </Central1>
+            <FormContainer>
 
-              <Button
-                  onClick={() => {
-                    this.unityTesting();
-                  }}
-              >
-                Unity Testing
-              </Button>
 
-            </ButtonContainer>
+              <Form>
 
-          </Form>
-        </FormContainer>
-      </BaseContainer>
+
+                <Label>Username</Label>
+
+                <InputField
+                    placeholder="Enter here your username"
+                    onChange={e => {
+                      this.handleInputChange('username', e.target.value);
+                    }}
+                />
+                <Label>Password</Label>
+                <InputField type="password"
+                            placeholder="Enter here your password"
+                            onChange={e => {
+                              this.handleInputChange('password', e.target.value);
+                            }}
+                />
+                <ButtonContainer>
+
+                  <Central>
+                    <Button
+                        disabled={!this.state.username || !this.state.password}
+                        width="30%"
+                        onClick={() => {
+                          this.login();
+                        }}
+                    >
+                      Login
+                    </Button>
+                  </Central>
+                  <br/>
+                  <Central>
+                    <Button2
+                        onClick={() => {
+                          this.props.history.push('/register');
+                        }}
+                    >
+                      Hey Buddy! New in the city? Wanna kill Time? Come and sign up here.
+                    </Button2>
+                  </Central>
+                </ButtonContainer>
+              </Form>
+            </FormContainer>
+
+          </div>
+          </body>
+        </div>
+
     );
   }
 }

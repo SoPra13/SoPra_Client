@@ -6,7 +6,7 @@ class User {
     this.id = null;
     this.username = null;
     this.password = null;
-    this.color = null;
+    this.avatar = null;
     this.userToken = null;
     this.lobbyToken = null;
     this.gameToken = null;
@@ -14,9 +14,16 @@ class User {
     this.voted = null;
     this.gaveClue = null;
     this.unityReady = null;
-    this.score = null;
-    this.ready = null; // READY, PREPARING
+    this.ready = null;
     this.word = null;
+    this.gamesPlayed = null;
+    this.guessesMade = null;
+    this.guessesCorrect = null;
+    this.invalidClues = null;
+    this.totalClues = null;
+    this.duplicateClues = null;
+    this.totalScore = null;
+
     Object.assign(this, data);
   }
 }

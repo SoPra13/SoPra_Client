@@ -5,6 +5,22 @@ import { api, handleError } from '../../helpers/api';
 import Lobby from "../shared/models/Lobby";
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import Header3 from "../../views/Header3";
+
+const Text = styled.div`
+  color:   rgba(248, 248, 148, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Text2 = styled.div`
+  font-weight: bold;
+  color:  #000FDB;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -15,30 +31,25 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-const Active = styled.div`
-.active, .btn:hover {
-  background-color: #666;
-  color: #c92222;
- `;
 
 const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  width: 30%;
   height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background:  #ed782f;
+  background: rgba(150, 0, 255, 0.5);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+        color: rgba(248, 248, 148, 1);
   }
   height: 35px;
   padding-left: 15px;
@@ -46,12 +57,12 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
+    background: rgba(120, 26, 89, 0.8);
   color: white;
 `;
 
 const Label = styled.label`
-  color: white;
+    color: rgba(248, 248, 148, 1);
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
@@ -59,18 +70,17 @@ const Label = styled.label`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+    margin-top: 10px;
+  margin-bottom: 20px;
+`;
+
+const ButtonContainer2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
   margin-top: 20px;
 `;
 
-function ready(){
-    const requestBody = JSON.stringify({
-        lobbyname: this.state.lobbyname,
-        userToken: this.state.userToken,
-        lobbyType: this.state.lobbyType
-    });
-    const response = api.post(`/lobby/ready` + `?userToken={userToken}` + localStorage.getItem(`userToken`)
-    + `&gameToken={gameToken}` + localStorage.getItem(`gameToken`), requestBody)
-}
 
 /**
  * https://reactjs.org/docs/react-component.html
@@ -90,25 +100,36 @@ class CustomLobby extends React.Component {
     async create() {
         try {
             const requestBody = JSON.stringify({
-                lobbyname: this.state.lobbyname,
+                lobbyName: this.state.lobbyname,
                 adminToken: this.state.adminToken,
                 lobbyType: this.state.lobbyType
             });
+            console.log(this.state.lobbyType);
             const response = await api.post('/lobby', requestBody);
-
+            await new Promise(resolve => setTimeout(resolve, 1000));
             // Get the returned user and update a new object.
             const lobby = new Lobby(response.data);
 
+            localStorage.setItem('lobbyToken', lobby.lobbyToken);
             console.log(lobby);
             console.log(lobby.lobbyToken);
 
-            // Store the token into the local storage.
-            localStorage.setItem('lobbyToken', lobby.lobbyToken);
 
 
             this.props.history.push(`/dashboard/waitingLobby`);
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+    }
+
+    changeLobbyType(){
+        if(this.state.lobbyType==="PUBLIC"){
+            this.setState({
+                lobbyType: "PRIVATE"
+            })}else{
+            this.setState({
+                lobbyType: "PUBLIC"
+            })
         }
     }
 
@@ -124,77 +145,62 @@ class CustomLobby extends React.Component {
     }
 
 
-    /**
-     * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
-     * Initialization that requires DOM nodes should go here.
-     * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-     * You may call setState() immediately in componentDidMount().
-     * It will trigger an extra rendering, but it will happen before the browser updates the screen.
-     */
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     render() {
         return (
-            <BaseContainer>
-                <FormContainer>
-                    <Form>
-                        <Label>Lobby name</Label>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('lobbyname', e.target.value);
-                            }}
-                        />
-{/*                        <Label>Password</Label>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('password', e.target.value);
-                            }}
-                        />*/}
-
-                        <ButtonContainer>
-                            <Active>
-                            <Button
-                                onClick={() => {
-                                    this.setState({
-                                        lobbyType: "PUBLIC"
-                                });
+            <div>        <Header3 height={"80"} />
+                <BaseContainer>
+                    <FormContainer>
+                        <Form>
+                            <Label>Lobby name</Label>
+                            <InputField
+                                placeholder="Enter here the lobby name"
+                                onChange={e => {
+                                    this.handleInputChange('lobbyname', e.target.value);
                                 }}
-                            >
-                                Public
-                            </Button>
-                            </Active>
+                            />
+                            <Text>Lobby is
+                            </Text>
+                            <Text2>{this.state.lobbyType === "PUBLIC" ? "PUBLIC" : "PRIVATE"}
+                            </Text2>
 
-                        </ButtonContainer>
+                            <ButtonContainer>
+                                <Button
+                                    width="30%"
+                                    height="70px"
+                                    onClick={() => {
+                                        this.changeLobbyType();
+                                    }}
+                                >
+                                    Change to {this.state.lobbyType === "PUBLIC" ? "Private" : "Public" }
+                                </Button>
 
-                        <ButtonContainer>
-                            <Button
-                                disabled={/*this.state.lobbyType == null || (this.state.lobbyType === "PRIVATE" && this.state.password == null)
-                                || */this.state.lobbyname == null}
-                                width="30%"
-                                onClick={() => {
-                                    this.create();
-                                }}
-                            >
-                                Create
-                            </Button>
-                        </ButtonContainer>
+                            </ButtonContainer>
 
-                        <ButtonContainer>
-                            <Button
-                                width="30%"
-                                onClick={() => {
-                                    this.props.history.push('/dashboard');
-                                }}
-                            >
-                                Back
-                            </Button>
-                        </ButtonContainer>
-                    </Form>
-                </FormContainer>
-            </BaseContainer>
+                            <ButtonContainer2>
+                                <Button
+                                    width="30%"
+                                    onClick={() => {
+                                        this.create();
+                                    }}
+                                >
+                                    Create
+                                </Button>
+
+                                <Button
+                                    width="30%"
+                                    onClick={() => {
+                                        this.props.history.push('/dashboard');
+                                    }}
+                                >
+                                    Back
+                                </Button>
+                            </ButtonContainer2>
+                        </Form>
+                    </FormContainer>
+                </BaseContainer>
+            </div>
         );
     }
 }

@@ -2,72 +2,70 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import Lobby from "../shared/models/Lobby";
 import { Spinner} from "../../views/design/Spinner";
-import Player from "../../views/Player";
 import Room from "../../views/Room";
-import EditProfile from "../profile/EditProfile";
 import ProfileInfo from "../../views/ProfileInfo";
 import Gamedescription from "../../views/Gamedescription";
+import Header2 from "../../views/Header2";
+import Logo from "./Logo.png";
+
+import Leaderboard from "../leaderboard/Leaderboard";
 
 const Container = styled(BaseContainer)`
+  height: 420px;
   color: white;
   text-align: center;
+  overflow: hidden;
 `;
 
-const FormContainer = styled.div`
-  margin-top: 2em;
+const Container2 = styled(BaseContainer)`
+  height: 460px;
+  color: white;
+  text-align: center;
   display: flex;
-  flex-direction: column;
+`;
+
+const Container3 = styled.div`
+  width: 500px;
+  height: 420px;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+`;
+
+const HeaderContainer = styled.div`
+  height: 110px;
+  background: ${props => props.background};
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  min-height: 300px;
-  justify-content: center;
 `;
 
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: 375px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
-  transition: opacity 0.5s ease, transform 0.5s ease;
+const MiniContainer =styled.div`
+    display: flex;
+    justify-content: center;
+    
 `;
 
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
-  border: none;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+const TabText = styled.div`
+ color: #FFC100;
+ text-shadow: -1px 0 blue, 0 1px blue, 1px 0 blue, 0 -1px blue;
 `;
 
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
-  text-transform: uppercase;
+const TabContentTitle = styled.div`
+ color: #FFC100;
+ text-shadow: -1px 0 blue, 0 1px red, 1px 0 red, 0 -1px red;
 `;
+
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  margin-top: 20px;
 `;
 
 const PlayerContainer = styled.li`
@@ -78,6 +76,9 @@ const PlayerContainer = styled.li`
 `;
 
 const LobbyContainer = styled.li`
+  &:hover {
+    transform: translateY(-2px);
+  }
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,100 +92,9 @@ const Users = styled.ul`
   height: 310px;
 `;
 
-const User1 = styled.ul`
-  list-style: none;
-  padding-left: 0;
-`;
 
 
-const Lobbies = styled.ul`
-  list-style: none;
-  padding-left: 0;
-`;
 
-const central = styled.div`
-  text-align: center;
-`;
-
-const centralFlexbox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
-
-const LoginForm = styled.div`
-  width: 40%;
-  height: 300px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  background-color: #ffca65;
-  text-align: center;
-`;
-
-const titleh2 = styled.h2`
-text-align: center;
-`;
-
-const List1 = styled.ul`
-  list-style-type: none;
-  text-align: center;
-  margin-bottom: 40px;
-  `;
-
-const UsersContainer = styled.div`
-  margin-top: 50px;
-  height: 150px;
-  overflow: auto;
-`;
-
-const LobbiesContainer = styled.div`
-  margin-top: 50px;
-  margin-bottom: 50px;
-  height: 150px;
-  overflow: auto;
-`;
-
-const PlayerButton = styled.li`
-width: 300px;
-color: #fff;
-background-color: #0e3d61;
-border: 2px solid;
-border-color: #c5c5c5;
-border-radius: 20px;
-height: 50px;
-line-height: 38px;
-padding: 5px 20px;
-margin-bottom: 10px;
-text-align: center;
-box-sizing: border-box;
-`;
-
-const LobbyButton = styled.li`
-color: #5a5a5a;
-background-color: #ffa700;
-border: 2px solid;
-border-color: #5a5a5a;
-border-radius: 5px;
-height: 50px;
-line-height: 38px;
-padding: 5px 20px;
-margin-bottom: 10px;
-text-align: center;
-box-sizing: border-box;
-`;
-
-/**
- * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
- * You should have a class (instead of a functional component) when:
- * - You need an internal state that cannot be achieved via props from other parent components
- * - You fetch data from the server (e.g., in componentDidMount())
- * - You want to access the DOM via Refs
- * https://reactjs.org/docs/react-component.html
- * @Class
- */
 class Dashboard extends React.Component {
 
     constructor() {
@@ -199,194 +109,151 @@ class Dashboard extends React.Component {
         };
     }
 
-    async logout() {
-        const key = localStorage.getItem(('userToken'))
 
-        console.log(key);
-
-        try {
-            const response = await api.put('/logout?token=' + key);
-
-            console.log(response);
-        } catch (error) {
-            alert(`Something went wrong while logging out: \n${handleError(error)}`);
-        }
-        localStorage.removeItem('userToken');
-        this.props.history.push('/login');
-
-    }
-
-    showProfile(id){
-        this.props.history.push({
-            pathname: `/dashboard/profile`,
-            userId: id
-        })
-    }
-
-
-    editProfile(id){
+    editProfile(){
         this.props.history.push({
             pathname: '/dashboard/profile/editProfile',
-            id: id,
+            userToken: localStorage.getItem('userToken'),
         })
     }
 
-    enterLoginLobby(id){
+    async enterPublicLobby(id, lobbyToken){
+        localStorage.setItem('lobbyToken', lobbyToken);
+
+        const response = await api.put('/lobby?joinToken='+ this.state.joinToken +
+            `&userToken=` + localStorage.getItem('userToken'));
+
+        // Get the returned user and update a new object.
+        console.log(response.data);
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Store the token into the local storage.
+        localStorage.setItem('lobbyToken', response.data.lobbyToken);
+
+        this.props.history.push({
+            pathname: '/dashboard/waitingLobby',
+            id: id
+        })
+    }
+
+
+    async enterPrivateLobby(id){
         this.props.history.push({
             pathname: '/dashboard/loginLobby',
             id: id
         })
     }
 
-/*    async deleteLobby(){
-        const response = await api.get('/lobbies');
-        if (response.data.playerList.length == 0){
-            const token = response.data.lobbyToken;
-            await api.delete('/lobby?lobbyToken=' + token);
+    async getUsers(){
+        try{
+            const response = await api.get('/users');
+            this.setState({ users: response.data });
+        }catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
-    }*/
 
-
-    /**
-     *  Every time the user enters something in the input field, the state gets updated.
-     * @param key (the key of the state for identifying the field that needs to be updated)
-     * @param value (the value that gets assigned to the identified state key)
-     */
-    handleInputChange(key, value) {
-        // Example: if the key is username, this statement is the equivalent to the following one:
-        // this.setState({'username': value});
-        this.setState({ [key]: value });
     }
+
+    async getLobbies(){
+        try{
+            const response = await api.get('/lobbies');
+            this.setState({ lobbies: response.data });
+            console.log(response);
+        }catch (error) {
+            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+        }
+    }
+
+    /*
+    0-99: bronze, 100-199: silver, 200-299: gold, 300-399: diamond, 400<= grandmaster
+     */
+
+    async logout() {
+
+        const key = localStorage.getItem(('userToken'));
+        try {
+            await api.put('/logout?token=' + key);
+        } catch (error) {
+            alert(`Something went wrong while logging out: \n${handleError(error)}`);
+        }
+        localStorage.removeItem('userToken');
+    }
+
+    async loggedOut(){
+        if(localStorage.getItem('userToken') === null){
+            this.props.history.push('/login');
+        }
+    }
+
+
 
     async componentWillMount(){
         try {
 
-            const key = localStorage.getItem('userToken')
+            const key = localStorage.getItem('userToken');
 
 
             const respo = await api.get('/user/?token=' + key);
             this.setState({user: respo.data});
             console.log(respo);
 
-            const response = await api.get('/users');
-            this.setState({ users: response.data });
-            console.log(response);
-
-
-            const resp = await api.get('/lobbies');
-            this.setState({ lobbies: resp.data });
-            console.log(resp);
-
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
+        this.getLobbies();
+        console.log(this.state.lobbies);
+
+        this.getUsers();
+        console.log(this.state.users);
 
     }
 
+
     async componentDidMount() {
-        try {
-            const response = await api.get('/users');
-            // delays continuous execution of an async operation for 1 second.
-            // This is just a fake async call, so that the spinner can be displayed
-            // feel free to remove it :)
-            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Get the returned users and update the state.
-            this.setState({ users: response.data });
-
-            console.log(response);
-        } catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
-        }
-
-/*        this.timerID = setInterval(
-            () => this.deleteLobby(),
+        this.timerID1 = setInterval(
+            () => this.getUsers(),
             1000
-        );*/
+        );
+        this.timerID2 = setInterval(
+            () => this.getLobbies(),
+            1000
+        );
+
+        this.timerID3 = setInterval(
+            () => this.loggedOut(),
+            500
+        );
     }
 
     componentWillUnmount() {
-/*        clearInterval(this.timerID);*/
+        clearInterval(this.timerID1);
+        clearInterval(this.timerID2);
+        clearInterval(this.timerID3);
     }
 
 
     render() {
 
+
+
         const localToken = localStorage.getItem("userToken");
-
-
-
-
 
         const tabComp =(
             <Tabs defaultIndex={0} onSelect={index => console.log(index)}>
                 <TabList>
-                    <Tab>My Profile</Tab>
-                    <Tab>Users</Tab>
-                    <Tab>Lobby</Tab>
-                    <Tab>Game description and rules</Tab>
+                    <Tab style={{background: "rgba(120, 26, 89, 0)"}}><TabText>Users & Leaderboard</TabText></Tab>
+                    <Tab style={{background: "rgba(120, 26, 89, 0)"}}><TabText>Lobbies</TabText></Tab>
+                    <Tab style={{background: "rgba(120, 26, 89, 0)"}}><TabText>Game Description and Rules</TabText></Tab>
                 </TabList>
 
-                <TabPanel>
 
-                    <Button
-                        position = "absolute"
-                        top = "0"
-                        right = "0"
-                        onClick={() => {
-                            this.logout();
-                        }}
-                    >
-                        Logout
-                    </Button>
-
-
-                    <Container>
-                        <h2>Profile</h2>
-                        {!this.state.user ? (
-                            <Spinner />
-                        ) : (
-                            <div>
-                                <User1>
-                                    <PlayerContainer key={this.state.user.id}>
-                                        <ProfileInfo user={this.state.user}/>
-                                    </PlayerContainer>
-                                </User1>
-
-                                {(this.state.user.token != localToken) ? (
-                                    <Label> </Label>
-                                ) : (
-                                    <ButtonContainer>
-                                        <Button
-                                            width="30%"
-                                            onClick={() => {
-                                                this.editProfile(this.state.user.id)
-                                            }}
-                                        >
-                                            Edit
-                                        </Button>
-                                    </ButtonContainer>
-                                )}
-                            </div>
-                        )}
-                    </Container>
-
-
-
-                </TabPanel>
 
                 <TabPanel>
-
-                    <Button
-                        onClick={() => {
-                            this.logout();
-                        }}
-                    >
-                        Logout
-                    </Button>
-
-                    <Container>
-                        <h2>Registered User! </h2>
+<MiniContainer>
+                    <Container3>
+                        <h2><TabContentTitle>Registered User!</TabContentTitle></h2>
                         {!this.state.users ? (
                             <Spinner />
                         ) : (
@@ -394,82 +261,56 @@ class Dashboard extends React.Component {
                                 <Users>
                                     {this.state.users.map(user => {
                                         return (
-                                            <PlayerContainer
-                                                key={user.id}
-                                                onClick={() => {
-                                                    console.log(user.id)
-                                                    this.showProfile(user.id);
-                                                }}>
-                                                <Player user={user}/>
+                                            <PlayerContainer>
+                                                <ProfileInfo user={user}/>
                                             </PlayerContainer>
                                         );
                                     })}
                                 </Users>
                             </div>
                         )}
-                    </Container>
 
+                    </Container3>
+    <Leaderboard/>
+    </MiniContainer>
                 </TabPanel>
 
 
 
                 <TabPanel>
-
-                    <Button
-                        onClick={() => {
-                            this.logout();
-                        }}
-                    >
-                        Logout
-                    </Button>
-
-                    <Container>
-                        <h2>All lobbies</h2>
-                        {!this.state.lobbies ? (
-                            <Spinner />
-                        ) : (
-                            <div>
-                                <Users>
-                                    {this.state.lobbies.map(lobby => {
-                                        return (
-                                            <PlayerContainer
-                                                key={lobby.id}
-                                                onClick={() => {
-                                                    console.log(lobby.id)
-                                                    this.enterLoginLobby(lobby.id);
-                                                }}>
-                                                <Room lobby={lobby}/>
-                                            </PlayerContainer>
-                                        );
-                                    })}
-                                </Users>
-                            </div>
-                        )}
-                    </Container>
-
-
-                    <Button
-                        position = "absolute"
-                        onClick={() => {
-                            this.props.history.push('/dashboard/customLobby');
-                        }}
-                    >
-                        Create Lobby
-                    </Button>
+                    <Container2>
+                        <Container>
+                            <h2><TabContentTitle>Lobbies</TabContentTitle></h2>
+                            {!this.state.lobbies ? (
+                                <Spinner />
+                            ) : (
+                                <div>
+                                    <Users>
+                                        {this.state.lobbies.map(lobby => {
+                                            return (
+                                                <LobbyContainer
+                                                    key={lobby.id}
+                                                    disabled={lobby.playerList+lobby.botList<7}
+                                                    onClick={() => {
+                                                        this.state.joinToken=lobby.joinToken;
+                                                        {lobby.lobbyType ==="PUBLIC" ? this.enterPublicLobby(lobby.id, lobby.lobbyToken) :
+                                                            this.enterPrivateLobby(lobby.id)}
+                                                    }}>
+                                                    <Room lobby={lobby}/>
+                                                </LobbyContainer>
+                                            );
+                                        })}
+                                    </Users>
+                                </div>
+                            )}
+                        </Container>
+                    </Container2>
 
 
                 </TabPanel>
 
                 <TabPanel>
 
-                    <Button
-                        position = "absolute"
-                        onClick={() => {
-                            this.logout();
-                        }}
-                    >
-                        Logout
-                    </Button>
                     <Gamedescription/>
                 </TabPanel>
             </Tabs>
@@ -477,11 +318,47 @@ class Dashboard extends React.Component {
 
         return (
             <div>
-                {tabComp}
+        <HeaderContainer>
+            <ButtonContainer>
+                <Button
+                    width="100px"
+                    onClick={() => {
+                    this.logout()
+                }}
+                >
+                    Logout
+                </Button>
+                <br/>
+                <Button maring-top="10px"
+                    width="100px"
+                    onClick={() => {
+                        this.editProfile()
+                    }}
+                >
+                    Edit
+                </Button>
+            </ButtonContainer>
+
+                <img src={Logo} width="90px"/>
+
+                <Button
+                    width="100px"
+                    onClick={() => {
+                        this.props.history.push('/dashboard/customLobby');
+                    }}
+                >
+                    Create Lobby
+                </Button>
+        </HeaderContainer>
+
+                <div className="background2">
+                    {tabComp}
+                </div>
             </div>
 
         );
     }
-}
 
+
+}
 export default withRouter(Dashboard);

@@ -2,10 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
-import Lobby from "../shared/models/Lobby";
+import Header3 from "../../views/Header3";
+
+const Central = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -20,14 +25,14 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  width: 30%;
   height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background-color: #ffca65;
+  background-color: rgba(48,208,255,0.4);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -41,7 +46,7 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
   color: white;
 `;
 
@@ -51,11 +56,6 @@ const Label = styled.label`
   text-transform: uppercase;
 `;
 
-const central = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -75,24 +75,27 @@ class LoginLobby extends React.Component {
         this.state = {
             lobbyname: null,
             userToken: localStorage.getItem(`userToken`),
-            lobbyToken: null
+            lobbyToken: null,
+            joinToken: null
         };
     }
 
     async login() {
         try {
-            const response = await api.put('/lobby?lobbyToken='+ this.state.lobbyToken +
+            const response = await api.put('/lobby?joinToken='+ this.state.joinToken +
                 `&userToken=` + localStorage.getItem('userToken'));
 
             // Get the returned user and update a new object.
             console.log(response.data);
 
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             // Store the token into the local storage.
-            localStorage.setItem('lobbyToken', this.state.lobbyToken);
+            localStorage.setItem('lobbyToken', response.data.lobbyToken);
 
             this.props.history.push('/dashboard/waitingLobby');
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong during the lobbyJoin: \n${handleError(error)}`);
         }
     }
 
@@ -112,48 +115,50 @@ class LoginLobby extends React.Component {
 
     render() {
         return (
-            <BaseContainer>
-                <FormContainer>
-                    <Form>
+            <div>        <Header3 height={"80"} />
+                <BaseContainer>
+                    <FormContainer>
+                        <Form>
 
 
 
-                        <Label>Password</Label>
-                        <InputField
-                            placeholder="Enter here your lobby token"
-                            onChange={e => {
-                                this.handleInputChange('lobbyToken', e.target.value);
-                            }}
-                        />
-                        <ButtonContainer>
+                            <Label>Password</Label>
+                            <InputField
+                                type="password"
+                                placeholder="Enter here your lobby token"
+                                onChange={e => {
+                                    this.handleInputChange('joinToken', e.target.value);
+                                }}
+                            />
+                            <ButtonContainer>
 
-                            <central>
-                                <Button
-                                    disabled={!this.state.lobbyToken}
-                                    width="30%"
-                                    onClick={() => {
-                                        this.login();
-                                    }}
-                                >
-                                    Enter Lobby
-                                </Button>
-                            </central>
+                                <Central>
+                                    <Button
+                                        disabled={!this.state.joinToken}
+                                        onClick={() => {
+                                            this.login();
+                                        }}
+                                    >
+                                        Enter Lobby
+                                    </Button>
+                                </Central>
+                                <br/>
+                                <Central>
+                                    <Button
+                                        width="35%"
+                                        onClick={() => {
+                                            this.props.history.push('/dashboard');
+                                        }}
+                                    >
+                                        Back
+                                    </Button>
+                                </Central>
 
-                            <central>
-                                <Button
-                                    width="30%"
-                                    onClick={() => {
-                                        this.props.history.push('/dashboard');
-                                    }}
-                                >
-                                    Back
-                                </Button>
-                            </central>
-
-                        </ButtonContainer>
-                    </Form>
-                </FormContainer>
-            </BaseContainer>
+                            </ButtonContainer>
+                        </Form>
+                    </FormContainer>
+                </BaseContainer>
+            </div>
         );
     }
 }

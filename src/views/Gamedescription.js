@@ -4,19 +4,24 @@ import JustOne1 from "../image/JustOne1.png";
 
 
 const Container = styled.div`
-  margin: 6px 0;
-  padding: 10px;
-  border-radius: 6px;
+
+  color: rgba(248, 248, 148, 1);;
   display: flex;
   align-items: center;
-    flex-direction: column;
-      justify-content: center;
-  border: 1px solid #ffffff26;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+`;
+const Container2 = styled.div`
+
+  color: rgba(248, 248, 148, 1);;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
 `;
 
-const JO = styled.img`
-height: 50%;
-`;
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -36,32 +41,48 @@ const FormContainer2 = styled.div`
   justify-content: center;
 `;
 
+const Background = styled.div`
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 630px;
+  justify-content: center;
+    background: rgba(120, 26, 89, 0.8);
+`;
+
+const Background2 = styled.div`
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 500px;
+  justify-content: center;
+  padding: 20px;
+    background: rgba(120, 26, 89, 0.8);
+`;
+
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 400px;
-  height: 300px;
+  height: 500px;
   justify-content: center;
-  overflow: auto;
+  overflow: hidden;
 `;
 
-
-const UserName = styled.div`
-  font-weight: lighter;
-  margin-left: 5px;
+const FormList1 = styled.ol`
 `;
 
-const Name = styled.div`
-  font-weight: bold;
-  color: #06c4ff;
+const FormList2 = styled.ul`
+  list-style-type: square;
 `;
 
-const Id = styled.div`
-  margin-left: auto;
-  margin-right: 10px;
-  font-weight: bold;
+const FormList3 = styled.ul`
+  list-style-type: circle;
 `;
+
 
 /**
  * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
@@ -74,55 +95,99 @@ const Id = styled.div`
 function Gamedescription() {
     return (
 
-        <Container>
-        <FormContainer>
+        <Container2>
             <FormContainer>
+                <Container>
+                    <FormContainer>
 
 
-                <FormContainer2>
-                <img style={{width: "50%"}} src={JustOne1} alt=""/>
-                <FormContainer>
-                <h1>OBJECT OF THE GAME</h1>
+                        <FormContainer2>
+                            <img style={{width: "50%"}} src={JustOne1} alt=""/>
+                            <FormContainer>
+                                <Background2>
+                                <h1>OBJECT OF THE GAME</h1>
 
 
-                <TextContainer>
+                                <TextContainer>
 
-            <p>
-                Just One is a cooperative party game.
-                You all play together to get the best score!
-                Together, make one of the players – the active player–
-                guess a Mystery word by secretly writing a clue on
-                your easel.
-                Choose your clue without coordinating with each other
-                and be original so as not to write the same clue as another player, as all identical clues will be canceled before
-                the active player gets to see them.
-                At the end of the game, tally your score based on the
-                number of Mystery words found.
-            </p>
-                </TextContainer>
+                                    <p>
+                                        Just One Web is a cooperative multiplayer online party game. Where teams of players compete together to reach the highest scores. Each round one player on a team is the active player who need to guess the Mystery word using the clues the teammates are giving.
+                                        But be careful, the most obvious clues are not always the most helpful. Then if two or more clues are similar, they all get eliminated. So be original and come up with unique clues.
+                                        The game starts once at least 3 players are ready. If you don’t have enough player, you may fill the empty slots with Bots. There is a maximum of 7 slots per game.
+                                        Once you start a game a deck of 13 randomly chosen cards will be set in the middle of the circle. The first active player is chosen randomly at the initiation of the first round.
+                                        Players take turns until the deck in the middle of the circle is empty. Each turn has 4 phases.
 
-                </FormContainer>
-                    </FormContainer2>
-                </FormContainer>
+                                    </p>
+                                </TextContainer>
+                                </Background2>
+                            </FormContainer>
+                        </FormContainer2>
 
-        <FormContainer>
-                <h1>SETUP</h1>
-            <TextContainer>
-                 <p>
-                1) Shuffle the cards and randomly draw 13 to create a
-                face-down deck in the middle of the table. Return
-                the remaining cards to the box, they will not be used
-                this game.
-                2) Give an easel and an erasable felt marker to each player.
-                3) Randomly choose a player to be the first active player.
-            </p>
-                </TextContainer>
-        </FormContainer>
+                    </FormContainer>
+                </Container>
 
-        </FormContainer>
-        </Container>
+                <Container2>
+                    <FormContainer>
+                        <Background>
+                            <h1>Phase Overview:</h1>
+
+                            <FormList1>
+                                <li>The teammates vote a topic out of 5 possible topics. The topic with the most votes will get selected for this round
+                                </li>
+                                <li>Each player then must come up with a clue on their own. The input field does not allow invalid clues to be submitted. Invalid clues:
+                                    <FormList2>
+                                        <li>Contains more than one word</li>
+                                        <li>The Mystery word but written differently
+                                        </li>
+                                        <li>The Mystery word written in a foreign Language.
+                                        </li>
+                                        <li>A word from the same family as the Mystery word.
+                                        </li>
+                                        <li>An Invented word.</li>
+                                        <li>Can not be a homophone or the homograph of the Mystery word
+                                        </li>
+                                    </FormList2>
+                                </li>
+                                <li>In the clue elimination stage, all invalid and identical clues are eliminated.
+                                    Identical clues:
+                                    <FormList2>
+                                        <li>Homographs</li>
+                                        <li>Variants from the same word family.</li>
+                                        <li>Variants of the same word.</li>
+                                    </FormList2>
+                                </li>
+                                <li>Then the active player has one guess to find the Mystery word from the remaining clues.
+                                    <FormList2>
+                                        <li>Success – active player guessed the correct word.
+                                            <FormList3>
+                                                <li>All player with remaining clues and the active player are awarded points depending on the time it took them to find their clue/word.</li>
+                                            </FormList3>
+                                        </li>
+                                        <li>Failure – active player guessed the wrong word.
+                                            <FormList3>
+                                                <li>No one gets points</li>
+                                                <li>Discard the next card on the deck</li>
+                                            </FormList3>
+                                        </li>
+                                        <li>Skip – if the active player does not want to risk losing a card he can skip his turn.
+                                            <FormList3>
+                                                <li>No one gets points</li>
+                                            </FormList3>
+                                        </li>
+                                    </FormList2>
+                                    Then the player to the left is the active player and the next turn begins.
+                                    The game ends if the deck in the middle of the circle is empty. The final score for each player is calculated by multiplying the sum of all points awarded at the end of each turn by the square of the number of correct guessed Mystery words.
+                                </li>
+
+                            </FormList1>
+                        </Background>
+                    </FormContainer>
+                </Container2>
+
+            </FormContainer>
+        </Container2>
 
     );
-};
+}
 
 export default Gamedescription;

@@ -2,14 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import Player from '../../views/Player';
 import { Spinner } from '../../views/design/Spinner';
-import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
-import Lobby from "../shared/models/Lobby";
 import BotPlayer from "../../views/BotPlayer";
 import Chat from '../chat/Chat';
+import ProfileInfo from "../../views/ProfileInfo";
 
+const NonAdmin = styled.div`
+  display: none;
+`;
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -26,6 +27,11 @@ const MultipleListsContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+`;
+
+const TabContentTitle = styled.div`
+ color: #FFC100;
+ text-shadow: -1px 0 blue, 0 1px red, 1px 0 red, 0 -1px red;
 `;
 
 const PlayerContainer = styled.li`
@@ -46,14 +52,14 @@ const Button1 = styled.button`
   &:hover {
     transform: translateY(-2px);
   }
-  margin: 10px;
+  margin: 20px;
   padding: 6px;
   font-weight: 700;
   font-size: 13px;
   text-align: center;
   color: #fff;
   width: ${props => props.width || null};
-  height: ${props => props.width || null};
+  height: ${props => props.height || null};
   border: 2px solid;
   border-color: #c5c5c5;
   border-radius: 20px;
@@ -73,8 +79,12 @@ class WaitingRoom extends React.Component {
             difficulty: "FRIEND",
             numberOfPlayers: 7,
             numberOfBots: 0,
+            lobbyType: null,
             adminToken: null,
-            isToggleReady: false
+            joinToken: null,
+            isToggleReady: false,
+            lobbyname: null,
+            lobbyInGame:null
         };
     }
 
@@ -84,7 +94,7 @@ class WaitingRoom extends React.Component {
      */
 
     addBot(str){
-    const response = api.put('/lobby?lobbyToken=' + this.state.lobbyToken + '&difficulty=' + str);
+        api.put('/lobby?lobbyToken=' + this.state.lobbyToken + '&difficulty=' + str);
     }
 
     /**
@@ -93,7 +103,7 @@ class WaitingRoom extends React.Component {
      */
 
     async removeBot(botToken){
-        const response = await api.delete('/lobby?lobbyToken=' + this.state.lobbyToken + '&botToken=' + botToken);
+        await api.delete('/lobby?lobbyToken=' + this.state.lobbyToken + '&botToken=' + botToken);
     }
 
     /**
@@ -103,8 +113,9 @@ class WaitingRoom extends React.Component {
 
     async kickPlayer(userToken){
         try {
-            const response = await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
+            await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
                 + '&userToken=' + userToken);
+            localStorage.removeItem('lobbyToken');
 
             console.log('Player get kicked from the admin');
 
@@ -137,7 +148,7 @@ class WaitingRoom extends React.Component {
      */
 
     stillInTheLobby(){
-        console.log('My lobbytoken: ' + localStorage.getItem('lobbyToken'))
+        console.log('My lobbytoken: ' + localStorage.getItem('lobbyToken'));
         if(this.checkPlayerList() == undefined){
             this.getKicked();
             this.props.history.push('/dashboard');
@@ -163,17 +174,16 @@ class WaitingRoom extends React.Component {
 
     leaveLobby(){
         try {
-            const response = api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
-                + '?userToken=' + localStorage.getItem('userToken'));
+            api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
+                + '&userToken=' + localStorage.getItem('userToken'));
 
             localStorage.removeItem('lobbyToken');
-
             this.props.history.push('/dashboard');
 
-        }catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
-        }
 
+        }catch (error) {
+            alert(`Something went wrong while leaving the lobby: \n${handleError(error)}`);
+        }
     }
 
     /**
@@ -181,7 +191,7 @@ class WaitingRoom extends React.Component {
      */
 
     getLobbyToken(){
-        alert(this.state.lobbyToken);
+        alert(this.state.joinToken);
     }
 
     /**
@@ -191,19 +201,42 @@ class WaitingRoom extends React.Component {
     async getLobby(){
         try {
             const response = await api.get('/lobby?lobbyToken='+ localStorage.getItem('lobbyToken'));
-
-
+            console.log(response.data);
             // Get the returned users and update the state.
             this.setState({
                 playerList: response.data.playerList,
                 botList: response.data.botList,
-                adminToken: response.data.adminToken
+                adminToken: response.data.adminToken,
+                joinToken: response.data.joinToken,
+                lobbyname: response.data.lobbyName,
+                lobbyType: response.data.lobbyType
             });
 
             // See here to get more data.
             console.log(response.data.playerList);
         } catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+            alert(`Something went wrong while fetching the lobby: \n${handleError(error)}`);
+            this.props.history.push('/dashboard');
+        }
+    }
+
+    async checkForGame(){
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await api.get('/game?token=' + localStorage.getItem('lobbyToken'));
+
+
+
+            this.setState({
+                game: true,
+            });
+
+            console.log(this.state.game);
+
+        } catch (error) {
+            this.setState({
+                game: false,
+            });
         }
     }
 
@@ -218,7 +251,7 @@ class WaitingRoom extends React.Component {
                 userToken: localStorage.getItem('userToken'),
                 status: "READY"
             });
-            const response = api.put('/lobby/ready?userToken=' + localStorage.getItem('userToken')
+            api.put('/lobby/ready?userToken=' + localStorage.getItem('userToken')
                 + '?gameToken=' + localStorage.getItem('userToken'), requestBody);
 
 
@@ -243,7 +276,7 @@ class WaitingRoom extends React.Component {
             console.log(response);
             console.log(response.data);
             localStorage.setItem('gameToken', localStorage.getItem('lobbyToken'));
-            console.log(localStorage.getItem('gameToken'))
+            console.log(localStorage.getItem('gameToken'));
 
             this.props.history.push('/unityGame');
 
@@ -256,17 +289,30 @@ class WaitingRoom extends React.Component {
      * componentWillMount() sets the states of playerList and botList before the first rendering
      */
 
-    componentWillMount() {
-        const response = api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'))
+    async componentWillMount() {
+        const response = await api.get('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken'));
 
 
-        const lobby = new Lobby(response.data);
+        const lobby = response.data;
+        console.log(lobby);
 
-
+        if(lobby.lobbyState ==='INGAME'){
+            console.log("INGAME")
+            this.setState({
+                lobbyInGame: true
+            })
+        }else{
+            console.log("OUTGAMe")
+            this.setState({
+                lobbyInGame: false
+            })
+        }
         this.setState({
             playerList: lobby.playerList,
-            botList: lobby.botList
-        })
+            botList: lobby.botList,
+            lobbyname: lobby.lobbyName
+        });
+        console.log(lobby);
     }
 
 
@@ -289,154 +335,160 @@ class WaitingRoom extends React.Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.timerID1)
+        clearInterval(this.timerID1);
         clearInterval(this.timerID2)
     }
 
     render() {
+
+
+
         return (
-            <BaseContainer>
-            <Container>
+            <div>
+                <BaseContainer>
+                    <Container>
 
-                <h2>Players & Bots of Lobby</h2>
-                <div>
-
-
-                    {!this.state.playerList ? (
-                        <Spinner />
-                    ) : (
+                        <h2><TabContentTitle>Players & Bots of Lobby {this.state.lobbyname}</TabContentTitle></h2>
+                        <h2> <TabContentTitle>{this.state.lobbyType === "PUBLIC" ? "" : "Password as private lobby: " + this.state.joinToken}</TabContentTitle></h2>
                         <div>
-                            <MultipleListsContainer>
-                            <Users>
-                                {this.state.playerList.map(user => {
-                                    return (
-                                        <PlayerContainer
-                                            key={user.id}
-                                            onClick={() => {
-                                                console.log(user.id)
-                                                /*nothing happens but a console log*/
-                                            }}>
-                                            <Player user={user}/>
-                                        </PlayerContainer>
-                                    );
-                                })}
-                            </Users>
-                            <Users>
-                                {this.state.playerList.map(user => {
-                                    return (
-                                        <Button1
-                                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                                            key={user.id}
-                                            onClick={() => {
-                                                console.log(user.id)
-                                                this.kickPlayer(user.token)
-                                            }}>
-                                            Kick
-                                        </Button1>
-                                    );
-                                })}
-                            </Users>
-                            <Users>
-                                <Chat/>
-                            </Users>
-                            </MultipleListsContainer>
-                        </div>
-                    )}
 
 
-                    {!this.state.botList ? (
-                        <Spinner />
-                    ) : (
-                        <div>
-                            <MultipleListsContainer>
-                                <Users>
-                                    {this.state.botList.map(bot => {
-                                        return (
-                                            <PlayerContainer
-                                                key={bot.id}
-                                                onClick={() => {
-                                                    console.log(bot.id)
-                                                    /*nothing happens but a console log*/
-                                                }}>
-                                                <BotPlayer bot={bot}/>
-                                            </PlayerContainer>
-                                        );
-                                    })}
-                                </Users>
-                                <Users>
-                                    {this.state.botList.map(bot => {
-                                        return (
-                                            <KickContainer>
-                                            <Button1
-                                                disabled = {localStorage.getItem('userToken') != this.state.adminToken}
-                                                key={bot.id}
-                                                onClick={() => {
-                                                    console.log(bot.id);
-                                                    console.log(bot.token);
-                                                    this.removeBot(bot.token)
-                                                }}>
-                                                Kick
-                                            </Button1>
-                                                </KickContainer>
-                                        );
-                                    })}
-                                </Users>
-                            </MultipleListsContainer>
-                        </div>
-                    )}
+                            {!this.state.playerList ? (
+                                <Spinner />
+                            ) : (
+                                <div>
+                                    <MultipleListsContainer>
+                                        <Users>
+                                            {this.state.playerList.map(user => {
+                                                return (
+                                                    <PlayerContainer
+                                                        key={user.id}
+                                                        onClick={() => {
+                                                            console.log(user.id)
+                                                            /*nothing happens but a console log*/
+                                                        }}>
+                                                        <ProfileInfo user={user}/>
+                                                    </PlayerContainer>
+                                                );
+                                            })}
+                                        </Users>
+                                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                                            (<NonAdmin/>)
+                                            :
+                                            (
+                                        <Users>
+                                            {this.state.playerList.map(user => {
+                                                return (
+                                                    <KickContainer>
+                                                        <Button1
+                                                            height="35px"
+                                                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
+                                                            key={user.id}
+                                                            onClick={() => {
+                                                                console.log(user.id);
+                                                                this.kickPlayer(user.token)
+                                                            }}>
+                                                            Kick
+                                                        </Button1>
+                                                    </KickContainer>
+                                                );
+                                            })}
+                                        </Users>
+                                            )}
+                                        <Users>
+                                            <Chat/>
+                                        </Users>
+                                    </MultipleListsContainer>
+                                </div>
+                            )}
 
 
-
+                            {!this.state.botList ? (
+                                <Spinner />
+                            ) : (
+                                <div>
+                                    <MultipleListsContainer>
+                                        <Users>
+                                            {this.state.botList.map(bot => {
+                                                return (
+                                                    <PlayerContainer
+                                                        key={bot.id}
+                                                        onClick={() => {
+                                                            console.log(bot.id)
+                                                            /*nothing happens but a console log*/
+                                                        }}>
+                                                        <BotPlayer bot={bot}/>
+                                                    </PlayerContainer>
+                                                );
+                                            })}
+                                        </Users>
+                                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                                            (<NonAdmin/>)
+                                            :(
+                                        <Users>
+                                            {this.state.botList.map(bot => {
+                                                return (
+                                                    <KickContainer>
+                                                        <Button1
+                                                            height="35px"
+                                                            disabled = {localStorage.getItem('userToken') != this.state.adminToken}
+                                                            key={bot.id}
+                                                            onClick={() => {
+                                                                console.log(bot.id);
+                                                                console.log(bot.token);
+                                                                this.removeBot(bot.token)
+                                                            }}>
+                                                            Kick
+                                                        </Button1>
+                                                    </KickContainer>
+                                                );
+                                            })}
+                                        </Users>
+                                            )}
+                                    </MultipleListsContainer>
+                                </div>
+                            )}
 
 
                     <PlayerContainer>
 
-                        <MultipleListsContainer>
-                    <Button1
-                        disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                        width="20%"
-                        onClick={() => {
-                            this.getLobbyToken();
-                        }}
-                    >
-                        Get the lobby token
-                    </Button1>
+                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                            (<NonAdmin/>)
+                            :
+                            (<div>
+                                    <MultipleListsContainer>
 
-                        <Button1
-                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                            width="20%"
-                            onClick={() => {
-                                this.addBot('FRIEND');
-                            }}
-                        >
-                            ADD FRIENDLY BOT
-                        </Button1>
+                                        <Button1
+                                            disabled={this.state.botList.length>=4}
+                                            width="35%"
+                                            onClick={() => {
+                                                this.addBot('FRIEND');
+                                            }}
+                                        >
+                                            ADD FRIENDLY BOT
+                                        </Button1>
 
-                        <Button1
-                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                            width="20%"
-                            onClick={() => {
-                                this.addBot('NEUTRAL');
-                            }}
-                        >
-                            ADD NEUTRAL BOT
-                        </Button1>
+                                        <Button1
+                                            disabled={this.state.botList.length>=4}
+                                            width="35%"
+                                            onClick={() => {
+                                                this.addBot('HOSTILE');
+                                            }}
+                                        >
+                                            ADD HOSTILE BOT
+                                        </Button1>
+                                    </MultipleListsContainer>
+                                </div>
+                            )
+                        }
 
-                        <Button1
-                            disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
-                            width="20%"
-                            onClick={() => {
-                                this.addBot('DARKSOULS');
-                            }}
-                        >
-                            ADD BADASS BOT
-                        </Button1>
-                            </MultipleListsContainer>
 
 
 
                         <MultipleListsContainer>
                         <Button1
+                            disabled = {(this.state.adminToken == localStorage.getItem('userToken')&&this.state.playerList.length > 1)}
+
                             onClick={() => {
                                 this.leaveLobby();
 
@@ -447,7 +499,7 @@ class WaitingRoom extends React.Component {
 
 
                     <Button1
-                        //disabled = {this.state.playerList.length + this.state.botList < 3}
+                        disabled = { this.state.lobbyInGame || (this.state.playerList != null && this.state.playerList.length < 1)}
                         onClick={() => {
                             this.enterGame();
                         }}
@@ -458,8 +510,11 @@ class WaitingRoom extends React.Component {
 
                     </PlayerContainer>
                     </div>
-            </Container>
-            </BaseContainer>
+
+                    </Container>
+                </BaseContainer>
+            </div>
+
         );
     }
 }
