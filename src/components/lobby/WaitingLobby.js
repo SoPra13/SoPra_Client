@@ -22,6 +22,27 @@ const Users = styled.ul`
   padding-left: 0;
 `;
 
+const Chatbox = styled.ul`
+  list-style: none;
+  padding-left: 40px;
+`;
+
+const EmptyBox = styled.div`
+    width: 280px;
+`;
+
+const EmptyBox2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 350px;
+`;
+
+const EmptyBox3 = styled.div`
+    width: 290px;
+`;
+
 const MultipleListsContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -52,7 +73,9 @@ const Button1 = styled.button`
   &:hover {
     transform: translateY(-2px);
   }
-  margin: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+   margin-left: 10px;
   padding: 6px;
   font-weight: 700;
   font-size: 13px;
@@ -352,13 +375,60 @@ class WaitingRoom extends React.Component {
                         <h2><TabContentTitle>Players & Bots of Lobby {this.state.lobbyname}</TabContentTitle></h2>
                         <h2> <TabContentTitle>{this.state.lobbyType === "PUBLIC" ? "" : "Password as private lobby: " + this.state.joinToken}</TabContentTitle></h2>
                         <div>
+                            <MultipleListsContainer style={{justifyContent: "space-between"}}>
+
+                            {this.state.botList === null || this.state.botList.length === 0 ? (
+                                <EmptyBox2/>
+                            ) : (
+                                <div>
+                                    <MultipleListsContainer style={{paddingRight: "0px"}}>
+                                        <Users>
+                                            {this.state.botList.map(bot => {
+                                                return (
+                                                    <PlayerContainer
+                                                        key={bot.id}
+                                                        onClick={() => {
+                                                            console.log(bot.id)
+                                                            /*nothing happens but a console log*/
+                                                        }}>
+                                                        <BotPlayer bot={bot}/>
+                                                    </PlayerContainer>
+                                                );
+                                            })}
+                                        </Users>
+                                        {localStorage.getItem('userToken') !== this.state.adminToken ?
+                                            (<NonAdmin/>)
+                                            :(
+                                                <Users>
+                                                    {this.state.botList.map(bot => {
+                                                        return (
+                                                            <KickContainer>
+                                                                <Button1
+                                                                    height="35px"
+                                                                    disabled = {localStorage.getItem('userToken') != this.state.adminToken}
+                                                                    key={bot.id}
+                                                                    onClick={() => {
+                                                                        console.log(bot.id);
+                                                                        console.log(bot.token);
+                                                                        this.removeBot(bot.token)
+                                                                    }}>
+                                                                    Kick
+                                                                </Button1>
+                                                            </KickContainer>
+                                                        );
+                                                    })}
+                                                </Users>
+                                            )}
+                                    </MultipleListsContainer>
+                                </div>
+                            )}
 
 
                             {!this.state.playerList ? (
                                 <Spinner />
                             ) : (
                                 <div>
-                                    <MultipleListsContainer>
+                                    <MultipleListsContainer style={{paddingRight: "20px"}}>
                                         <Users>
                                             {this.state.playerList.map(user => {
                                                 return (
@@ -396,72 +466,32 @@ class WaitingRoom extends React.Component {
                                             })}
                                         </Users>
                                             )}
-                                        <Users>
-                                            <Chat/>
-                                        </Users>
+
                                     </MultipleListsContainer>
                                 </div>
                             )}
 
+                            <Chatbox>
+                                <Chat/>
+                            </Chatbox>
 
-                            {!this.state.botList ? (
-                                <Spinner />
-                            ) : (
-                                <div>
-                                    <MultipleListsContainer>
-                                        <Users>
-                                            {this.state.botList.map(bot => {
-                                                return (
-                                                    <PlayerContainer
-                                                        key={bot.id}
-                                                        onClick={() => {
-                                                            console.log(bot.id)
-                                                            /*nothing happens but a console log*/
-                                                        }}>
-                                                        <BotPlayer bot={bot}/>
-                                                    </PlayerContainer>
-                                                );
-                                            })}
-                                        </Users>
-                                        {localStorage.getItem('userToken') !== this.state.adminToken ?
-                                            (<NonAdmin/>)
-                                            :(
-                                        <Users>
-                                            {this.state.botList.map(bot => {
-                                                return (
-                                                    <KickContainer>
-                                                        <Button1
-                                                            height="35px"
-                                                            disabled = {localStorage.getItem('userToken') != this.state.adminToken}
-                                                            key={bot.id}
-                                                            onClick={() => {
-                                                                console.log(bot.id);
-                                                                console.log(bot.token);
-                                                                this.removeBot(bot.token)
-                                                            }}>
-                                                            Kick
-                                                        </Button1>
-                                                    </KickContainer>
-                                                );
-                                            })}
-                                        </Users>
-                                            )}
-                                    </MultipleListsContainer>
-                                </div>
-                            )}
+                            </MultipleListsContainer>
 
 
-                    <PlayerContainer>
+
+
+
+                    <MultipleListsContainer style={{justifyContent: "space-between"}}>
 
                         {localStorage.getItem('userToken') !== this.state.adminToken ?
-                            (<NonAdmin/>)
+                            (<EmptyBox3/>)
                             :
                             (<div>
                                     <MultipleListsContainer>
 
                                         <Button1
                                             disabled={localStorage.getItem('userToken') !== this.state.adminToken}
-                                            width="35%"
+                                            width="38%"
                                             onClick={() => {
                                                 this.addBot('FRIEND');
                                             }}
@@ -489,7 +519,7 @@ class WaitingRoom extends React.Component {
                         <MultipleListsContainer>
                         <Button1
                             disabled = {(this.state.adminToken == localStorage.getItem('userToken')&&this.state.playerList.length > 1)}
-
+                            width="110px"
                             onClick={() => {
                                 this.leaveLobby();
 
@@ -509,7 +539,8 @@ class WaitingRoom extends React.Component {
                     </Button1>
                             </MultipleListsContainer>
 
-                    </PlayerContainer>
+                        <EmptyBox/>
+                    </MultipleListsContainer>
                     </div>
 
                     </Container>
