@@ -8,7 +8,7 @@ import { Button } from '../../views/design/Button';
 import Header3 from "../../views/Header3";
 
 const Text = styled.div`
-  color:   rgba(248, 248, 148, 1);
+  color: rgba(248, 248, 148, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,7 +16,7 @@ const Text = styled.div`
 
 const Text2 = styled.div`
   font-weight: bold;
-  color:  #000FDB;
+  color:  #FFBB18;;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,7 +43,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: rgba(150, 0, 255, 0.5);
+  background: rgba(9, 5, 88, 0.75);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -58,7 +58,7 @@ const InputField = styled.input`
   border-radius: 20px;
   margin-bottom: 20px;
     background: rgba(120, 26, 89, 0.8);
-  color: white;
+  color: rgba(248, 248, 148);
 `;
 
 const Label = styled.label`

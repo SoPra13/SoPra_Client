@@ -87,7 +87,7 @@ const InputField = styled.input`
   border-radius: 20px;
   margin-bottom: 20px;
   background: rgba(120, 26, 89, 0.8);
-  color: white;
+  color: rgba(248, 248, 148);
 `;
 
 

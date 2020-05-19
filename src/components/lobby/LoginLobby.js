@@ -12,6 +12,13 @@ const Central = styled.div`
   justify-content: center;
 `;
 
+const Text = styled.div`
+  color: rgba(248, 248, 148, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -32,13 +39,13 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background-color: rgba(48,208,255,0.4);
+  background: rgba(9, 5, 88, 0.75);
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
 const InputField = styled.input`
   &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+        color: rgba(248, 248, 148, 1);
   }
   height: 35px;
   padding-left: 15px;
@@ -46,8 +53,8 @@ const InputField = styled.input`
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.3);
-  color: white;
+    background: rgba(120, 26, 89, 0.8);
+  color: rgba(248, 248, 148);
 `;
 
 const Label = styled.label`
@@ -122,7 +129,7 @@ class LoginLobby extends React.Component {
 
 
 
-                            <Label>Password</Label>
+                            <Label><Text>Password</Text></Label>
                             <InputField
                                 type="password"
                                 placeholder="Enter here your lobby token"

@@ -78,6 +78,7 @@ const PlayerContainer = styled.li`
 const LobbyContainer = styled.li`
   &:hover {
     transform: translateY(-2px);
+    cursor: pointer;
   }
   display: flex;
   flex-direction: column;
@@ -338,8 +339,9 @@ class Dashboard extends React.Component {
                 </Button>
             </ButtonContainer>
 
-                <img src={Logo} width="90px"/>
 
+                <img src={Logo} width="90px"/>
+            <ButtonContainer>
                 <Button
                     width="100px"
                     onClick={() => {
@@ -348,6 +350,17 @@ class Dashboard extends React.Component {
                 >
                     Create Lobby
                 </Button>
+                <br/>
+                <Button
+                    width="100px"
+                    height="48px"
+                    onClick={() => {
+                        this.props.history.push('/dashboard/loginLobby');
+                    }}
+                >
+                    Enter private Lobby
+                </Button>
+            </ButtonContainer>
         </HeaderContainer>
 
                 <div className="background2">
