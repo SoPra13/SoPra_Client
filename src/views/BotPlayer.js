@@ -30,6 +30,10 @@ const Form2 = styled.div`
     flex-direction: row;
 `;
 
+const Rank = styled.div`
+  color: #FFBB18;
+`;
+
 const Container = styled.div`
   margin: 6px 0;
   width: 300px;
@@ -111,11 +115,15 @@ const BotPlayer = ({ bot }) => {
     return (
         <Container>
             <Form2>
-                <img src={getAvatar(3)} width="60px" height="60px"/>
+                <img src={getAvatar(3)} width="80px" height="80px"/>
                 <Form>
                     <UserName>{bot.botName + ": " + bot.difficulty.toLowerCase()}</UserName>
                 </Form>
-                <img src={getRank(ranking(999))} width="60px" height="60px"/>
+                <Form>
+                    <img src={getRank(ranking(999))} width="60px" height="60px"/>
+                    <Rank>Casual</Rank>
+                </Form>
+
             </Form2>
         </Container>
     );

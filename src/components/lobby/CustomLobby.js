@@ -16,7 +16,7 @@ const Text = styled.div`
 
 const Text2 = styled.div`
   font-weight: bold;
-  color:  #FFBB18;;
+  color:  #FFBB18;  
   display: flex;
   flex-direction: column;
   align-items: center;

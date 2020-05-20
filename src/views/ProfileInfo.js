@@ -49,6 +49,9 @@ const Green = styled.div`
   color: #1CD200;
 `;
 
+const Rank = styled.div`
+  color: #FFBB18;
+`;
 
 const UserName = styled.div`
   color: #F8F894;
@@ -101,6 +104,20 @@ function ranking(score){
     }
 }
 
+function rankingName(score){
+    if(score<100){
+        return "Noob";
+    }else if(100<=score<200){
+        return "Casual";
+    }else if(200<=score<300){
+        return "Pro";
+    }else if(300<=score<400){
+        return "Veteran";
+    }else{
+        return "Master";
+    }
+}
+
 function getRank(avatar){
     var a = avatar;
 
@@ -122,12 +139,16 @@ const ProfileInfo = ({ user }) => {
     return (
         <Container>
             <Form2>
-                <img src={getAvatar(user.avatar)} width="60px" height="60px"/>
+                <img src={getAvatar(user.avatar)} width="80px" height="80px"/>
                 <Form>
                     <UserName>{user.username}</UserName>
                     <OnlineStatus>{user.status === "ONLINE" ? <Green>ONLINE</Green> : <Red>OFFLINE</Red>}</OnlineStatus>
                 </Form>
-                <img src={getRank(ranking(user.totalScore))} width="60px" height="60px"/>
+                <Form>
+                    <img src={getRank(ranking(user.totalScore))} width="60px" height="60px"/>
+                    <Rank>{rankingName(user.totalScore)}</Rank>
+                </Form>
+
             </Form2>
         </Container>
     );

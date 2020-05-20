@@ -36,7 +36,7 @@ const EmptyBox2 = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 350px;
+  width: 300px;
 `;
 
 const EmptyBox3 = styled.div`
@@ -73,8 +73,8 @@ const Button1 = styled.button`
   &:hover {
     transform: translateY(-2px);
   }
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
    margin-left: 10px;
   padding: 6px;
   font-weight: 700;
@@ -499,6 +499,7 @@ class WaitingRoom extends React.Component {
                                     <MultipleListsContainer>
 
                                         <Button1
+                                            style={{marginBottom: "0px", marginTop:"0px"}}
                                             disabled={this.state.botList.length>=4}
                                             width="38%"
                                             onClick={() => {
@@ -509,6 +510,7 @@ class WaitingRoom extends React.Component {
                                         </Button1>
 
                                         <Button1
+                                            style={{marginBottom: "0px", marginTop:"0px"}}
                                             disabled={this.state.botList.length>=4}
                                             width="35%"
                                             onClick={() => {
@@ -527,6 +529,7 @@ class WaitingRoom extends React.Component {
 
                         <MultipleListsContainer>
                         <Button1
+                            style={{marginBottom: "0px", marginTop:"0px"}}
                             disabled = {(this.state.adminToken == localStorage.getItem('userToken')&&this.state.playerList.length > 1)}
                             width="110px"
                             onClick={() => {
@@ -539,6 +542,7 @@ class WaitingRoom extends React.Component {
 
 
                     <Button1
+                        style={{marginBottom: "0px", marginTop:"0px"}}
                         disabled = { this.state.lobbyInGame || (this.state.playerList != null && this.state.playerList.length < 1)}
                         onClick={() => {
                             this.enterGame();

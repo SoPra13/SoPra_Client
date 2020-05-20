@@ -28,7 +28,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 30%;
-  height: 500px;
+  height: 590px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -78,6 +78,10 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
+const Advice = styled.div`
+  color: rgba(248, 248, 148);
+`;
+
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
  * You should have a class (instead of a functional component) when:
@@ -110,30 +114,34 @@ class Register extends React.Component {
      */
     async register() {
         if(this.state.username.length<9){
-        if(this.state.confirmation === this.state.password) {
-            try {
-                const requestBody = JSON.stringify({
-                    username: this.state.username,
-                    password: this.state.password,
-                    avatar: this.state.avatar
-                });
-                await api.post('/register', requestBody);
+            if(0<this.state.password.length<33) {
+                if (this.state.confirmation === this.state.password) {
+                    try {
+                        const requestBody = JSON.stringify({
+                            username: this.state.username,
+                            password: this.state.password,
+                            avatar: this.state.avatar
+                        });
+                        await api.post('/register', requestBody);
 
-                /*            // Get the returned user and update a new object.
-                            const user = new User(response.data);
+                        /*            // Get the returned user and update a new object.
+                                    const user = new User(response.data);
 
-                            // Store the token into the local storage.
-                            localStorage.setItem('userToken', user.userToken);*/
+                                    // Store the token into the local storage.
+                                    localStorage.setItem('userToken', user.userToken);*/
 
-                this.props.history.push(`/login`);
-            } catch (error) {
-                alert(`Something went wrong during the sign up: \n${handleError(error)}`);
-            }
-        }else{
-            alert("Your passwords aren't identical.")
+                        this.props.history.push(`/login`);
+                    } catch (error) {
+                        alert(`Something went wrong during the sign up: \n${handleError(error)}`);
+                    }
+                } else {
+                    alert("Your passwords aren't identical.");
+                }
+            }else{
+            alert("Please set a password of length 1-32.");
         }
         }else{
-            alert("Your username has to be min 1 and max 8 characters")
+            alert("Your username has to be min 1 and max 8 characters");
         }
     }
 
@@ -189,7 +197,12 @@ class Register extends React.Component {
         return (
             <FormContainer>
                 <Form>
-                    <Label>Welcome!</Label>
+                    <Label>Oh dear! Need a new Account?</Label>
+
+                    <Advice>Here some advices: Choose an Avatar you like. Username can take a length of 1-8 characters
+                        and the password a length of 1-32. Don't forget to repeat the password
+                        and press "Sign up"-button.</Advice>
+                    <br/>
 
 
                     <CentralRow>
