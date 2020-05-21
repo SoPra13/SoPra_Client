@@ -711,7 +711,9 @@ export class UnityGame extends React.Component {
                         height: "600px"
                     }}
                 >
-                    <Unity unityContent={this.unityContent} style={{background: "rgba(255, 255, 255, 0)"}} />
+                    <Unity unityContent={this.unityContent}
+                           className="centralRow centralColumn"
+                           style={{background: "rgba(255, 255, 255, 0)"}} />
                 </div>
                     </CentralRow>
                 </CentralColumn>

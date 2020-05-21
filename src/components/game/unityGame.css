@@ -1,0 +1,11 @@
+.centralRow{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.centralColumn{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

@@ -111,6 +111,7 @@ class EditProfile extends React.Component {
 
     //update user
     async update() {
+        if(this.state.username.length<9){
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
@@ -124,6 +125,9 @@ class EditProfile extends React.Component {
 
         } catch (error) {
             alert(`Something went wrong during updating: \n${handleError(error)}`);
+        }
+        }else{
+            alert("Your username has to be min 1 and max 8 characters");
         }
     }
 
