@@ -43,6 +43,14 @@ const EmptyBox3 = styled.div`
     width: 290px;
 `;
 
+const EmptyBox4 = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 350px;
+`;
+
 const MultipleListsContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -209,13 +217,6 @@ class WaitingRoom extends React.Component {
         }
     }
 
-    /**
-     * window pops up to with the token
-     */
-
-    getLobbyToken(){
-        alert(this.state.joinToken);
-    }
 
     /**
      * function to update the playerList and botList
@@ -321,12 +322,12 @@ class WaitingRoom extends React.Component {
         console.log(lobby);
 
         if(lobby.lobbyState ==='INGAME'){
-            console.log("INGAME")
+            console.log("INGAME");
             this.setState({
                 lobbyInGame: true
             })
         }else{
-            console.log("OUTGAMe")
+            console.log("OUTGAMe");
             this.setState({
                 lobbyInGame: false
             })
@@ -355,7 +356,7 @@ class WaitingRoom extends React.Component {
             () => this.stillInTheLobby(),
             2000,
 
-        )
+        );
         window.addEventListener('beforeunload', (event) => {
             // Cancel the event as stated by the standard.
             event.preventDefault();
@@ -387,7 +388,7 @@ class WaitingRoom extends React.Component {
                             <MultipleListsContainer style={{justifyContent: "space-between"}}>
 
                             {this.state.botList === null || this.state.botList.length === 0 ? (
-                                <EmptyBox2/>
+                                localStorage.getItem('userToken') === this.state.adminToken ? (<EmptyBox4/>):(<EmptyBox2/>)
                             ) : (
                                 <div>
                                     <MultipleListsContainer style={{paddingRight: "0px"}}>

@@ -238,9 +238,6 @@ class Dashboard extends React.Component {
     render() {
 
 
-
-        const localToken = localStorage.getItem("userToken");
-
         const tabComp =(
             <Tabs defaultIndex={0} onSelect={index => console.log(index)}>
                 <TabList>
@@ -281,7 +278,7 @@ class Dashboard extends React.Component {
                 <TabPanel>
                     <Container2>
                         <Container>
-                            <h2><TabContentTitle>Lobbies</TabContentTitle></h2>
+                            <h2><TabContentTitle>Public Lobbies only    </TabContentTitle></h2>
                             {!this.state.lobbies ? (
                                 <Spinner />
                             ) : (

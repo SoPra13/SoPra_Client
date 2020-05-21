@@ -98,6 +98,7 @@ class CustomLobby extends React.Component {
     }
 
     async create() {
+        if(1<=this.state.lobbyname.length && this.state.lobbyname<14){
         try {
             const requestBody = JSON.stringify({
                 lobbyName: this.state.lobbyname,
@@ -119,6 +120,9 @@ class CustomLobby extends React.Component {
             this.props.history.push(`/dashboard/waitingLobby`);
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+        }else{
+            alert("The lobby name has to be min 1 and max 13 characters");
         }
     }
 

@@ -111,7 +111,7 @@ class EditProfile extends React.Component {
 
     //update user
     async update() {
-        if(this.state.username.length<9){
+        if(1<=this.state.username.length && this.state.username.length<9){
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,

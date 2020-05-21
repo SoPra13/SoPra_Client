@@ -113,8 +113,8 @@ class Register extends React.Component {
      * and its token is stored in the localStorage.
      */
     async register() {
-        if(this.state.username.length<9){
-            if(0<this.state.password.length<33) {
+        if(1<=this.state.username.length && this.state.username.length<9){
+            if(0<this.state.password.length && this.state.password.length<33) {
                 if (this.state.confirmation === this.state.password) {
                     try {
                         const requestBody = JSON.stringify({

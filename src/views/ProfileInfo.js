@@ -92,48 +92,32 @@ function getAvatar(avatar){
 
 function ranking(score){
     if(score<100){
-        return 1;
+        return Bronze;
     }else if(100<=score<200){
-        return 2;
+        return Silver;
     }else if(200<=score<300){
-        return 3;
+        return Gold;
     }else if(300<=score<400){
-        return 4;
+        return Diamond;
     }else{
-        return 5;
+        return GrandMaster;
     }
 }
 
 function rankingName(score){
     if(score<100){
         return "Noob";
-    }else if(100<=score<200){
+    }else if(100<=score && score<200){
         return "Casual";
-    }else if(200<=score<300){
+    }else if(200<=score && score<300){
         return "Pro";
-    }else if(300<=score<400){
+    }else if(300<=score && score <400){
         return "Veteran";
     }else{
         return "Master";
     }
 }
 
-function getRank(avatar){
-    var a = avatar;
-
-    switch (a) {
-        case 1:
-            return Bronze;
-        case 2:
-            return Silver;
-        case 3:
-            return Gold;
-        case 4:
-            return Diamond;
-        case 5:
-            return GrandMaster;
-    }
-}
 
 const ProfileInfo = ({ user }) => {
     return (
@@ -145,7 +129,7 @@ const ProfileInfo = ({ user }) => {
                     <OnlineStatus>{user.status === "ONLINE" ? <Green>ONLINE</Green> : <Red>OFFLINE</Red>}</OnlineStatus>
                 </Form>
                 <Form>
-                    <img src={getRank(ranking(user.totalScore))} width="60px" height="60px"/>
+                    <img src={ranking(user.totalScore)} width="60px" height="60px"/>
                     <Rank>{rankingName(user.totalScore)}</Rank>
                 </Form>
 
