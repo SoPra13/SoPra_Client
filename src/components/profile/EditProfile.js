@@ -202,13 +202,12 @@ class EditProfile extends React.Component {
                                     <FormContainer2>
 
                                         <FormContainer3>
-                                            <Label><Title2>Username</Title2></Label>
                                             <Central>
                                             <img src={this.getAvatar(this.state.avatar)} width='60px' height='60px'/>
                                             </Central>
                                             <br/>
                                             <InputField
-                                                placeholder="Enter here a new username"
+                                                placeholder="New username"
                                                 onChange={e => {
                                                     this.handleInputChange('username', e.target.value);
                                                 }}

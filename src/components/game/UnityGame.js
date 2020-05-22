@@ -675,6 +675,19 @@ export class UnityGame extends React.Component {
         });
     }
 
+    async handleEvent(event){
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = '';
+
+        const key = localStorage.getItem(('userToken'));
+
+        await api.put('/logout?token=' + key);
+
+        localStorage.clear();
+    }
+
     componentDidMount() {
         this.timerID = setInterval(
             () => this.currentGame(),
@@ -682,19 +695,12 @@ export class UnityGame extends React.Component {
         );
         document.body.style.backgroundColor = '#404040';
 
-        window.addEventListener('beforeunload', (event) => {
-            // Cancel the event as stated by the standard.
-            event.preventDefault();
-            // Chrome requires returnValue to be set.
-            event.returnValue = '';
-
-            localStorage.clear();
-            this.leaveGame();
-        });
+        window.addEventListener('beforeunload', this.handleEvent);
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID);
+        window.removeEventListener('beforeunload', this.handleEvent);
         document.body.style.backgroundColor = '#ffeaaa';
     }
 
