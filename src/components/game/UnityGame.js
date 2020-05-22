@@ -43,6 +43,7 @@ export class UnityGame extends React.Component {
             lobbyToken: localStorage.getItem('lobbyToken'),
             userToken: localStorage.getItem('userToken'),
             gameToken: localStorage.getItem('gameToken'),
+            initialPlayerList: null,
             round:0,
             game: null,
             playerNumber: 0,
@@ -125,6 +126,11 @@ export class UnityGame extends React.Component {
             this.sendRoundsTopic(message);
         });
 
+        this.unityContent.on("TellReactToSkip", () =>{
+            console.log("Unity tells Round was skipped");
+            this.sendRoundsTopic(this.state.game.topic);
+        });
+
         this.unityContent.on("FetchCluesString", () =>{
             console.log("Unity asks for the list of clues");
             this.sendClueList();
@@ -136,7 +142,7 @@ export class UnityGame extends React.Component {
         });
 
         this.unityContent.on("TellReactToEvaluateRound", () =>{
-            console.log("Unity asks if what the result of submitted guess was");
+            console.log("Unity asks what the result of submitted guess was");
             this.getResultOfGuess()
         });
 
@@ -284,8 +290,29 @@ export class UnityGame extends React.Component {
 
     setScores(){
         var scoreArray = [];
-        for(var i = 0; i<this.state.game.playerList.length; i++){
-            scoreArray.push(this.state.game.playerList[i].totalScore.toString());
+        var matched = false;
+
+        if(this.state.initialPlayerList==null) {
+            this.state.initialPlayerList = this.state.game.playerList;
+        }
+        console.log(this.state.initialPlayerList);
+        console.log(this.state.game.playerList);
+
+        // Copyright of this Kramer-ian Algorithm belongs solemnly to Marc Kramer
+        for(var x = 0; x < this.state.initialPlayerList.length; x++){
+            matched = false;
+            for (var i = 0; i < this.state.game.playerList.length; i++) {
+
+                if(this.state.game.playerList[i].token === this.state.initialPlayerList[x].token){
+                    scoreArray.push(this.state.game.playerList[i].totalScore.toString());
+                    matched=true;
+                    break;
+                }
+
+            }
+            if(!matched) {
+                scoreArray.push(this.state.initialPlayerList[x].totalScore.toString());
+            }
         }
 
         for(var i = 0; i<this.state.game.botList.length; i++){
@@ -625,13 +652,13 @@ export class UnityGame extends React.Component {
 
         var duplicateArray = [];
         for(var i = 0; i<this.state.game.playerList.length; i++){
-            duplicateArray.push(this.state.game.playerList[i].duplicateClues.toString());
+            duplicateArray.push(0);
         }
 
 
         var validArray = [];
         for(var i = 0; i<this.state.game.playerList.length; i++){
-            validArray.push((this.state.game.playerList[i].totalClues-this.state.game.playerList[i].duplicateClues-this.state.game.playerList[i].invalidClues).toString());
+            validArray.push((this.state.game.playerList[i].totalClues-this.state.game.playerList[i].invalidClues).toString());
         }
 
 
@@ -688,6 +715,19 @@ export class UnityGame extends React.Component {
         });
     }
 
+    async handleEvent(event){
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = '';
+
+        const key = localStorage.getItem(('userToken'));
+
+        await api.put('/logout?token=' + key);
+
+        localStorage.clear();
+    }
+
     componentDidMount() {
         this.timerID = setInterval(
             () => this.currentGame(),
@@ -695,19 +735,12 @@ export class UnityGame extends React.Component {
         );
         document.body.style.backgroundColor = '#404040';
 
-        window.addEventListener('beforeunload', (event) => {
-            // Cancel the event as stated by the standard.
-            event.preventDefault();
-            // Chrome requires returnValue to be set.
-            event.returnValue = '';
-
-            localStorage.clear();
-            this.leaveGame();
-        });
+        window.addEventListener('beforeunload', this.handleEvent);
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID);
+        window.removeEventListener('beforeunload', this.handleEvent);
         document.body.style.backgroundColor = '#ffeaaa';
     }
 

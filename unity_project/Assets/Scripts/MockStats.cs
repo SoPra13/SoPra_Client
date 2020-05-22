@@ -71,7 +71,8 @@ public class MockStats : MonoBehaviour
         "Stone", "Hero", "Lasergun", "Ladybug", "Spike"};
     private string[] clueList = {"1", "2", "3", "4", "5", "6", "7" };
     private int activePlayerGuess = 0; //0 = player has not made a guess; 1 = player has made a guess
-    private int[] scoreList = { 100, 200, 500, 750, 1000, 3000, 10000 }; //data come from backend
+    private int[] scoreList = { 0, 0, 0, 0, 0, 0, 0 }; //data come from backend
+    private int[] tempScoreList = { 0, 0, 0, 0, 0, 0, 0 };
     private int[] correctGuesses = { 3, 0, 0, 0, 0, 0, 0 }; //ReactSendCorrectGuessString(str)
     private int[] duplicatedClues = { 6, 0, 0, 0, 0, 0, 0 }; //ReactSendDuplicateString(str)
     private int[] validClues = { 10, 0, 0, 0, 0, 0, 0 }; //ReactSendValidCluesSting(str)
@@ -93,7 +94,7 @@ public class MockStats : MonoBehaviour
     void Start()
     {
         activePlayer = 6;
-        playerPosition = 7; //REACTINPUT, this value needs to come from React
+        playerPosition = 6; //REACTINPUT, this value needs to come from React
         playerTotal = 7; // REACTINPUT, this value needs to come from React
         connectedPlayers = 6; //REACTINPUT, this value needs to come from React
     }
@@ -203,16 +204,6 @@ public class MockStats : MonoBehaviour
 
     public void MultiplyScore()
     {
-        //Just for Testing//
-        //multiplier = 3.5f;
-        /*score = 7;
-        for (int i = 0; i < 7; i++)
-        {
-            duplicatedClues[i] = 2;
-            correctGuesses[i] = 7;
-            validClues[i] = 8;
-        }*/
-        //Testing End Here
 
         float tempScore = score;
         tempScore *= GetMultiplier();
@@ -220,6 +211,11 @@ public class MockStats : MonoBehaviour
         tempScore += (correctGuesses[playerPosition - 1]*10);
         tempScore += (validClues[playerPosition - 1] * playerTotal);
         float rounded = Mathf.Round(tempScore);
+        rounded += 10;
+        if(rounded == 0)
+        {
+            rounded = 1;
+        }
         score = (int)rounded;
     }
 
@@ -737,11 +733,12 @@ public class MockStats : MonoBehaviour
 
     public void ReactSendScoreString(string scoreString)
     {
+        
         char[] separator = { ';' };
         string[] tempList = scoreString.Split(separator, StringSplitOptions.None);
         for (int i = 0; i < playerTotal; i++)
         {
-            scoreList[i] = int.Parse(tempList[i]);         
+            scoreList[i] = int.Parse(tempList[i]);  
         }
     }
 }

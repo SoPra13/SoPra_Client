@@ -146,7 +146,6 @@ class WaitingRoom extends React.Component {
         try {
             await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
                 + '&userToken=' + userToken);
-            localStorage.removeItem('lobbyToken');
 
             console.log('Player get kicked from the admin');
 
@@ -345,7 +344,18 @@ class WaitingRoom extends React.Component {
      * componentDidMount() mounts the lobby to change the state of playerList every 1s and botList every 2s
      * componentWillUnmount resets the timer
      */
+    async handleEvent(event){
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = '';
 
+        const key = localStorage.getItem(('userToken'));
+
+        await api.put('/logout?token=' + key);
+
+        localStorage.clear();
+    }
 
     componentDidMount() {
         this.timerID1 = setInterval(
@@ -357,21 +367,15 @@ class WaitingRoom extends React.Component {
             2000,
 
         );
-        window.addEventListener('beforeunload', (event) => {
-            // Cancel the event as stated by the standard.
-            event.preventDefault();
-            // Chrome requires returnValue to be set.
-            event.returnValue = '';
-
-            localStorage.clear();
-        });
+        window.addEventListener('beforeunload', this.handleEvent);
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID1);
         clearInterval(this.timerID2);
-    }
+        window.removeEventListener('beforeunload', this.handleEvent);
 
+    }
 
     render() {
 
