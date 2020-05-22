@@ -93,11 +93,11 @@ function getAvatar(avatar){
 function ranking(score){
     if(score<100){
         return Bronze;
-    }else if(100<=score<200){
+    }else if(100<=score && score<200){
         return Silver;
-    }else if(200<=score<300){
+    }else if(200<=score && score<300){
         return Gold;
-    }else if(300<=score<400){
+    }else if(300<=score && score<400){
         return Diamond;
     }else{
         return GrandMaster;

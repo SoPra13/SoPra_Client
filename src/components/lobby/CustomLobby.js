@@ -98,7 +98,7 @@ class CustomLobby extends React.Component {
     }
 
     async create() {
-        if(1<=this.state.lobbyname.length && this.state.lobbyname<14){
+        if(1<=this.state.lobbyname.length && this.state.lobbyname.length<14){
         try {
             const requestBody = JSON.stringify({
                 lobbyName: this.state.lobbyname,

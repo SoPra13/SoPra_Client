@@ -92,6 +92,20 @@ function ranking(score){
     }
 }
 
+function rankingName(score){
+    if(score<100){
+        return "Noob";
+    }else if(100<=score && score<200){
+        return "Casual";
+    }else if(200<=score && score<300){
+        return "Pro";
+    }else if(300<=score && score <400){
+        return "Veteran";
+    }else{
+        return "Master";
+    }
+}
+
 
 
 const BotPlayer = ({ bot }) => {
@@ -104,7 +118,7 @@ const BotPlayer = ({ bot }) => {
                 </Form>
                 <Form>
                     <img src={ranking(999)} width="60px" height="60px"/>
-                    <Rank>Master</Rank>
+                    <Rank>{rankingName(999)}</Rank>
                 </Form>
 
             </Form2>

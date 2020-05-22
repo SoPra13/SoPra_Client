@@ -10,17 +10,6 @@ import Logo from "./Logo.png";
 
 import classes from '../login/login.css';
 
-
-const Background = styled.div`
-    background-image: url('/LoginImage.png');
-    width: 100%;
-    height: 100vh;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
-`;
-
 const Central1 = styled.div`
   color: #FFC100;
   display: flex;
