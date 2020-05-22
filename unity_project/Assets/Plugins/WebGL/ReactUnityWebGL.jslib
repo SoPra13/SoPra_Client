@@ -58,5 +58,8 @@
         },
     FetchScores: function() {
           ReactUnityWebGL.FetchScores();
+        },
+    TellReactToSkip: function() {
+          ReactUnityWebGL.TellReactToSkip();
         }
 });

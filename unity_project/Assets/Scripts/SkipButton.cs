@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;
+using System;
 
 public class SkipButton : MonoBehaviour
 {
@@ -9,6 +11,10 @@ public class SkipButton : MonoBehaviour
     private bool isOver = false;
     private bool waitForSkip = false;
     private MockStats mockStats;
+
+    [DllImport("__Internal")]
+    private static extern void TellReactToSkip();
+
 
     public void Start()
     {
@@ -23,6 +29,12 @@ public class SkipButton : MonoBehaviour
         }
         else
         {
+            try { TellReactToSkip(); }
+            catch (EntryPointNotFoundException e)
+            {
+                Debug.Log("Unity wants to tell React that the round has been skipped " + e);
+            }
+
             GameObject.Find("DenySFX").GetComponent<AudioSource>().Play();
             GameObject.Find("MisteryWordInput").GetComponent<Animator>().SetBool("disappear", true);
             GameObject.Find("SkipButton").GetComponent<Animator>().SetBool("disappear", true);
