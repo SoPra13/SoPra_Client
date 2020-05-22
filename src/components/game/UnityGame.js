@@ -30,6 +30,7 @@ export class UnityGame extends React.Component {
             lobbyToken: localStorage.getItem('lobbyToken'),
             userToken: localStorage.getItem('userToken'),
             gameToken: localStorage.getItem('gameToken'),
+            initialPlayerList: null,
             round:0,
             game: null,
             playerNumber: 0,
@@ -112,6 +113,11 @@ export class UnityGame extends React.Component {
             this.sendRoundsTopic(message);
         });
 
+        this.unityContent.on("TellReactToSkip", () =>{
+            console.log("Unity tells Round was skipped");
+            this.sendRoundsTopic(this.state.game.topic);
+        });
+
         this.unityContent.on("FetchCluesString", () =>{
             console.log("Unity asks for the list of clues");
             this.sendClueList();
@@ -123,7 +129,7 @@ export class UnityGame extends React.Component {
         });
 
         this.unityContent.on("TellReactToEvaluateRound", () =>{
-            console.log("Unity asks if what the result of submitted guess was");
+            console.log("Unity asks what the result of submitted guess was");
             this.getResultOfGuess()
         });
 
@@ -186,6 +192,7 @@ export class UnityGame extends React.Component {
         this.state.round = this.state.game.currentRound;
         this.state.playerListLength = this.state.game.playerList.length;
 
+        this.state.initialPlayerList = this.state.game.playerList;
 
         var playerIndex = this.getIndex(game, localStorage.getItem('userToken'));
         var activePlayer = game.guesser+1;
@@ -271,8 +278,19 @@ export class UnityGame extends React.Component {
 
     setScores(){
         var scoreArray = [];
-        for(var i = 0; i<this.state.game.playerList.length; i++){
-            scoreArray.push(this.state.game.playerList[i].totalScore.toString());
+
+
+        for (var x = 0; i<this.state.initialPlayerList; x++){
+
+            for (var i = 0; i < this.state.game.playerList.length; i++) {
+                if(this.state.game.playerList[i].token == this.state.initialPlayerList[x].token) {
+
+                    scoreArray.push(this.state.game.playerList[x].totalScore.toString());
+                    break;
+                }
+                scoreArray.push(this.state.initialPlayerList[x].totalScore.toString());
+            }
+
         }
 
         for(var i = 0; i<this.state.game.botList.length; i++){
