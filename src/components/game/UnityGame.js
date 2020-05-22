@@ -192,7 +192,6 @@ export class UnityGame extends React.Component {
         this.state.round = this.state.game.currentRound;
         this.state.playerListLength = this.state.game.playerList.length;
 
-        this.state.initialPlayerList = this.state.game.playerList;
 
         var playerIndex = this.getIndex(game, localStorage.getItem('userToken'));
         var activePlayer = game.guesser+1;
@@ -278,19 +277,29 @@ export class UnityGame extends React.Component {
 
     setScores(){
         var scoreArray = [];
+        var matched = false;
 
+        if(this.state.initialPlayerList==null) {
+            this.state.initialPlayerList = this.state.game.playerList;
+        }
+        console.log(this.state.initialPlayerList);
+        console.log(this.state.game.playerList);
 
-        for (var x = 0; i<this.state.initialPlayerList; x++){
-
+        // Copyright of this Kramer-ian Algorithm belongs solemnly to Marc Kramer
+        for(var x = 0; x < this.state.initialPlayerList.length; x++){
+            matched = false;
             for (var i = 0; i < this.state.game.playerList.length; i++) {
-                if(this.state.game.playerList[i].token == this.state.initialPlayerList[x].token) {
 
-                    scoreArray.push(this.state.game.playerList[x].totalScore.toString());
+                if(this.state.game.playerList[i].token === this.state.initialPlayerList[x].token){
+                    scoreArray.push(this.state.game.playerList[i].totalScore.toString());
+                    matched=true;
                     break;
                 }
+
+            }
+            if(!matched) {
                 scoreArray.push(this.state.initialPlayerList[x].totalScore.toString());
             }
-
         }
 
         for(var i = 0; i<this.state.game.botList.length; i++){
@@ -630,13 +639,13 @@ export class UnityGame extends React.Component {
 
         var duplicateArray = [];
         for(var i = 0; i<this.state.game.playerList.length; i++){
-            duplicateArray.push(this.state.game.playerList[i].duplicateClues.toString());
+            duplicateArray.push(0);
         }
 
 
         var validArray = [];
         for(var i = 0; i<this.state.game.playerList.length; i++){
-            validArray.push((this.state.game.playerList[i].totalClues-this.state.game.playerList[i].duplicateClues-this.state.game.playerList[i].invalidClues).toString());
+            validArray.push((this.state.game.playerList[i].totalClues-this.state.game.playerList[i].invalidClues).toString());
         }
 
 
