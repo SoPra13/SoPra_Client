@@ -17,7 +17,7 @@ import loginCss from '../login/login.css';
 import Leaderboard from "../leaderboard/Leaderboard";
 
 const Container = styled(BaseContainer)`
-  height: 420px;
+  height: 450px;
   color: white;
   text-align: center;
   overflow: hidden;
@@ -32,10 +32,13 @@ const Container2 = styled(BaseContainer)`
 
 const Container3 = styled.div`
   width: 500px;
-  height: 420px;
+  height: 450px;
   color: white;
   text-align: center;
   overflow: hidden;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
 `;
 
 const HeaderContainer = styled.div`
@@ -96,7 +99,7 @@ const Users = styled.ul`
   list-style: none;
   padding-left: 0;
   overflow: auto;
-  height: 350px;
+  height: 380px;
 `;
 
 const EmptyBox = styled.div`
