@@ -81,7 +81,7 @@ public class GameOverEvaluation : MonoBehaviour
 
     public IEnumerator WaitForUpdate()
     {
-        try { FetchScores(); }//This will tell React to get the Round int for this round
+        try { FetchScores(); }
         catch (EntryPointNotFoundException e)
         {
             Debug.Log("Unity wants to get a score update but Failed " + e);
