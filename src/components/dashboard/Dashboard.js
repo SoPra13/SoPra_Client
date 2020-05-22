@@ -12,6 +12,7 @@ import ProfileInfo from "../../views/ProfileInfo";
 import Gamedescription from "../../views/Gamedescription";
 import Header2 from "../../views/Header2";
 import Logo from "./Logo.png";
+import loginCss from '../login/login.css';
 
 import Leaderboard from "../leaderboard/Leaderboard";
 
@@ -48,7 +49,6 @@ const HeaderContainer = styled.div`
 const MiniContainer =styled.div`
     display: flex;
     justify-content: center;
-    
 `;
 
 const TabText = styled.div`
@@ -73,6 +73,9 @@ const PlayerContainer = styled.li`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
 `;
 
 const LobbyContainer = styled.li`
@@ -84,15 +87,21 @@ const LobbyContainer = styled.li`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+    margin: 0px;
+  padding: 0px;
+  border: 0px;
 `;
 
 const Users = styled.ul`
   list-style: none;
   padding-left: 0;
   overflow: auto;
-  height: 310px;
+  height: 350px;
 `;
 
+const EmptyBox = styled.div`
+    width: 100px;
+`;
 
 
 
@@ -256,7 +265,7 @@ class Dashboard extends React.Component {
                             <Spinner />
                         ) : (
                             <div>
-                                <Users>
+                                <Users className="scroll-bar" id="style-15">
                                     {this.state.users.map(user => {
                                         return (
                                             <PlayerContainer>
@@ -269,6 +278,7 @@ class Dashboard extends React.Component {
                         )}
 
                     </Container3>
+    <EmptyBox/>
     <Leaderboard/>
     </MiniContainer>
                 </TabPanel>
@@ -283,7 +293,7 @@ class Dashboard extends React.Component {
                                 <Spinner />
                             ) : (
                                 <div>
-                                    <Users>
+                                    <Users  className="scroll-bar" id="style-15">
                                         {this.state.lobbies.map(lobby => {
                                             return (
                                                 <LobbyContainer
@@ -315,7 +325,7 @@ class Dashboard extends React.Component {
         );
 
         return (
-            <div>
+            <div  className="scroll-bar" id="style-15">
         <HeaderContainer>
             <ButtonContainer>
                 <Button
@@ -333,7 +343,7 @@ class Dashboard extends React.Component {
                         this.editProfile()
                     }}
                 >
-                    Edit
+                    Edit Profile
                 </Button>
             </ButtonContainer>
 

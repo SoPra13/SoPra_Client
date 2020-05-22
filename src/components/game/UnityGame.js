@@ -5,12 +5,25 @@ import { BaseContainer } from '../../helpers/layout';
 import { withRouter } from 'react-router-dom';
 import Unity, { UnityContent } from "react-unity-webgl";
 import { api, handleError } from '../../helpers/api';
+import Logo from '../login/Logo.png';
 
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color:   rgba(248, 248, 148, 1);
+`;
 
 const CentralRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+`;
+
+const Flex = styled.div`
+    display: flex;
 `;
 
 const CentralColumn = styled.div`
@@ -717,6 +730,15 @@ export class UnityGame extends React.Component {
                 </div>
                     </CentralRow>
                 </CentralColumn>
+
+                <CentralColumn>
+                    <TextContainer>
+                <h1>Attention! Unity needs time to load, please wait a moment...</h1>
+                    </TextContainer>
+                <TextContainer>
+                <h1>Important: Do not close or switch the tab!</h1>
+                        </TextContainer>
+                    </CentralColumn>
             </BaseContainer>
         );
     }

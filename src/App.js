@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import AppRouter from "./components/shared/routers/AppRouter";
 import { api } from "./helpers/api";
+import LoginCSS from "./components/login/login.css";
 
 class App extends Component {
   componentDidMount() {

@@ -9,3 +9,7 @@
     flex-direction: column;
     justify-content: center;
 }
+
+.text{
+    color:   rgba(248, 248, 148, 1);
+}

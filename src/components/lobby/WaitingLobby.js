@@ -88,15 +88,15 @@ const Button1 = styled.button`
   font-weight: 700;
   font-size: 13px;
   text-align: center;
-  color: #fff;
+  color: rgba(248, 248, 148);
   width: ${props => props.width || null};
   height: ${props => props.height || null};
   border: 2px solid;
-  border-color: #c5c5c5;
+  border-color: rgba(248, 248, 148);
   border-radius: 20px;
   cursor: ${props => (props.disabled ? "default" : "pointer")};
   opacity: ${props => (props.disabled ? 0.4 : 1)};
-  background: #0e3d61;
+  background: rgba(120, 26, 89, 0.8);
   transition: all 0.3s ease;
 `;
 

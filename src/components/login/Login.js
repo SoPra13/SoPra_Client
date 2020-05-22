@@ -32,8 +32,8 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 30%;
-  height: 375px;
+  width: 350px;
+  height: 425px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
