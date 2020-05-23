@@ -137,7 +137,7 @@ class Dashboard extends React.Component {
             `&userToken=` + localStorage.getItem('userToken'));
 
         // Get the returned user and update a new object.
-        console.log(response.data);
+        //console.log(response.data);
 
         await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -172,7 +172,7 @@ class Dashboard extends React.Component {
         try{
             const response = await api.get('/lobbies');
             this.setState({ lobbies: response.data });
-            console.log(response);
+            //console.log(response);
         }catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
@@ -209,16 +209,16 @@ class Dashboard extends React.Component {
 
             const respo = await api.get('/user/?token=' + key);
             this.setState({user: respo.data});
-            console.log(respo);
+            //console.log(respo);
 
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
         this.getLobbies();
-        console.log(this.state.lobbies);
+        //console.log(this.state.lobbies);
 
         this.getUsers();
-        console.log(this.state.users);
+        //console.log(this.state.users);
 
     }
 

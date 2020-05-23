@@ -93,7 +93,7 @@ class LoginLobby extends React.Component {
                 `&userToken=` + localStorage.getItem('userToken'));
 
             // Get the returned user and update a new object.
-            console.log(response.data);
+            //console.log(response.data);
 
             await new Promise(resolve => setTimeout(resolve, 1000));
 

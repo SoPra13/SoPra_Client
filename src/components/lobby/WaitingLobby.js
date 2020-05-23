@@ -147,7 +147,7 @@ class WaitingRoom extends React.Component {
             await api.delete('/lobby?lobbyToken=' + localStorage.getItem('lobbyToken')
                 + '&userToken=' + userToken);
 
-            console.log('Player get kicked from the admin');
+            //console.log('Player get kicked from the admin');
 
             this.props.history.push('/dashboard');
 
@@ -162,11 +162,11 @@ class WaitingRoom extends React.Component {
 
     getKicked(){
 
-        console.log('My lobby token is before: ' + localStorage.getItem('lobbyToken'));
+        //console.log('My lobby token is before: ' + localStorage.getItem('lobbyToken'));
 
         localStorage.removeItem('lobbyToken');
 
-        console.log('My lobby token is deleted: ' + localStorage.getItem('lobbyToken'));
+        //console.log('My lobby token is deleted: ' + localStorage.getItem('lobbyToken'));
 
         this.props.history.push('/dashboard');
     }
@@ -178,12 +178,12 @@ class WaitingRoom extends React.Component {
      */
 
     stillInTheLobby(){
-        console.log('My lobbytoken: ' + localStorage.getItem('lobbyToken'));
+        //console.log('My lobbytoken: ' + localStorage.getItem('lobbyToken'));
         if(this.checkPlayerList() == undefined){
             this.getKicked();
             this.props.history.push('/dashboard');
         }
-        console.log(this.checkPlayerList());
+        //console.log(this.checkPlayerList());
     }
 
 
@@ -224,7 +224,7 @@ class WaitingRoom extends React.Component {
     async getLobby(){
         try {
             const response = await api.get('/lobby?lobbyToken='+ localStorage.getItem('lobbyToken'));
-            console.log(response.data);
+            //console.log(response.data);
             await api.put('/user/updateingametab?userToken=' + localStorage.getItem('userToken'));
             // Get the returned users and update the state.
             this.setState({
@@ -237,7 +237,7 @@ class WaitingRoom extends React.Component {
             });
 
             // See here to get more data.
-            console.log(response.data.playerList);
+            //console.log(response.data.playerList);
         } catch (error) {
             alert(`Something went wrong while fetching the lobby: \n${handleError(error)}`);
             this.props.history.push('/dashboard');
@@ -255,7 +255,7 @@ class WaitingRoom extends React.Component {
                 game: true,
             });
 
-            console.log(this.state.game);
+            //console.log(this.state.game);
 
         } catch (error) {
             this.setState({
@@ -297,10 +297,10 @@ class WaitingRoom extends React.Component {
             const response = api.put('/lobby/' + localStorage.getItem('lobbyToken')
                 + '/game');
 
-            console.log(response);
-            console.log(response.data);
+            //console.log(response);
+            //console.log(response.data);
             localStorage.setItem('gameToken', localStorage.getItem('lobbyToken'));
-            console.log(localStorage.getItem('gameToken'));
+            //console.log(localStorage.getItem('gameToken'));
 
             this.props.history.push('/unityGame');
 
@@ -318,15 +318,15 @@ class WaitingRoom extends React.Component {
 
 
         const lobby = response.data;
-        console.log(lobby);
+        //console.log(lobby);
 
         if(lobby.lobbyState ==='INGAME'){
-            console.log("INGAME");
+            //console.log("INGAME");
             this.setState({
                 lobbyInGame: true
             })
         }else{
-            console.log("OUTGAMe");
+            //console.log("OUTGAMe");
             this.setState({
                 lobbyInGame: false
             })
@@ -336,7 +336,7 @@ class WaitingRoom extends React.Component {
             botList: lobby.botList,
             lobbyname: lobby.lobbyName
         });
-        console.log(lobby);
+        //console.log(lobby);
     }
 
 
@@ -402,7 +402,7 @@ class WaitingRoom extends React.Component {
                                                     <PlayerContainer
                                                         key={bot.id}
                                                         onClick={() => {
-                                                            console.log(bot.id)
+                                                            //console.log(bot.id)
                                                             /*nothing happens but a console log*/
                                                         }}>
                                                         <BotPlayer bot={bot}/>
@@ -422,8 +422,8 @@ class WaitingRoom extends React.Component {
                                                                     disabled = {localStorage.getItem('userToken') != this.state.adminToken}
                                                                     key={bot.id}
                                                                     onClick={() => {
-                                                                        console.log(bot.id);
-                                                                        console.log(bot.token);
+                                                                        //console.log(bot.id);
+                                                                        //console.log(bot.token);
                                                                         this.removeBot(bot.token)
                                                                     }}>
                                                                     Kick
@@ -449,7 +449,7 @@ class WaitingRoom extends React.Component {
                                                     <PlayerContainer
                                                         key={user.id}
                                                         onClick={() => {
-                                                            console.log(user.id)
+                                                            //console.log(user.id)
                                                             /*nothing happens but a console log*/
                                                         }}>
                                                         <ProfileInfo user={user}/>
@@ -470,7 +470,7 @@ class WaitingRoom extends React.Component {
                                                             disabled = {localStorage.getItem('userToken') !== this.state.adminToken}
                                                             key={user.id}
                                                             onClick={() => {
-                                                                console.log(user.id);
+                                                                //console.log(user.id);
                                                                 this.kickPlayer(user.token)
                                                             }}>
                                                             Kick

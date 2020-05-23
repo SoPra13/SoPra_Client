@@ -117,7 +117,7 @@ class EditProfile extends React.Component {
                 username: this.state.username,
                 avatar: this.state.avatar
             });
-            console.log(requestBody);
+            //console.log(requestBody);
 
             await api.put('/user?token=' + localStorage.getItem('userToken'), requestBody);
             this.props.history.push('/dashboard');
@@ -136,11 +136,11 @@ class EditProfile extends React.Component {
     }
 
     setAvatar(x){
-        console.log(x);
+        //console.log(x);
         this.setState({
            avatar: x
         });
-        console.log(this.state.avatar);
+        //console.log(this.state.avatar);
     }
 
     getAvatar(avatar){

@@ -105,15 +105,15 @@ class CustomLobby extends React.Component {
                 adminToken: this.state.adminToken,
                 lobbyType: this.state.lobbyType
             });
-            console.log(this.state.lobbyType);
+            //console.log(this.state.lobbyType);
             const response = await api.post('/lobby', requestBody);
             await new Promise(resolve => setTimeout(resolve, 1000));
             // Get the returned user and update a new object.
             const lobby = new Lobby(response.data);
 
             localStorage.setItem('lobbyToken', lobby.lobbyToken);
-            console.log(lobby);
-            console.log(lobby.lobbyToken);
+            //console.log(lobby);
+            //console.log(lobby.lobbyToken);
 
 
 

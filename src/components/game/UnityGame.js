@@ -57,27 +57,27 @@ export class UnityGame extends React.Component {
 
         //TODO: CHRIS remove?
         this.unityContent.on("ComTest", score =>{
-            console.log("Es funzt!" + score);
+            //console.log("Es funzt!" + score);
         });
 
 
         this.unityContent.on("PlayerHasConnected", () =>{
-            console.log("Unity asks for PlayerStats");
+            //console.log("Unity asks for PlayerStats");
             this.setPlayerArray(this.state.game);
         });
 
         this.unityContent.on("FetchSubmittedClues", () =>{
-            console.log("Unity asks for the info about which player has already given a clue");
+            //console.log("Unity asks for the info about which player has already given a clue");
             this.sendClueReadyString(this.state.game);
         });
 
         this.unityContent.on("PlayerVoted", (topic) =>{
-            console.log("Unity has told Player voted for topic at position: " + topic);
+            //console.log("Unity has told Player voted for topic at position: " + topic);
             this.voteForTopic(topic);
         });
 
         this.unityContent.on("FetchPlayerInfo", () =>{
-            console.log("Unity asks for Player Names, Avatars & Topics");
+            //console.log("Unity asks for Player Names, Avatars & Topics");
             this.setPlayerNames(this.state.game);
             this.setPlayerAvatars(this.state.game);
             this.setTopics(this.state.game);
@@ -86,58 +86,58 @@ export class UnityGame extends React.Component {
 
 
         this.unityContent.on("FetchRound", () =>{
-            console.log("Unity asks for number of round");
+            //console.log("Unity asks for number of round");
             this.sendRoundNumber(this.state.game);
         });
 
 
         this.unityContent.on("FetchVotedString", () =>{
-            console.log("Unity asks for the info about which player has already voted for topic");
+            //console.log("Unity asks for the info about which player has already voted for topic");
             this.sendPlayerHasChosenTopicInfo(this.state.game);
         });
 
 
         this.unityContent.on("FetchTopicList", () =>{
-            console.log("Unity asks for the list of given Votes");
+            //console.log("Unity asks for the list of given Votes");
             this.sendTopicList(this.state.game.voteList);
         });
 
 
         this.unityContent.on("LeaveGame", () =>{
-            console.log("Unity tells that player wants to leave the game");
+            //console.log("Unity tells that player wants to leave the game");
             this.leaveGame();
         });
 
 
         this.unityContent.on("SendGuessToReact", (message) =>{
-            console.log("Unity tells player has guessed: " + message);
+            //console.log("Unity tells player has guessed: " + message);
             this.sendGuess(message);
             this.sendRoundsTopic(this.state.game.topic);
         });
 
         this.unityContent.on("SendClueToReact", (message) =>{
-            console.log("Unity tells player gave clue: " + message);
+            //console.log("Unity tells player gave clue: " + message);
             this.sendClue(message);
         });
 
         this.unityContent.on("SendTopicToReact", (message) =>{
-            console.log("Unity tells the topic for this round is: " + message);
+            //console.log("Unity tells the topic for this round is: " + message);
             this.setTopic(message);
             this.sendRoundsTopic(message);
         });
 
         this.unityContent.on("TellReactToSkip", () =>{
-            console.log("Unity tells Round was skipped");
+            //console.log("Unity tells Round was skipped");
             this.sendRoundsTopic(this.state.game.topic);
         });
 
         this.unityContent.on("FetchCluesString", () =>{
-            console.log("Unity asks for the list of clues");
+            //console.log("Unity asks for the list of clues");
             this.sendClueList();
         });
 
         this.unityContent.on("FetchActivePlayerSubmittedGuess", () =>{
-            console.log("Unity asks if a guess was submitted");
+            //console.log("Unity asks if a guess was submitted");
             this.hasGuessed();
         });
 
@@ -147,17 +147,17 @@ export class UnityGame extends React.Component {
         });
 
         this.unityContent.on("StartNextRound", () =>{
-            console.log("Unity asks to start next round");
+            //console.log("Unity asks to start next round");
             this.nextRound()
         });
 
         this.unityContent.on("GameHasEnded", (score) =>{
-            console.log("Unity tells game has ended, score:"+score);
+            //console.log("Unity tells game has ended, score:"+score);
             this.endGame(score);
         });
 
         this.unityContent.on("FetchScoreStats", () =>{
-            console.log("Unity tells game has ended");
+            //console.log("Unity tells game has ended");
             this.sendScoreStats(this.state.game)
         });
 
@@ -229,7 +229,7 @@ export class UnityGame extends React.Component {
             "ReactSetPlayerStats",
             infoString
         )
-        console.log('PlayerStats sent to Unity: ' + infoString);
+        //console.log('PlayerStats sent to Unity: ' + infoString);
     }
 
 
@@ -250,7 +250,7 @@ export class UnityGame extends React.Component {
             "ReactSetPlayerNames",
             nameString
         )
-        console.log("NameString sent to Unity: " + nameString);
+        //console.log("NameString sent to Unity: " + nameString);
     }
 
 
@@ -272,7 +272,7 @@ export class UnityGame extends React.Component {
             "ReactSetPlayerAvatars",
             avatarString
         );
-        console.log("AvatarString sent to Unity: " + avatarString);
+        //console.log("AvatarString sent to Unity: " + avatarString);
     }
 
 
@@ -284,7 +284,7 @@ export class UnityGame extends React.Component {
             "ReactSetTopicArray",
             topicString
         );
-        console.log("MysteryWord sent to Unity");
+        //console.log("MysteryWord sent to Unity");
     }
 
 
@@ -295,8 +295,8 @@ export class UnityGame extends React.Component {
         if(this.state.initialPlayerList==null) {
             this.state.initialPlayerList = this.state.game.playerList;
         }
-        console.log(this.state.initialPlayerList);
-        console.log(this.state.game.playerList);
+        //console.log(this.state.initialPlayerList);
+        //console.log(this.state.game.playerList);
 
         // Copyright of this Kramer-ian Algorithm belongs solemnly to Marc Kramer
         for(var x = 0; x < this.state.initialPlayerList.length; x++){
@@ -326,7 +326,7 @@ export class UnityGame extends React.Component {
             "ReactSendScoreString",
             scoreString
         );
-        console.log("ScoreString sent to Unity: " + scoreString);
+        //console.log("ScoreString sent to Unity: " + scoreString);
     }
 
 
@@ -342,7 +342,7 @@ export class UnityGame extends React.Component {
             "ReactSetTopicVoteList",
             topicListString
         );
-        console.log("VotedString sent to Unity: " + topicListString);
+        //console.log("VotedString sent to Unity: " + topicListString);
     }
 
 
@@ -361,7 +361,7 @@ export class UnityGame extends React.Component {
                "ReactSetThisRoundsTopic",
                topic
            )
-       console.log("Topic set sent to Unity:"+ topic);
+       //console.log("Topic set sent to Unity:"+ topic);
      }
 
 
@@ -372,7 +372,7 @@ export class UnityGame extends React.Component {
         } catch (error) {
             alert(`Something fizzled while sending topic to Backend: \n${handleError(error)}`);
         }
-        console.log("Sent topic to backend: " + topic);
+        //console.log("Sent topic to backend: " + topic);
     }
 
 
@@ -383,7 +383,7 @@ export class UnityGame extends React.Component {
             "ReactSetRound",
             round
         );
-        console.log("RoundNumber sent to Unity: " + round);
+        //console.log("RoundNumber sent to Unity: " + round);
     }
 
 
@@ -401,13 +401,6 @@ export class UnityGame extends React.Component {
             }
         }
 
-        /*if(this.state.game.playerList<this.state.playerListLength){
-            for (var i = 0; i<(this.state.playerListLength-this.state.game.playerList); i++) {
-                    votedString += '1'
-                console.log("CHRISISDAHORNYGOAT")
-                }
-        }*/
-
         for (var i = 0; i < game.botList.length; i++) {
             if(this.state.game.botsVoted) {
                 votedString += '1'
@@ -421,7 +414,7 @@ export class UnityGame extends React.Component {
             "ReactSetPlayerHasChosenTopic",
             votedString
         );
-        console.log("String of votes sent to Unity: " + votedString);
+        //console.log("String of votes sent to Unity: " + votedString);
     }
 
 
@@ -443,7 +436,7 @@ export class UnityGame extends React.Component {
 
             await api.put('/user/updateingametab?userToken=' + localStorage.getItem('userToken'));
 
-            console.log(this.state.game);
+            //console.log(this.state.game);
 
         } catch (error) {
             alert(`Something fizzled while trying to get the game: \n${handleError(error)}`);
@@ -460,7 +453,7 @@ export class UnityGame extends React.Component {
         }catch(error){
             alert(`Something fizzled while sending the clue to Backend: \\n${handleError(error)}`);
         }
-        console.log("Sent clue to backend: " + clue);
+        //console.log("Sent clue to backend: " + clue);
     }
 
 
@@ -493,7 +486,7 @@ export class UnityGame extends React.Component {
             "ReactSetPlayerHasSubmittedClue",
             clueGivenString
         );
-        console.log("String of who gave clue sent to Unity: " + clueGivenString);
+        //console.log("String of who gave clue sent to Unity: " + clueGivenString);
     }
 
 
@@ -504,7 +497,7 @@ export class UnityGame extends React.Component {
             "ReactSetClueString",
             cluesString
         );
-        console.log("String of clues sent to Unity: " + cluesString);
+        //console.log("String of clues sent to Unity: " + cluesString);
     }
 
     async leaveGame(){
@@ -517,7 +510,7 @@ export class UnityGame extends React.Component {
         }catch(error) {
             alert(`Something fizzled while sending leave request to Backend: \\n${handleError(error)}`);
         }
-        console.log("Sent leave request to backend");
+        //console.log("Sent leave request to backend");
     }
 
 
@@ -541,7 +534,7 @@ export class UnityGame extends React.Component {
                     "ReactSetActivePlayerMadeGuess",
                     0
                 );
-                console.log("Sent to Unity that guess was not given");
+                //console.log("Sent to Unity that guess was not given");
             }
 
 
@@ -560,7 +553,7 @@ export class UnityGame extends React.Component {
 
         if(!this.state.game.guessGiven){
             await this.sendGuess(null);
-            console.log('Told Backend round was skipped');
+            //console.log('Told Backend round was skipped');
         }
 
         if(this.state.game.guessCorrect){
@@ -570,8 +563,8 @@ export class UnityGame extends React.Component {
                 1
             );
 
-            console.log("Sent Unity guess:"+ this.state.game.guess);
-            console.log("Sent Unity that round was won");
+            //console.log("Sent Unity guess:"+ this.state.game.guess);
+            //console.log("Sent Unity that round was won");
         }else if((this.state.game.guessCorrect == null)){
             this.unityContent.send(
                 "MockStats",
@@ -586,7 +579,7 @@ export class UnityGame extends React.Component {
                 "ReactTellRoundWin",
                 0
             );
-            console.log("Sent Unity that round was lost");
+            //console.log("Sent Unity that round was lost");
         }
     }
 
@@ -596,7 +589,7 @@ export class UnityGame extends React.Component {
             if(this.state.game.playerList[this.state.game.guesser].token===localStorage.getItem('userToken') && this.state.round === this.state.game.currentRound) {
                 const response = await api.put('/game/round?gameToken=' + localStorage.getItem('gameToken'));
                 this.state.game = response.data;
-                console.log("Sent to Backend that next round should start");
+                //console.log("Sent to Backend that next round should start");
             }
             while(this.state.round === this.state.game.currentRound){
                 await new Promise(resolve => setTimeout(resolve, 1000));
@@ -608,7 +601,7 @@ export class UnityGame extends React.Component {
                 "MockStats",
                 "ReactStartNextRound"
             );
-            console.log("Sent to Unity that next round should start");
+            //console.log("Sent to Unity that next round should start");
 
             if(this.state.game.currentRound>12){return};
             this.setPlayerArray(this.state.game);
@@ -623,7 +616,7 @@ export class UnityGame extends React.Component {
         await new Promise(resolve => setTimeout(resolve, 1000));
         var scoreString = score.toString();
         await api.put('/game/score?userToken='+ localStorage.getItem('userToken')+'&score='+score);
-        console.log("Sent to Backend that game ended, sent score:"+score);
+        //console.log("Sent to Backend that game ended, sent score:"+score);
 
     }catch(error){
         alert(`Something fizzled while sending request to end the game: \\n${handleError(error)}`);
@@ -639,7 +632,7 @@ export class UnityGame extends React.Component {
         }catch(error){
             alert(`Something fizzled while sending the guess to Backend: \\n${handleError(error)}`);
         }
-        console.log("Sent Guess or Skip to Backend");
+        //console.log("Sent Guess or Skip to Backend");
     }
 
     async sendScoreStats(game){
@@ -700,10 +693,10 @@ export class UnityGame extends React.Component {
             "ReactSendValidCluesSting",
             validString
         );
-        console.log("Sent Stats to Unity:");
-        console.log("String of correct guesses: " + guessString);
-        console.log("String of duplicate clues: " + duplicateString);
-        console.log("String of valid clues: " + validString);
+        //console.log("Sent Stats to Unity:");
+        //console.log("String of correct guesses: " + guessString);
+        //console.log("String of duplicate clues: " + duplicateString);
+        //console.log("String of valid clues: " + validString);
 
     }
 
