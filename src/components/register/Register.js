@@ -157,7 +157,7 @@ class Register extends React.Component {
     }
 
     setAvatar(x){
-        console.log(x);
+        //console.log(x);
         this.setState({
             avatar: x
         });
