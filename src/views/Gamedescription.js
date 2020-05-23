@@ -60,6 +60,7 @@ const Background2 = styled.div`
   justify-content: center;
   padding: 20px;
     background: rgba(120, 26, 89, 0.8);
+      border-radius: 20px;
 `;
 
 const TextContainer = styled.div`
@@ -70,6 +71,7 @@ const TextContainer = styled.div`
   height: 500px;
   justify-content: center;
   overflow: hidden;
+  
 `;
 
 const FormList1 = styled.ol`
