@@ -74,7 +74,7 @@ and password. After the login to the dashboard you can create your own lobby and
 on public or private. On the tab "Public Lobbies" you can join public lobbies, which are not 
 in the game yet or join a private lobby through a four ciphers password.
 
-![All Lobies](/img/Lobbies.png)
+![All Lobies](Img/Lobbies.png)
 
 Important: There is no feature to communicate the four ciphers of a private lobby. Either
 communicate orally or by third party tool.
@@ -82,7 +82,7 @@ communicate orally or by third party tool.
 Setup: It needs at least 3 players to join the game. One game contains a deck with 13 cards, 
 therefore at most 13 topics.
 
-![In a Lobby](/img/Lobby.png)
+![In a Lobby](Img/Lobby.png)
 
 As lobby creator/admin you can add/kick bots and kick players. An admin can only leave a lobby,
 if you are the last player in the lobby. Player and bots have different behaviour. By "Join into Game"
@@ -100,7 +100,7 @@ The guesser(/active player) waits for the clues. At this point there are three o
  an additional card will be discarded
 - skip this round; there will be no points and only this current topic will be discarded
 
-![Dashboard with Leaderboard](/img/Dashboard.png)
+![Dashboard with Leaderboard](Img/Dashboard.png)
 
 The application contains some features:
 - ranking system; visualized by the picture and rank name, depending on the current score
