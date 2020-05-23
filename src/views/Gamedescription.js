@@ -60,6 +60,7 @@ const Background2 = styled.div`
   justify-content: center;
   padding: 20px;
     background: rgba(120, 26, 89, 0.8);
+      border-radius: 20px;
 `;
 
 const TextContainer = styled.div`
@@ -70,6 +71,7 @@ const TextContainer = styled.div`
   height: 500px;
   justify-content: center;
   overflow: hidden;
+  
 `;
 
 const FormList1 = styled.ol`
@@ -110,12 +112,20 @@ function Gamedescription() {
                                 <TextContainer>
 
                                     <p>
-                                        Just One Web is a cooperative multiplayer online party game. Where teams of players compete together to reach the highest scores. Each round one player on a team is the active player who need to guess the Mystery word using the clues the teammates are giving.
-                                        But be careful, the most obvious clues are not always the most helpful. Then if two or more clues are similar, they all get eliminated. So be original and come up with unique clues.
-                                        The game starts once at least 3 players are ready. If you don’t have enough player, you may fill the empty slots with Bots. There is a maximum of 7 slots per game.
-                                        Once you start a game a deck of 13 randomly chosen cards will be set in the middle of the circle. The first active player is chosen randomly at the initiation of the first round.
-                                        Players take turns until the deck in the middle of the circle is empty. Each turn has 4 phases.
-
+                                        Just One Web is a cooperative multiplayer online party game, where teams of players
+                                        compete together to reach the highest scores. Each round one player on a team is
+                                        the guesser that needs to guess the Topic Word using the clues the teammates
+                                        (in the role of clue-givers) provide. But be careful, the most obvious clues are
+                                        not always the most helpful. Then if two or more clues are similar, they all get
+                                        eliminated. So be original and come up with unique clues. The game starts once at
+                                        least 3 players have joined the lobby. If you don’t have enough player, you may
+                                        fill the empty slots with friendly or malicious Bots. There is a maximum of 7
+                                        slots per game. Once you start a game a deck of 13 randomly chosen Topic cards
+                                        will be set in the middle of the game field. The first guesser is chosen randomly
+                                        at the initiation of the first round. Players take turns until the deck in the
+                                        middle of the circle is empty. Furthermore, each round consists of 4 phases,
+                                        namely the ”Topic Choice Phase”, the “Clue Phase”, the “Guess Phase” and the
+                                        “Evaluation Phase”.
                                     </p>
                                 </TextContainer>
                                 </Background2>

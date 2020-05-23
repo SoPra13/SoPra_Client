@@ -73,9 +73,9 @@ public class MockStats : MonoBehaviour
     private int activePlayerGuess = 0; //0 = player has not made a guess; 1 = player has made a guess
     private int[] scoreList = { 0, 0, 0, 0, 0, 0, 0 }; //data come from backend
     private int[] tempScoreList = { 0, 0, 0, 0, 0, 0, 0 };
-    private int[] correctGuesses = { 3, 0, 0, 0, 0, 0, 0 }; //ReactSendCorrectGuessString(str)
-    private int[] duplicatedClues = { 6, 0, 0, 0, 0, 0, 0 }; //ReactSendDuplicateString(str)
-    private int[] validClues = { 10, 0, 0, 0, 0, 0, 0 }; //ReactSendValidCluesSting(str)
+    private int[] correctGuesses = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendCorrectGuessString(str)
+    private int[] duplicatedClues = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendDuplicateString(str)
+    private int[] validClues = { 0, 0, 0, 0, 0, 0, 0 }; //ReactSendValidCluesSting(str)
 
     private bool giveReactTime = false;
     private bool hasLostLastRound = false;
@@ -204,7 +204,6 @@ public class MockStats : MonoBehaviour
 
     public void MultiplyScore()
     {
-
         float tempScore = score;
         tempScore *= GetMultiplier();
         tempScore -= (duplicatedClues[playerPosition-1]*2);

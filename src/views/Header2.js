@@ -5,7 +5,9 @@ import {api, handleError} from "../helpers/api";
 import { Button } from "./design/Button";
 import  { Redirect } from 'react-router-dom';
 
-
+const EmptyBox = styled.div`
+  width: 100px;
+`;
 const Container = styled.div`
   height: ${props => props.height}px;
   background: ${props => props.background};
@@ -36,16 +38,9 @@ const Header2 = props => {
 
     return (
         <Container height={props.height}>
-            <Button
-                width="100px"
-                onClick={() => {
-                    logout().then(r => <Redirect to='/login'  />);
-                }}
-            >
-                Logout
-            </Button>
+            <EmptyBox/>
 
-
+<img src={Logo} height="100px" width="100px"/>
             <Button
                 position = "absolute"
                 onClick={() => {
