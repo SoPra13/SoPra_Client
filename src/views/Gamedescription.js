@@ -94,7 +94,6 @@ const FormList3 = styled.ul`
  */
 function Gamedescription() {
     return (
-
         <Container2>
             <FormContainer>
                 <Container>
