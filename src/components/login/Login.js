@@ -213,6 +213,16 @@ class Login extends React.Component {
                       Hey Buddy! New in the city? Wanna kill Time? Come and sign up here.
                     </Button2>
                   </Central>
+                    <br/>
+                    <Central>
+                        <Button
+                            onClick={() => {
+                                this.props.history.push('/leaderboard');
+                            }}
+                        >
+                            Leaderboard
+                        </Button>
+                    </Central>
                 </ButtonContainer>
               </Form>
             </FormContainer>
