@@ -15,7 +15,7 @@ import {GameGuard} from "../routeProtectors/GameGuard";
 import {LobbyGuard} from "../routeProtectors/LobbyGuard";
 import LoginLobby from "../../lobby/LoginLobby";
 import Chat from "../../chat/Chat";
-import Leaderboard from "../../leaderboard/Leaderboard";
+import Openleaderboard from "../../leaderboard/openleaderboard";
 
 
 /**
@@ -117,7 +117,7 @@ class AppRouter extends React.Component {
                   )}
               />
 
-              <Route path="/leaderboard" exact render={() => <Leaderboard/>}/>
+              <Route path="/leaderboard" exact render={() => <Openleaderboard/>}/>
               <Route path="/" exact render={() => <Redirect to={"/login"} />} />
           </div>
         </Switch>
