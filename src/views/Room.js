@@ -88,7 +88,7 @@ return (
     <Container>
         <Form2>
             <Form>
-                <img src={getAvatar(3)} width="85px" height="85px"/>
+                <img src={getAvatar(7)} width="85px" height="85px"/>
                 <NumberOfPlayers>#Bots: {lobby.botList.length}</NumberOfPlayers>
             </Form>
         <Form>

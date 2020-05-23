@@ -3,7 +3,15 @@ import PlayerBox from './PlayerBox'
 import './leaderboard.css'
 import LeaderboardSelector from './leaderboardselector'
 import { api } from '../../helpers/api'
+import styled from 'styled-components';
 
+const Central = styled.div`
+  color: #FFC100;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+`;
 
 export default class Leaderboard extends Component {
     constructor(props) {
@@ -13,12 +21,16 @@ export default class Leaderboard extends Component {
     }
     render() {
         return (
+            <div>
+            <Central>
             <div className="leaderboardoutercontainer">
                 <h1>Leaderboard</h1>
                 <LeaderboardSelector selected={this.state.selected} handlechange={this.handleChange}/>
                 <div className="leaderboardinnercontainer">
                 {this.state.lead.map(l => (<PlayerBox rank={l.rank + "."} username={l.username} score={l.result}/>))}
                 </div>
+            </div>
+          </Central>
             </div>
         )
     }
