@@ -210,7 +210,7 @@ class Login extends React.Component {
                           this.props.history.push('/register');
                         }}
                     >
-                      Hey Buddy! New in the city? Wanna kill Time? Come and sign up here.
+                      Hey Buddy! New in the city? Wanna kill Time? Come and <span style={{color: "#FFC100"}}>sign up here</span>.
                     </Button2>
                   </Central>
                     <br/>
