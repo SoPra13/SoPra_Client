@@ -92,14 +92,14 @@ public class Rounds : MonoBehaviour
             gameBoard.DisplayArrow();
             if (round == 0)
             {
-                StartCoroutine(gameBoard.StartTextBox(mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has been chosen to be the Active " +
-                                    "Player this Round! He will draw <color=#001AF6>13</color> random topic cards...", false, 1));
+                StartCoroutine(gameBoard.StartTextBox(mockStats.GetName(mockStats.GetActivePlayer() - 1) + " has been chosen to be the Guesser " +
+                                    "this Round! He will draw <color=#001AF6>13</color> random topic cards...", false, 1));
                 StartCoroutine(Phase1Shuffle());
                 roundPhase = 2;
             }
             else
             {
-                StartCoroutine(gameBoard.StartTextBox(mockStats.GetName(mockStats.GetActivePlayer() - 1) + " is the new active Player for " +
+                StartCoroutine(gameBoard.StartTextBox(mockStats.GetName(mockStats.GetActivePlayer() - 1) + " is the new Guesser for " +
                                     "this Round!", false, 1));
                 StartCoroutine(WaitForArrowToDisappear());
                 roundPhase = 2;
@@ -592,7 +592,6 @@ public class Rounds : MonoBehaviour
 
 
     //This is called when a player leaves the game (called by react)
-    //Todo Add player notification that a player left
     public void ReactAbortGame()
     {
         StartCoroutine(EndGame(true));
@@ -605,7 +604,7 @@ public class Rounds : MonoBehaviour
         gameBoard.SetupCardStack();
         yield return new WaitForSeconds(4f);
         StartCoroutine(gameBoard.StartTextBox("The Cards have been dealt! Round 1 will start with " + mockStats.GetName(mockStats.GetActivePlayer()-1) + " as" +
-            " <color=#001AF6>active player</color>!", false, 1));
+            " <color=#001AF6>Guesser</color>!", false, 1));
         yield return new WaitForSeconds(3.5f);
         gameBoard.RemoveArrow();
         roundPhase = 3;

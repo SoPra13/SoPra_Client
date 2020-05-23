@@ -663,7 +663,7 @@ public class GameBoard : MonoBehaviour
         //TODO here I have to add the correct topics
         float y = 164.6f;
         //StartCoroutine(DisplayInfoText("You have <color=#001AF6>30</color> Seconds to pick a Topic for this Round!",true,0));
-        StartCoroutine(StartTextBox("Please vote for a Topic. The active player will have to guess the topic afterwards!", true, 0));
+        StartCoroutine(StartTextBox("Please vote for a Topic Word. The guesser will have to guess the topic afterwards!", true, 0));
         for (int j = 0; j < 5; j++)
         {
             GameObject topicButton = Instantiate(topicButtonObject, new Vector3(-7.6f, y, 0), Quaternion.identity) as GameObject;
@@ -846,7 +846,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(2f);
-        StartCoroutine(StartTextBox("As you are the active player, you need to wait for the others to choose a Topic for this round!",true,2));
+        StartCoroutine(StartTextBox("As you are the Guesser, you need to wait for the others to choose a Topic Word for this round!",true,2));
         Phase5HasLoaded = true;
         yield return new WaitForSeconds(0.1f);
     }
@@ -1059,7 +1059,7 @@ public class GameBoard : MonoBehaviour
         ForceRemoveInfoBox();
         StartCoroutine(NotifyPlayerThatTopicHasBeenChosen());
         yield return new WaitForSeconds(5f);
-        StartCoroutine(StartTextBox("The players have chosen their Topic for this Round. They will now give you clues. Hold on...", true, 2));
+        StartCoroutine(StartTextBox("The Clue-Givers have chosen their Topic for this Round. They will now give you clues. Hold on...", true, 2));
         StartCoroutine(ActivePlayerWaitsForClues());
         yield return new WaitForSeconds(2.5f);       
     }
@@ -1086,7 +1086,7 @@ public class GameBoard : MonoBehaviour
             StartCoroutine(NotifyPlayerhaveSubmittedTheirClue());
             yield return new WaitForSeconds(5f);
             //HardDeleteInfoBox();
-            StartCoroutine(StartTextBox("Now it's your turn to guess the correct Mistery Word...", true, 0));
+            StartCoroutine(StartTextBox("Now it's your turn to guess the correct Topic Word...", true, 0));
             yield return new WaitForSeconds(2f);
             round.SetRoundPhase(9);
         }
@@ -1109,7 +1109,7 @@ public class GameBoard : MonoBehaviour
             StartCoroutine(NotifyPlayerhaveSubmittedTheirClue());
             yield return new WaitForSeconds(5f);
             //HardDeleteInfoBox();
-            StartCoroutine(StartTextBox("The active player is now guessing...wait for him to submit his guess", true, 2));
+            StartCoroutine(StartTextBox("The Guesser is now guessing...wait for him to submit his guess", true, 2));
             GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("wake", true);
             GameObject.Find("ThinkingBubble" + mockStats.GetActivePlayer()).GetComponent<Animator>().SetBool("thinking", true);
             yield return new WaitForSeconds(1.5f);
