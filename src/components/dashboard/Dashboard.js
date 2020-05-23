@@ -10,7 +10,6 @@ import { Spinner} from "../../views/design/Spinner";
 import Room from "../../views/Room";
 import ProfileInfo from "../../views/ProfileInfo";
 import Gamedescription from "../../views/Gamedescription";
-import Header2 from "../../views/Header2";
 import Logo from "./Logo.png";
 import loginCss from '../login/login.css';
 
