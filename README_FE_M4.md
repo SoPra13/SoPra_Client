@@ -7,32 +7,7 @@ that uses NLP to check the validity of clues and a JPA database to store all sco
 games. The scores of all players are ranked on a public leaderboard. If a group wants more players they can add bots 
 to the game. The bots use NLP to give either good or bad clues.
 
-## Getting started with React
-
-Read and go through those Tutorials, It will make your life easier!
-
-- Read the React [Docs](https://reactjs.org/docs/getting-started.html)
-- Do this React [Getting Started](https://reactjs.org/tutorial/tutorial.html) Tutorial (it doesn’t assume any existing React knowledge)
-- Get an Understanding of [CSS](http://localhost:3000) and [HTML](https://www.w3schools.com/html/html_intro.asp)!
-
-Once you have done all of this, in the template there are two main external dependencies that you should look at:
-
-- [styled-components](https://www.styled-components.com/docs)
-  It removes the mapping between components and styles (i.e. external css files). This means that when you're defining your styles, you're actually creating a normal React component, that has your styles attached to it
-* [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) Declarative routing for React being a collection of navigational components that compose declaratively with your application. 
-
-<!-- ## IDE Recommendation
-As a student, you have the possibility with [JetBrains](https://www.jetbrains.com/student/) to obtain a free individual license and have access to several IDEs. 
-We recommend you to use [WebStorm](https://www.jetbrains.com/webstorm/specials/webstorm/webstorm.html?gclid=EAIaIQobChMIyPOj5f723wIVqRXTCh3SKwtYEAAYASAAEgLtMvD_BwE&gclsrc=aw.ds) for your front-end. 
-Once you have downloaded and installed it, you can add the following WebStorm plugins: 
-> Go to Preferences > Plugins > Browse Repositories and look for: 
-* [styled-components](https://plugins.jetbrains.com/plugin/9997-styled-components) (provides coding assistance like CSS Highlighting for Styled Components)
-* [prettier](https://plugins.jetbrains.com/plugin/10456-prettier) (a smart code formatter)
-* [Material Theme UI](https://plugins.jetbrains.com/plugin/8006-material-theme-ui) (Material Theme for Jetbrains IDEs, allowing a total customization of the IDE including Themes, Color Schemes, Icons and many other features.)
-
-Feel fre e to use other IDEs (e.g. [VisualStudio](https://code.visualstudio.com/)) if you want.  -->
-
-## Prerequisites and Installation
+## How to setup and run this Project
 
 For your local development environment you'll need Node.js >= 8.10. You can download it [here](https://nodejs.org). All other dependencies including React get installed with:
 
@@ -63,9 +38,22 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Learn More
+## Getting started with React
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Read and go through those Tutorials, It will make your life easier!
+
+- Read the React [Docs](https://reactjs.org/docs/getting-started.html)
+- Get an Understanding of [CSS](http://localhost:3000) and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+- Learn Unity [Docs](https://docs.unity3d.com/Manual/index.html)!
+
+There are three main external dependencies that you should look at:
+
+- [react-unity-webgl](https://www.npmjs.com/package/react-unity-webgl) It lets unity communicate through react the framework
+
+- [styled-components](https://www.styled-components.com/docs)
+  It removes the mapping between components and styles (i.e. external css files). This means that when you're defining your styles, you're actually creating a normal React component.
+
+- [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) Declarative routing for React being a collection of navigational components that compose declaratively with your application. 
 
 ## Illustrations/UI Flow
 
@@ -116,7 +104,7 @@ Possible features to enhance UX:
 - rejoin session after disconnect
 - guest mode for spectactors
 
-#### Contributing
+## Contributing
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
@@ -162,19 +150,30 @@ Project maintainers who do not follow or enforce the Code of Conduct in good fai
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 1.4, available at https://www.contributor-covenant.org/version/1/4/code-of-conduct/
 
 ## Authors
-Simon Padua
+Simon Padua (IsaacTheII)
 
-Chris Aeberhard
+Chris Aeberhard (niddhog)
 
-Thanh Cong Huynh
- 
-Ivan Allinckx
-
-Marc Kramer
+Thanh Huynh (Tharoxes)
+   
+Ivan Allinckx   (iallin)
+   
+Marc Kramer (Makram95)
 
 ## Acknowledgement
 
-Credits belong to the unknown artist of the picture: ![night city wallpaper 4k](Img/Board.jpg)
+Art for Dashboard
+
+Artist: Literal Lemon (https://steamcommunity.com/id/LiteralLemon) 
+![night city wallpaper 4k](https://steamuserimages-a.akamaihd.net/ugc/959733232046545325/316D147A964EFF85A1170A889052D46F7D92945E/)
+
+Pixel Art for Unity Game
+    
+Artist: Colletior (https://steamcommunity.com/id/colletior)
+![loading screen](https://steamuserimages-a.akamaihd.net/ugc/1020572650861906095/163EE0850ABF95553316D39354C28C13B2514A33/)
+
+Artist: Akito One (https://steamcommunity.com/id/akito_one)
+![Background](https://steamuserimages-a.akamaihd.net/ugc/2438013375536940927/D370DBF7BFC83ED36F783F08A598FFF3E71A1D61/)
 
 ## License
 Copyright (c) [2020] [Sopra Group13]
